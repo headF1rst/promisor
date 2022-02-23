@@ -1,4 +1,4 @@
-package promisor.promisor.model;
+package promisor.promisor.domain.model;
 
 import lombok.Getter;
 
