@@ -1,4 +1,4 @@
-package promisor.promisor.user;
+package promisor.promisor.domain.user;
 
 public enum UserRole {
     USER,
