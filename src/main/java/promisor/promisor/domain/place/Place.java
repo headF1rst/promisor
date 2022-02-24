@@ -1,7 +1,7 @@
-package promisor.promisor.place;
+package promisor.promisor.domain.place;
 
 import lombok.Getter;
-import promisor.promisor.model.BaseEntity;
+import promisor.promisor.domain.model.BaseEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

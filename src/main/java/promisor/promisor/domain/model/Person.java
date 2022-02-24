@@ -1,9 +1,7 @@
-package promisor.promisor.model;
+package promisor.promisor.domain.model;
 
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.Lob;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotEmpty;
 
@@ -18,8 +16,4 @@ public class Person extends BaseEntity {
 
     @NotEmpty
     private String name;
-
-    @Lob
-    @NotEmpty
-    private String password;
 }
