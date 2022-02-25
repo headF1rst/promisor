@@ -11,7 +11,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signin")
+    @PostMapping("/users")
     public String register(@RequestBody User request) {
         return userService.register(request);
     }
