@@ -1,6 +1,7 @@
 package promisor.promisor.domain.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotEmpty;
@@ -12,8 +13,9 @@ import javax.validation.constraints.NotEmpty;
  */
 @MappedSuperclass
 @Getter
+@RequiredArgsConstructor
 public class Person extends BaseEntity {
 
     @NotEmpty
-    private String name;
+    private final String name;
 }

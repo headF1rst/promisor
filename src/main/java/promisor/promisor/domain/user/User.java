@@ -45,6 +45,16 @@ public class User extends Person implements UserDetails {
     @Digits(fraction = 0, integer = 11)
     private String telephone;
 
+
+    public User(String name, String email, String password,  String telephone, UserRole userRole) {
+
+        super(name);
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+        this.userRole = userRole;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
@@ -53,7 +63,7 @@ public class User extends Person implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getName();
+        return email;
     }
 
     @Override
@@ -64,9 +74,9 @@ public class User extends Person implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         if (getStatus() == "ACTIVE") {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -82,5 +92,9 @@ public class User extends Person implements UserDetails {
         } else {
             return false;
         }
+    }
+
+    public void setEncodedPassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }
