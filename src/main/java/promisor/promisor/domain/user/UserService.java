@@ -27,6 +27,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 사용자를 찾을수 없습니다."));
     }
 
+    @Transactional
     public String register(SignUpDto request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
@@ -36,7 +37,7 @@ public class UserService implements UserDetailsService {
         }
 
         String token = signUpUser(
-                new User(
+               User.of(
                         request.getName(),
                         request.getEmail(),
                         request.getPassword(),
@@ -47,6 +48,7 @@ public class UserService implements UserDetailsService {
         return token;
     }
 
+    @Transactional
     public String signUpUser(User user) {
         boolean userExists = userDao
                 .findByEmail(user.getEmail())

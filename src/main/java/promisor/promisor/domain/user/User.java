@@ -45,14 +45,21 @@ public class User extends Person implements UserDetails {
     @Digits(fraction = 0, integer = 11)
     private String telephone;
 
+    protected User(String name) {
+        super(name);
+    }
 
-    public User(String name, String email, String password,  String telephone, UserRole userRole) {
+    private User(String name, String email, String password,  String telephone, UserRole userRole) {
 
         super(name);
         this.email = email;
         this.password = password;
         this.telephone = telephone;
         this.userRole = userRole;
+    }
+
+    public static User of(String name, String email, String password,  String telephone, UserRole userRole) {
+        return new User(name, email, password,  telephone, userRole);
     }
 
     @Override
