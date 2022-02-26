@@ -18,4 +18,5 @@ public class Person extends BaseEntity {
 
     @NotEmpty
     private final String name;
+
 }
