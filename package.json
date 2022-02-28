@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@types/react-router-dom": "^5.3.3",
+    "@types/styled-components": "^5.1.23",
+    "react-hook-form": "^7.27.1",
+    "react-router-dom": "^6.2.1",
+    "styled-components": "^5.3.3"
+  }
+}
