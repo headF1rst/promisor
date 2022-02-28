@@ -7,9 +7,9 @@ import promisor.promisor.domain.user.UserRole;
 @Data
 public class SignUpDto {
 
-    private final String name;
-    private final String email;
-    private final String password;
-    private final String telephone;
-    private final UserRole userRole;
+    private String name;
+    private String email;
+    private String password;
+    private String telephone;
+    private UserRole userRole;
 }
