@@ -13,10 +13,14 @@ import javax.validation.constraints.NotEmpty;
  */
 @MappedSuperclass
 @Getter
-@RequiredArgsConstructor
 public class Person extends BaseEntity {
 
-    @NotEmpty
-    private final String name;
+    @NotEmpty(message = "이름이 안들어 왔습니다.")
+    private String name;
 
+    protected Person() {}
+
+    protected Person(String name) {
+        this.name = name;
+    }
 }

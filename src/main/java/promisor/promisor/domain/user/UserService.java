@@ -60,6 +60,11 @@ public class UserService implements UserDetailsService {
 
         String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
         user.setEncodedPassword(encodedPassword);
-        return "";
+
+        userDao.save(user);
+
+//        TODO: 인증 토큰 전송하기
+
+        return "it works";
     }
 }
