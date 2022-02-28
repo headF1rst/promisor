@@ -100,6 +100,7 @@ const Logo = styled.div<{ window: number }>`
   font-family: winkle;
   font-size: 3rem;
   color: ${(p) => p.theme.green};
+  text-shadow: -2px 1px 0px #ffffff;
 `;
 const LoginForm = styled.form`
   width: 60vw;
@@ -111,7 +112,6 @@ const LoginInput = styled.div`
   justify-content: center;
   div {
     position: relative;
-    background-color: white;
     width: fit-content;
     top: 10px;
     left: 10px;
@@ -127,11 +127,13 @@ const LoginInput = styled.div`
     padding-inline: 20px;
     padding-top: 15px;
     padding-bottom: 10px;
+    background-color: transparent;
+    color: ${(p) => p.theme.textColor};
     &:focus {
       outline: none;
     }
     &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 1000px white inset;
+      -webkit-box-shadow: 0 0 0 1000px ${(p) => p.theme.bgColor} inset;
       -webkit-text-fill-color: ${(p) => p.theme.green};
     }
   }
@@ -140,8 +142,8 @@ const LoginButton = styled.button`
   width: 100%;
   border: none;
   text-align: center;
-  background-color: black;
-  color: ${(p) => p.theme.white};
+  background-color: ${(p) => p.theme.textColor};
+  color: ${(p) => p.theme.bgColor};
   border-radius: 5px;
   margin-top: 15px;
   padding: 10px;
@@ -154,7 +156,6 @@ const Tab = styled.div`
   margin-top: 30px;
   span {
     padding-inline: 8px;
-    color: black;
     font-weight: 600;
     cursor: pointer;
   }
