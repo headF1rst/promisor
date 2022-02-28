@@ -1,17 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import styled from "styled-components";
+
 interface ILoginForm {
   email: string;
   password: string;
+  passwordConfirm: string;
 }
 function Login() {
   const { register, setValue, handleSubmit } = useForm<ILoginForm>();
+  const navigate = useNavigate();
+  const loginMatch = useMatch("/login");
   const onValid = ({ email, password }: ILoginForm) => {
     console.log(email, password);
   };
   const onInvalid = ({ email, password }: any) => {
     console.log(email, password);
+  };
+  const onPushClick = () => {
+    if (loginMatch) {
+      navigate("/register");
+    } else {
+      navigate("/login");
+    }
   };
   return (
     <div
@@ -22,7 +35,7 @@ function Login() {
       }}
     >
       <Header>
-        <span>LOGIN</span>
+        <span>{loginMatch ? "LOGIN" : "REGISTER"}</span>
       </Header>
       <Container>
         <Logo window={window.innerWidth}>Promisor</Logo>
@@ -44,11 +57,24 @@ function Login() {
               type="password"
             />
           </LoginInput>
-          <LoginButton>Login</LoginButton>
+          {!loginMatch && (
+            <LoginInput>
+              <div>PASSWORD CONFIRM</div>
+              <input
+                {...register("passwordConfirm", {
+                  required: "Password Confirm is required.",
+                })}
+                type="password"
+              />
+            </LoginInput>
+          )}
+          <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton>
         </LoginForm>
         <Tab>
-          아직 계정이 없으십니까?
-          <span>가입하기</span>
+          {loginMatch ? "아직 계정이 없으십니까?" : "계정이 있으십니까?"}
+          <span onClick={onPushClick}>
+            {loginMatch ? "가입하기" : "로그인하기"}
+          </span>
         </Tab>
       </Container>
     </div>
@@ -64,11 +90,10 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 `;
 const Logo = styled.div<{ window: number }>`
   width: 90vw;
-  height: ${(p) => (p.window >= 1000 ? "20vw" : "30vw")};
+  height: ${(p) => (p.window >= 1000 ? "15vw" : "30vw")};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -78,7 +103,7 @@ const Logo = styled.div<{ window: number }>`
 `;
 const LoginForm = styled.form`
   width: 60vw;
-  height: 30vh;
+  height: 45vh;
 `;
 const LoginInput = styled.div`
   display: flex;
@@ -105,6 +130,10 @@ const LoginInput = styled.div`
     &:focus {
       outline: none;
     }
+    &:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px white inset;
+      -webkit-text-fill-color: ${(p) => p.theme.green};
+    }
   }
 `;
 const LoginButton = styled.button`
@@ -127,5 +156,6 @@ const Tab = styled.div`
     padding-inline: 8px;
     color: black;
     font-weight: 600;
+    cursor: pointer;
   }
 `;
