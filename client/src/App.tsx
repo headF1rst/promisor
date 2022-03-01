@@ -8,7 +8,7 @@ import { darkTheme, lightTheme } from "./Theme";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
-  src: url(("{{url_for('static',filename='font/WinkleRegular.ttf')}}")
+  src: url("/asset/WinkleRegular.ttf");
 }
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
