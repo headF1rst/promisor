@@ -2,10 +2,14 @@ import { motion } from "framer-motion";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
-import { darkModeState } from "./atoms/darkmode";
+import { darkModeState } from "./states/darkmode";
 import Login from "./routes/Login";
 import { darkTheme, lightTheme } from "./Theme";
 const GlobalStyle = createGlobalStyle`
+@font-face { 
+  font-family: 'Winkle';
+  src: url("/asset/WinkleRegular.ttf");
+}
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -77,11 +81,11 @@ function App() {
   };
   return (
     <ThemeProvider theme={dark ? darkTheme : lightTheme}>
-      <DarkmodeToggle dark={dark} onClick={onToggleClick}>
+      <DarkmodeToggle dark={dark ? "dark" : "light"} onClick={onToggleClick}>
         {dark ? (
-          <Circle layoutId="darkmode" dark={dark} />
+          <Circle layoutId="darkmode" dark={dark ? "dark" : "light"} />
         ) : (
-          <Circle layoutId="darkmode" dark={dark} />
+          <Circle layoutId="darkmode" dark={dark ? "dark" : "light"} />
         )}
       </DarkmodeToggle>
       <GlobalStyle />
@@ -97,9 +101,10 @@ function App() {
 
 export default App;
 
-const DarkmodeToggle = styled(motion.div)<{ dark: boolean }>`
-  background-color: ${(p) => (p.dark ? p.theme.green : p.theme.bgColor)};
-  border: solid 2px ${(p) => (p.dark ? "transparent" : p.theme.green)};
+const DarkmodeToggle = styled(motion.div)<{ dark: string }>`
+  background-color: ${(p) =>
+    p.dark == "dark" ? p.theme.green : p.theme.bgColor};
+  border: solid 2px ${(p) => (p.dark == "dark" ? "transparent" : p.theme.green)};
   position: fixed;
   left: 10px;
   top: 10px;
@@ -108,12 +113,12 @@ const DarkmodeToggle = styled(motion.div)<{ dark: boolean }>`
   border-radius: 20px;
   cursor: pointer;
 `;
-const Circle = styled(motion.div)<{ dark: boolean }>`
+const Circle = styled(motion.div)<{ dark: string }>`
   position: relative;
-  left: ${(p) => (p.dark ? "20px" : "2px")};
+  left: ${(p) => (p.dark == "dark" ? "20px" : "2px")};
   top: 2px;
   width: 20px;
   height: 20px;
   border-radius: 20px;
-  background-color: ${(p) => (p.dark ? "white" : p.theme.green)};
+  background-color: ${(p) => (p.dark == "dark" ? "white" : p.theme.green)};
 `;
