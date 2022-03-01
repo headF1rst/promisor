@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import styled from "styled-components";
-
+import * as S from "../components/_index";
 interface ILoginForm {
   email: string;
   password: string;
@@ -27,46 +27,40 @@ function Login() {
     }
   };
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        padding: "30px",
-      }}
-    >
-      <Header>
+    <S.Template>
+      <S.Header items={1}>
         <span>{loginMatch ? "LOGIN" : "REGISTER"}</span>
-      </Header>
-      <Container>
-        <Logo window={window.innerWidth}>Promisor</Logo>
+      </S.Header>
+      <S.Container>
+        <Logo>Promisor</Logo>
         <LoginForm onSubmit={handleSubmit(onValid, onInvalid)}>
-          <LoginInput>
+          <LabelInput>
             <div>EMAIL</div>
-            <input
+            <S.Input
               {...register("email", {
                 required: "Email is required.",
               })}
             />
-          </LoginInput>
-          <LoginInput>
+          </LabelInput>
+          <LabelInput>
             <div>PASSWORD</div>
-            <input
+            <S.Input
               {...register("password", {
                 required: "Password is required.",
               })}
               type="password"
             />
-          </LoginInput>
+          </LabelInput>
           {!loginMatch && (
-            <LoginInput>
+            <LabelInput>
               <div>PASSWORD CONFIRM</div>
-              <input
+              <S.Input
                 {...register("passwordConfirm", {
                   required: "Password Confirm is required.",
                 })}
                 type="password"
               />
-            </LoginInput>
+            </LabelInput>
           )}
           <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton>
         </LoginForm>
@@ -76,24 +70,15 @@ function Login() {
             {loginMatch ? "가입하기" : "로그인하기"}
           </span>
         </Tab>
-      </Container>
-    </div>
+      </S.Container>
+    </S.Template>
   );
 }
 export default Login;
-const Header = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const Logo = styled.div<{ window: number }>`
+
+const Logo = styled.div`
   width: 90vw;
-  height: ${(p) => (p.window >= 1000 ? "15vw" : "30vw")};
+  height: 30vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,7 +91,7 @@ const LoginForm = styled.form`
   width: 60vw;
   height: 45vh;
 `;
-const LoginInput = styled.div`
+const LabelInput = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -119,25 +104,8 @@ const LoginInput = styled.div`
     font-size: 0.9rem;
     color: ${(p) => p.theme.grey};
   }
-  input {
-    width: 100%;
-    height: 40px;
-    border: solid 1px ${(p) => p.theme.grey};
-    border-radius: 5px;
-    padding-inline: 20px;
-    padding-top: 15px;
-    padding-bottom: 10px;
-    background-color: transparent;
-    color: ${(p) => p.theme.textColor};
-    &:focus {
-      outline: none;
-    }
-    &:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 1000px ${(p) => p.theme.bgColor} inset;
-      -webkit-text-fill-color: ${(p) => p.theme.green};
-    }
-  }
 `;
+
 const LoginButton = styled.button`
   width: 100%;
   border: none;
