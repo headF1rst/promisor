@@ -5,6 +5,7 @@ import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { darkModeState } from "./states/darkmode";
 import Login from "./routes/Login";
 import { darkTheme, lightTheme } from "./Theme";
+import Test from "./Test";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
@@ -93,6 +94,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
+          <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
