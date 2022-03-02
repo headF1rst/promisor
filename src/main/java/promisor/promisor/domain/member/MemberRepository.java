@@ -1,4 +1,4 @@
-package promisor.promisor.domain.user;
+package promisor.promisor.domain.member;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,13 +10,13 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface UserDAO extends JpaRepository<User, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<User> findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
     @Transactional
     @Modifying
-    @Query("update User u " +
-            "set u.status = 'ACTIVE' where u.email = ?1")
-    int enableUser(String email);
+    @Query("update Member m " +
+            "set m.status = 'ACTIVE' where m.email = ?1")
+    int enableMember(String email);
 }

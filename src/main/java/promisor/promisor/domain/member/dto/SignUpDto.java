@@ -1,8 +1,7 @@
-package promisor.promisor.domain.user.dto;
+package promisor.promisor.domain.member.dto;
 
 import lombok.Data;
-import promisor.promisor.domain.user.User;
-import promisor.promisor.domain.user.UserRole;
+import promisor.promisor.domain.member.MemberRole;
 
 @Data
 public class SignUpDto {
@@ -11,5 +10,5 @@ public class SignUpDto {
     private String email;
     private String password;
     private String telephone;
-    private UserRole userRole;
+    private MemberRole memberRole;
 }

@@ -1,4 +1,4 @@
-package promisor.promisor.domain.user;
+package promisor.promisor.domain.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import promisor.promisor.domain.user.dto.SignUpDto;
+import promisor.promisor.domain.member.dto.SignUpDto;
 import promisor.promisor.global.security.token.ConfirmationToken;
 import promisor.promisor.global.security.token.ConfirmationTokenService;
 import promisor.promisor.infra.email.EmailSender;
@@ -19,9 +19,9 @@ import java.util.UUID;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserService implements UserDetailsService {
+public class MemberService implements UserDetailsService {
 
-    private final UserDAO userDao;
+    private final MemberRepository memberRepository;
     private final EmailValidator emailValidator;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
@@ -29,7 +29,7 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userDao.findByEmail(email)
+        return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 사용자를 찾을수 없습니다."));
     }
 
@@ -43,25 +43,25 @@ public class UserService implements UserDetailsService {
         }
 
         String token = signUpUser(
-               User.of(
+               Member.of(
                         request.getName(),
                         request.getEmail(),
                         request.getPassword(),
                         request.getTelephone(),
-                        UserRole.USER
+                        MemberRole.USER
                 )
         );
 
-        String link = "http://localhost:8080/users/confirm?token=" + token;
+        String link = "http://localhost:8080/members/confirm?token=" + token;
         emailSender.send(request.getEmail(), buildEmail(request.getName(), link));
 
         return token;
     }
 
     @Transactional
-    public String signUpUser(User user) {
-        boolean userExists = userDao
-                .findByEmail(user.getEmail())
+    public String signUpUser(Member member) {
+        boolean userExists = memberRepository
+                .findByEmail(member.getEmail())
                 .isPresent();
 
         if (userExists) {
@@ -70,10 +70,10 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("이미 존재하는 이메일입니다.");
         }
 
-        String encodedPassword = bCryptPasswordEncoder.encode(user.getPassword());
-        user.setEncodedPassword(encodedPassword);
+        String encodedPassword = bCryptPasswordEncoder.encode(member.getPassword());
+        member.setEncodedPassword(encodedPassword);
 
-        userDao.save(user);
+        memberRepository.save(member);
 
         String token = UUID.randomUUID().toString();
 
@@ -81,7 +81,7 @@ public class UserService implements UserDetailsService {
                 token,
                 LocalDateTime.now(),
                 LocalDateTime.now().plusMinutes(15),
-                user
+                member
                 );
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
@@ -106,7 +106,7 @@ public class UserService implements UserDetailsService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userDao.enableUser(confirmationToken.getUser().getEmail());
+        memberRepository.enableMember(confirmationToken.getUser().getEmail());
         return "인증되었습니다.";
     }
 

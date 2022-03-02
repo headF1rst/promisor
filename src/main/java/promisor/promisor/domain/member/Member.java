@@ -1,4 +1,4 @@
-package promisor.promisor.domain.user;
+package promisor.promisor.domain.member;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,13 +13,13 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
- * User 도메인 객체를 나타내는 자바 빈
+ * Member 도메인 객체를 나타내는 자바 빈
  *
  * @author Sanha Ko
  */
 @Entity
 @Getter
-public class User extends Person implements UserDetails {
+public class Member extends Person implements UserDetails {
 
     @Lob
     @NotEmpty
@@ -30,7 +30,7 @@ public class User extends Person implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private MemberRole memberRole;
 
     @Lob
     private String imageUrl;
@@ -45,24 +45,24 @@ public class User extends Person implements UserDetails {
     @Digits(fraction = 0, integer = 11)
     private String telephone;
 
-    protected User() {}
+    protected Member() {}
 
-    private User(String name, String email, String password,  String telephone, UserRole userRole) {
+    private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
 
         super(name);
         this.email = email;
         this.password = password;
         this.telephone = telephone;
-        this.userRole = userRole;
+        this.memberRole = memberRole;
     }
 
-    public static User of(String name, String email, String password,  String telephone, UserRole userRole) {
-        return new User(name, email, password,  telephone, userRole);
+    public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {
+        return new Member(name, email, password,  telephone, memberRole);
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(memberRole.name());
         return Collections.singletonList(authority);
     }
 
