@@ -3,7 +3,7 @@ package promisor.promisor.domain.chat;
 import lombok.Getter;
 import promisor.promisor.domain.group.Group;
 import promisor.promisor.domain.model.BaseEntity;
-import promisor.promisor.domain.user.User;
+import promisor.promisor.domain.member.Member;
 
 import javax.persistence.*;
 
@@ -24,7 +24,7 @@ public class Chat extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member member;
 
     @Lob
     private String content;

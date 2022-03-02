@@ -1,9 +1,8 @@
 package promisor.promisor.global.security.token;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import promisor.promisor.domain.user.User;
+import promisor.promisor.domain.member.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,18 +28,18 @@ public class ConfirmationToken {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "app_user_id")
-    private User user;
+    private Member user;
 
     protected ConfirmationToken() {}
 
-    private ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, User user) {
+    private ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, Member user) {
         this.token = token;
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
         this.user = user;
     }
 
-    public static ConfirmationToken of(String token, LocalDateTime createdAt, LocalDateTime expiredAt, User user) {
+    public static ConfirmationToken of(String token, LocalDateTime createdAt, LocalDateTime expiredAt, Member user) {
         return new ConfirmationToken(token, createdAt, expiredAt, user);
     }
 }
