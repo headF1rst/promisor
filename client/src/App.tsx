@@ -6,6 +6,9 @@ import { darkModeState } from "./states/darkmode";
 import Login from "./routes/Login";
 import { darkTheme, lightTheme } from "./Theme";
 import Test from "./Test";
+import Friend from "./routes/Friend";
+import Home from "./routes/Home";
+import Group from "./routes/Group";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
@@ -94,6 +97,10 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
+          <Route path="/" element={<Home />}>
+            <Route path="/group" element={<Group />} />
+            <Route path="/friend" element={<Friend />} />
+          </Route>
           <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
@@ -114,6 +121,7 @@ const DarkmodeToggle = styled(motion.div)<{ dark: string }>`
   height: 28px;
   border-radius: 20px;
   cursor: pointer;
+  z-index: 100;
 `;
 const Circle = styled(motion.div)<{ dark: string }>`
   position: relative;

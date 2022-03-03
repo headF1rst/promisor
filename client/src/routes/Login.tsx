@@ -40,7 +40,7 @@ function Login() {
         <span>{loginMatch ? "LOGIN" : "REGISTER"}</span>
       </S.Header>
       <S.Container>
-        <Logo>Promisor</Logo>
+        <S.Logo>Promisor</S.Logo>
         <LoginForm
           page={loginMatch ? "login" : "register"}
           onSubmit={
@@ -112,17 +112,6 @@ function Login() {
 }
 export default Login;
 
-const Logo = styled.div`
-  width: 90vw;
-  height: 30vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: winkle;
-  font-size: 3rem;
-  color: ${(p) => p.theme.green};
-  text-shadow: -2px 1px 0px #ffffff;
-`;
 const LoginForm = styled.form<{ page: string }>`
   width: 60vw;
   height: ${(p) => (p.page == "login" ? "45vh" : "60vh")};
