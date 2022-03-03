@@ -5,19 +5,27 @@ import { useMatch } from "react-router-dom";
 import styled from "styled-components";
 import * as S from "../components/_index";
 interface ILoginForm {
+  name: string;
   email: string;
   password: string;
   passwordConfirm: string;
+  phoneNumber: string;
 }
 function Login() {
   const { register, setValue, handleSubmit } = useForm<ILoginForm>();
   const navigate = useNavigate();
   const loginMatch = useMatch("/login");
-  const onValid = ({ email, password }: ILoginForm) => {
+  const onLoginValid = ({ email, password }: ILoginForm) => {
     console.log(email, password);
   };
-  const onInvalid = ({ email, password }: any) => {
-    console.log(email, password);
+  const onRegisterValid = ({
+    name,
+    email,
+    password,
+    passwordConfirm,
+    phoneNumber,
+  }: ILoginForm) => {
+    console.log(name, email, password, passwordConfirm, phoneNumber);
   };
   const onPushClick = () => {
     if (loginMatch) {
@@ -33,10 +41,28 @@ function Login() {
       </S.Header>
       <S.Container>
         <Logo>Promisor</Logo>
-        <LoginForm onSubmit={handleSubmit(onValid, onInvalid)}>
+        <LoginForm
+          page={loginMatch ? "login" : "register"}
+          onSubmit={
+            loginMatch
+              ? handleSubmit(onLoginValid)
+              : handleSubmit(onRegisterValid)
+          }
+        >
+          {!loginMatch && (
+            <LabelInput>
+              <div>NAME</div>
+              <S.Input
+                {...register("name", {
+                  required: "Name is required.",
+                })}
+              />
+            </LabelInput>
+          )}
           <LabelInput>
             <div>EMAIL</div>
             <S.Input
+              type="email"
               {...register("email", {
                 required: "Email is required.",
               })}
@@ -52,15 +78,25 @@ function Login() {
             />
           </LabelInput>
           {!loginMatch && (
-            <LabelInput>
-              <div>PASSWORD CONFIRM</div>
-              <S.Input
-                {...register("passwordConfirm", {
-                  required: "Password Confirm is required.",
-                })}
-                type="password"
-              />
-            </LabelInput>
+            <>
+              <LabelInput>
+                <div>PASSWORD CONFIRM</div>
+                <S.Input
+                  {...register("passwordConfirm", {
+                    required: "Password Confirm is required.",
+                  })}
+                  type="password"
+                />
+              </LabelInput>
+              <LabelInput>
+                <div>PHONE NUMBER</div>
+                <S.Input
+                  {...register("phoneNumber", {
+                    required: "Phone number is required.",
+                  })}
+                />
+              </LabelInput>
+            </>
           )}
           <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton>
         </LoginForm>
@@ -87,9 +123,9 @@ const Logo = styled.div`
   color: ${(p) => p.theme.green};
   text-shadow: -2px 1px 0px #ffffff;
 `;
-const LoginForm = styled.form`
+const LoginForm = styled.form<{ page: string }>`
   width: 60vw;
-  height: 45vh;
+  height: ${(p) => (p.page == "login" ? "45vh" : "60vh")};
 `;
 const LabelInput = styled.div`
   display: flex;
