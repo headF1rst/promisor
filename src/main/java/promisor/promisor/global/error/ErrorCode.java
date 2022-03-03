@@ -21,6 +21,8 @@ public enum ErrorCode {
     EMAIL_CONFIRMED(400, "M003", "이미 인증된 이메일입니다."),
     EMAIL_NOT_VALID(400,"M004" ,"유효하지 않은 이메일입니다. 다시 입력해주세요."),
     TOKEN_EXPIRED(400, "M005", "토큰이 만료되었습니다."),
+    TOKEN_NOT_EXIST(400, "M006","토큰이 존재하지 않습니다."),
+
     // Group
 
     ;
@@ -28,7 +30,6 @@ public enum ErrorCode {
     private int httpStatus;
     private final String code;
     private final String message;
-    private String detail;
 
     ErrorCode(final int httpStatus, final String code, final String message) {
         this.httpStatus = httpStatus;

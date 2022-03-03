@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dto.SignUpDto;
 import promisor.promisor.domain.member.exception.EmailDuplicatedException;
-import promisor.promisor.domain.member.exception.TokenExpiredException;
+import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
 import promisor.promisor.global.token.ConfirmationTokenService;
 import promisor.promisor.infra.email.EmailSender;

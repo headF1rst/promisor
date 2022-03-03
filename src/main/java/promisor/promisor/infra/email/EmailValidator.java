@@ -17,12 +17,13 @@ public class EmailValidator implements Predicate<String> {
     @Override
     public boolean test(String email) {
 
-        Pattern pattern = Pattern.compile("\"^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\\\.[a-zA-Z0-9-]+)*$\"");
+        String regex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
 
-        if (!pattern.matcher(email).matches()) {
+        Pattern pattern = Pattern.compile(regex);
+        if (pattern.matcher(email).matches()) {
+            return true;
+        } else{
             return false;
         }
-
-        return true;
     }
 }
