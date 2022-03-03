@@ -33,7 +33,7 @@ public class EmailService implements EmailSender {
             mailSender.send(mimeMessage);
         } catch (MessagingException e) {
             LOGGER.error("이메일을 전송하는데 실패했습니다.", e);
-            throw new IllegalStateException("이메일을 전송하는데 실패했습니다.");
+            throw new EmailSendException(email);
         }
     }
 }

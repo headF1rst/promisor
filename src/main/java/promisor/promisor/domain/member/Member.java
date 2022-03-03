@@ -1,6 +1,8 @@
 package promisor.promisor.domain.member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,6 +10,7 @@ import promisor.promisor.domain.model.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.Collections;
@@ -19,14 +22,16 @@ import java.util.Collections;
  */
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Person implements UserDetails {
 
     @Lob
-    @NotEmpty
+    @Email
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Lob
-    @NotEmpty
+    @Column(nullable = false, unique = true)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -44,8 +49,6 @@ public class Member extends Person implements UserDetails {
     @NotEmpty
     @Digits(fraction = 0, integer = 11)
     private String telephone;
-
-    protected Member() {}
 
     private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
 
