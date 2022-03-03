@@ -26,7 +26,6 @@ import java.util.Collections;
 public class Member extends Person implements UserDetails {
 
     @Lob
-    @Email
     @Column(nullable = false, unique = true)
     private String email;
 
@@ -57,6 +56,7 @@ public class Member extends Person implements UserDetails {
         this.password = password;
         this.telephone = telephone;
         this.memberRole = memberRole;
+
     }
 
     public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {

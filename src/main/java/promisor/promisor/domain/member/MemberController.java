@@ -14,11 +14,13 @@ public class MemberController {
 
     @PostMapping("/members")
     public String register(@RequestBody @Valid final SignUpDto request) {
+
         return memberService.register(request);
     }
 
     @GetMapping("/members/confirm")
     public String confirm(@RequestParam("token") String token) {
+
         return memberService.confirmToken(token);
     }
 }

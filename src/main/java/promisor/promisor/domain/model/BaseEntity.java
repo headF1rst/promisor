@@ -26,4 +26,5 @@ public abstract class BaseEntity implements Serializable {
 
     @Column(length = 10)
     private String status;
+
 }
