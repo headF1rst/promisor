@@ -6,11 +6,13 @@ export const lightTheme: DefaultTheme = {
   bgColor: "#fcfcfc",
   green: "#04C994",
   pink: "#FEEBE8",
+  smoke: "whitesmoke",
 };
 export const darkTheme: DefaultTheme = {
   textColor: "#fcfcfc",
   grey: "#C4C4C4",
-  bgColor: "#1c1c1c",
+  bgColor: "#242424",
   green: "#04C994",
   pink: "#FEEBE8",
+  smoke: "black",
 };

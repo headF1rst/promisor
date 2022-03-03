@@ -9,5 +9,5 @@ export const FlatList = styled.div`
   flex-direction: row;
   margin-bottom: 0.5em;
   border-radius: 1em;
-  background-color: whitesmoke;
+  background-color: ${(p) => p.theme.smoke};
 `;
