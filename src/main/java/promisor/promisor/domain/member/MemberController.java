@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import promisor.promisor.domain.member.dto.SignUpDto;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
@@ -11,7 +13,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/members")
-    public String register(@RequestBody SignUpDto request) {
+    public String register(@RequestBody @Valid final SignUpDto request) {
         return memberService.register(request);
     }
 

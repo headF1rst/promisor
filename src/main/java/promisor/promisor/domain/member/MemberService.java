@@ -8,10 +8,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dto.SignUpDto;
-import promisor.promisor.global.security.token.ConfirmationToken;
-import promisor.promisor.global.security.token.ConfirmationTokenService;
+import promisor.promisor.domain.member.exception.EmailDuplicatedException;
+import promisor.promisor.domain.member.exception.TokenExpiredException;
+import promisor.promisor.global.token.ConfirmationToken;
+import promisor.promisor.global.token.ConfirmationTokenService;
 import promisor.promisor.infra.email.EmailSender;
 import promisor.promisor.infra.email.EmailValidator;
+import promisor.promisor.infra.email.exception.EmailConfirmedException;
+import promisor.promisor.infra.email.exception.EmailNotValid;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -37,9 +41,8 @@ public class MemberService implements UserDetailsService {
     public String register(SignUpDto request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
-//        TODO: 예외발생 처리 더 나은 방법으로 수정하기
         if (!isValidEmail) {
-            throw new IllegalStateException("유효하지 않은 이메일입니다.");
+            throw new EmailNotValid(request.getEmail());
         }
 
         String token = signUpUser(
@@ -67,7 +70,7 @@ public class MemberService implements UserDetailsService {
         if (userExists) {
             // TODO check of attributes are the same and
             // TODO if email not confirmed send confirmation email.
-            throw new IllegalStateException("이미 존재하는 이메일입니다.");
+            throw new EmailDuplicatedException(member.getEmail());
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(member.getPassword());
@@ -96,17 +99,17 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalStateException("토큰이 존재하지 않습니다."));
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("이미 인증된 이메일입니다.");
+            throw new EmailConfirmedException();
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("토큰이 만료되었습니다.");
+            throw new TokenExpiredException();
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        memberRepository.enableMember(confirmationToken.getUser().getEmail());
+        memberRepository.enableMember(confirmationToken.getMember().getEmail());
         return "인증되었습니다.";
     }
 
