@@ -3,7 +3,7 @@ package promisor.promisor.domain.goal;
 import lombok.Getter;
 import promisor.promisor.domain.group.Group;
 import promisor.promisor.domain.model.BaseEntity;
-import promisor.promisor.domain.user.User;
+import promisor.promisor.domain.member.Member;
 
 import javax.persistence.*;
 
@@ -20,7 +20,7 @@ public class Goal extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member user;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "group_id")

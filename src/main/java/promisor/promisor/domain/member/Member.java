@@ -1,6 +1,8 @@
-package promisor.promisor.domain.user;
+package promisor.promisor.domain.member;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,29 +10,31 @@ import promisor.promisor.domain.model.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.Collections;
 
 /**
- * User 도메인 객체를 나타내는 자바 빈
+ * Member 도메인 객체를 나타내는 자바 빈
  *
  * @author Sanha Ko
  */
 @Entity
 @Getter
-public class User extends Person implements UserDetails {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Member extends Person implements UserDetails {
 
     @Lob
-    @NotEmpty
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Lob
-    @NotEmpty
+    @Column(nullable = false, unique = true)
     private String password;
 
     @Enumerated(EnumType.STRING)
-    private UserRole userRole;
+    private MemberRole memberRole;
 
     @Lob
     private String imageUrl;
@@ -45,15 +49,29 @@ public class User extends Person implements UserDetails {
     @Digits(fraction = 0, integer = 11)
     private String telephone;
 
+    private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
+
+        super(name);
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+        this.memberRole = memberRole;
+
+    }
+
+    public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {
+        return new Member(name, email, password,  telephone, memberRole);
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(userRole.name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(memberRole.name());
         return Collections.singletonList(authority);
     }
 
     @Override
     public String getUsername() {
-        return getName();
+        return email;
     }
 
     @Override
@@ -64,9 +82,9 @@ public class User extends Person implements UserDetails {
     @Override
     public boolean isAccountNonLocked() {
         if (getStatus() == "ACTIVE") {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -82,5 +100,9 @@ public class User extends Person implements UserDetails {
         } else {
             return false;
         }
+    }
+
+    public void setEncodedPassword(String encodedPassword) {
+        this.password = encodedPassword;
     }
 }

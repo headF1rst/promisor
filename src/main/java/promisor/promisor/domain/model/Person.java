@@ -1,6 +1,7 @@
 package promisor.promisor.domain.model;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotEmpty;
@@ -14,6 +15,12 @@ import javax.validation.constraints.NotEmpty;
 @Getter
 public class Person extends BaseEntity {
 
-    @NotEmpty
+    @NotEmpty(message = "이름이 안들어 왔습니다.")
     private String name;
+
+    protected Person() {}
+
+    protected Person(String name) {
+        this.name = name;
+    }
 }
