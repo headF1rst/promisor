@@ -16,13 +16,9 @@ function FriendList({ select, friends_data }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
   const onListClick = (id: number) => {
     if (!select) return;
-    let newSelected = [];
-    const selectedCopy = [...selected];
-    if (selectedCopy.includes(id)) {
-      newSelected = selectedCopy.filter((value) => value != id);
-    } else {
-      newSelected = [...selected, id];
-    }
+
+    const newSelected = [...selected, id];
+
     setSelected(newSelected);
   };
   return (

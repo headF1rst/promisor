@@ -9,6 +9,7 @@ import { darkModeState } from "../states/darkmode";
 import Friend from "./Friend";
 import Group from "./Group";
 import { AiOutlineMenu } from "react-icons/ai";
+import Setting from "./Setting";
 
 function Home() {
   const [side, setSide] = useState(false);
@@ -40,7 +41,7 @@ function Home() {
     <S.Template>
       <S.Header items={3}>
         <span></span>
-        {groupMatch ? "그룹" : friendMatch ? "친구" : settingMatch && "설정"}
+        {friendMatch ? "친구" : settingMatch ? "설정" : "그룹"}
         <AiOutlineMenu style={{ cursor: "pointer" }} onClick={onSideClick} />
       </S.Header>
       <AnimatePresence>
@@ -93,7 +94,7 @@ function Home() {
         )}
       </AnimatePresence>
 
-      {groupMatch ? <Group /> : friendMatch && <Friend />}
+      {friendMatch ? <Friend /> : settingMatch ? <Setting /> : <Group />}
     </S.Template>
   );
 }

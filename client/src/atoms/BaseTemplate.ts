@@ -3,7 +3,7 @@ export const Template = styled.div`
   padding-inline: 2rem;
   padding-top: 1em;
   @media screen and (min-width: 900px) {
-    padding-inline: 20rem;
+    padding-inline: 5rem;
   }
 `;
 export const Container = styled.div`
