@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import styled from "styled-components";
-import * as S from "../components/_index";
+import * as S from "../atoms/_index";
 interface ILoginForm {
   name: string;
   email: string;
@@ -114,7 +114,8 @@ export default Login;
 
 const LoginForm = styled.form<{ page: string }>`
   width: 60vw;
-  height: ${(p) => (p.page == "login" ? "45vh" : "60vh")};
+  height: ${(p) => (p.page === "login" ? "45vh" : "60vh")};
+  margin-top: 1em;
 `;
 const LabelInput = styled.div`
   display: flex;

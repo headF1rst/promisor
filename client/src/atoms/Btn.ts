@@ -10,3 +10,11 @@ export const RoundBtn = styled.div`
   text-align: center;
   cursor: pointer;
 `;
+
+export const FixedRoundBtn = styled(RoundBtn)`
+  position: fixed;
+  bottom: 3em;
+  font-size: 0.9em;
+  width: 6em;
+  height: 1.5em;
+`;

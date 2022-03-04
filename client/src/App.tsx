@@ -9,6 +9,7 @@ import Test from "./Test";
 import Friend from "./routes/Friend";
 import Home from "./routes/Home";
 import Group from "./routes/Group";
+import CreateGroup from "./routes/CreateGroup";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
@@ -31,12 +32,13 @@ time, mark, audio, video {
   padding: 0;
   border: 0;
   font-size: 100%;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Nanum Gothic', sans-serif !important;
   font: inherit;
   vertical-align: baseline;
   background-color: ${(p) => p.theme.bgColor};
   color: ${(p) => p.theme.textColor}
 }
+::selection { background-color: rgba(4, 201, 148, 0.2)}
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure,
 footer, header, hgroup, main, menu, nav, section {
@@ -80,18 +82,9 @@ a {
 `;
 function App() {
   const [dark, setDark] = useRecoilState(darkModeState);
-  const onToggleClick = () => {
-    setDark((prev: boolean) => !prev);
-  };
+
   return (
     <ThemeProvider theme={dark ? darkTheme : lightTheme}>
-      <DarkmodeToggle dark={dark ? "dark" : "light"} onClick={onToggleClick}>
-        {dark ? (
-          <Circle layoutId="darkmode" dark={dark ? "dark" : "light"} />
-        ) : (
-          <Circle layoutId="darkmode" dark={dark ? "dark" : "light"} />
-        )}
-      </DarkmodeToggle>
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
@@ -101,6 +94,7 @@ function App() {
             <Route path="/group" element={<Group />} />
             <Route path="/friend" element={<Friend />} />
           </Route>
+          <Route path="/group/create" element={<CreateGroup />} />
           <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
@@ -109,26 +103,3 @@ function App() {
 }
 
 export default App;
-
-const DarkmodeToggle = styled(motion.div)<{ dark: string }>`
-  background-color: ${(p) =>
-    p.dark == "dark" ? p.theme.green : p.theme.bgColor};
-  border: solid 2px ${(p) => (p.dark == "dark" ? "transparent" : p.theme.green)};
-  position: fixed;
-  left: 10px;
-  top: 10px;
-  width: 46px;
-  height: 28px;
-  border-radius: 20px;
-  cursor: pointer;
-  z-index: 100;
-`;
-const Circle = styled(motion.div)<{ dark: string }>`
-  position: relative;
-  left: ${(p) => (p.dark == "dark" ? "20px" : "2px")};
-  top: 2px;
-  width: 20px;
-  height: 20px;
-  border-radius: 20px;
-  background-color: ${(p) => (p.dark == "dark" ? "white" : p.theme.green)};
-`;
