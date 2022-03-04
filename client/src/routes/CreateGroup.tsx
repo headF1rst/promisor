@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
@@ -40,7 +40,7 @@ function CreateGroup() {
   const [selected, setSelected] = useRecoilState(selectedState);
   const onListClick = (id: number) => {
     const selectedCopy = [...selected];
-    const newSelected = selectedCopy.filter((value) => value != id);
+    const newSelected = selectedCopy.filter((value) => value !== id);
     setSelected(newSelected);
   };
   return (
@@ -55,22 +55,29 @@ function CreateGroup() {
       <S.Container>
         <FriendList friends_data={TEST_PROFILE} select={true} />
         <RowList>
-          {TEST_PROFILE.map(
-            (value) =>
-              selected.includes(value.id) && (
-                <S.Profile direction={"column"}>
-                  <S.ProfileImg type={"profile"} src={value.img} />
-                  <HoverImg
-                    initial={{ opacity: 0 }}
-                    whileHover={{ opacity: 1 }}
-                    onClick={() => onListClick(value.id)}
+          <AnimatePresence>
+            {TEST_PROFILE.map(
+              (value) =>
+                selected.includes(value.id) && (
+                  <S.Profile
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ type: "linear" }}
+                    direction={"column"}
                   >
-                    X
-                  </HoverImg>
-                  <span>{value.title}</span>
-                </S.Profile>
-              )
-          )}
+                    <S.ProfileImg type={"profile"} src={value.img} />
+                    <HoverImg
+                      initial={{ opacity: 0 }}
+                      whileHover={{ opacity: 1 }}
+                      onClick={() => onListClick(value.id)}
+                    >
+                      X
+                    </HoverImg>
+                    <span>{value.title}</span>
+                  </S.Profile>
+                )
+            )}
+          </AnimatePresence>
         </RowList>
       </S.Container>
     </S.Template>
@@ -95,6 +102,9 @@ const HoverImg = styled(motion.div)`
 const RowList = styled.div`
   position: fixed;
   padding-inline: 1em;
+  @media screen and (min-width: 900px) {
+    padding-inline: 25rem;
+  }
   bottom: 0;
   width: 100%;
   height: 5em;
