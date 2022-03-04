@@ -1,6 +1,12 @@
+import { motion } from "framer-motion";
 import React from "react";
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
 import * as S from "../atoms/_index";
 import FriendList from "../organisms/FriendList";
+import { selectedState } from "../states/createGroup";
+import { IoIosArrowBack } from "react-icons/io";
+import { Link } from "react-router-dom";
 const TEST_PROFILE = [
   {
     id: 0,
@@ -30,13 +36,69 @@ const TEST_PROFILE = [
     chat: "안녕",
   },
 ];
-function Friend() {
+function CreateGroup() {
+  const [selected, setSelected] = useRecoilState(selectedState);
+  const onListClick = (id: number) => {
+    const selectedCopy = [...selected];
+    const newSelected = selectedCopy.filter((value) => value != id);
+    setSelected(newSelected);
+  };
   return (
-    <S.Container>
-      <FriendList friends_data={TEST_PROFILE} select={false} />
-      <S.FixedRoundBtn>친구 추가</S.FixedRoundBtn>
-    </S.Container>
+    <S.Template>
+      <S.Header items={3}>
+        <Link to="/group">
+          <IoIosArrowBack />
+        </Link>
+        <span>그룹 생성</span>
+        <span>완료</span>
+      </S.Header>
+      <S.Container>
+        <FriendList friends_data={TEST_PROFILE} select={true} />
+        <RowList>
+          {TEST_PROFILE.map(
+            (value) =>
+              selected.includes(value.id) && (
+                <S.Profile direction={"column"}>
+                  <S.ProfileImg type={"profile"} src={value.img} />
+                  <HoverImg
+                    initial={{ opacity: 0 }}
+                    whileHover={{ opacity: 1 }}
+                    onClick={() => onListClick(value.id)}
+                  >
+                    X
+                  </HoverImg>
+                  <span>{value.title}</span>
+                </S.Profile>
+              )
+          )}
+        </RowList>
+      </S.Container>
+    </S.Template>
   );
 }
 
-export default Friend;
+export default CreateGroup;
+
+const HoverImg = styled(motion.div)`
+  position: absolute;
+  width: 2em;
+  height: 2em;
+  border-radius: 2em;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+`;
+
+const RowList = styled.div`
+  position: fixed;
+  padding-inline: 1em;
+  bottom: 0;
+  width: 100%;
+  height: 5em;
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+`;
