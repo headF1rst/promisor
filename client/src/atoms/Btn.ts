@@ -9,6 +9,8 @@ export const RoundBtn = styled.div`
   border-radius: 1em;
   text-align: center;
   cursor: pointer;
+  font-size: 0.9em;
+  height: 1.5em;
 `;
 
 export const FixedRoundBtn = styled(RoundBtn)`

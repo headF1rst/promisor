@@ -50,16 +50,16 @@ function Login() {
           }
         >
           {!loginMatch && (
-            <LabelInput>
+            <S.LabelInput>
               <div>NAME</div>
               <S.Input
                 {...register("name", {
                   required: "Name is required.",
                 })}
               />
-            </LabelInput>
+            </S.LabelInput>
           )}
-          <LabelInput>
+          <S.LabelInput>
             <div>EMAIL</div>
             <S.Input
               type="email"
@@ -67,8 +67,8 @@ function Login() {
                 required: "Email is required.",
               })}
             />
-          </LabelInput>
-          <LabelInput>
+          </S.LabelInput>
+          <S.LabelInput>
             <div>PASSWORD</div>
             <S.Input
               {...register("password", {
@@ -76,10 +76,10 @@ function Login() {
               })}
               type="password"
             />
-          </LabelInput>
+          </S.LabelInput>
           {!loginMatch && (
             <>
-              <LabelInput>
+              <S.LabelInput>
                 <div>PASSWORD CONFIRM</div>
                 <S.Input
                   {...register("passwordConfirm", {
@@ -87,15 +87,15 @@ function Login() {
                   })}
                   type="password"
                 />
-              </LabelInput>
-              <LabelInput>
+              </S.LabelInput>
+              <S.LabelInput>
                 <div>PHONE NUMBER</div>
                 <S.Input
                   {...register("phoneNumber", {
                     required: "Phone number is required.",
                   })}
                 />
-              </LabelInput>
+              </S.LabelInput>
             </>
           )}
           <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton>
@@ -116,20 +116,6 @@ const LoginForm = styled.form<{ page: string }>`
   width: 60vw;
   height: ${(p) => (p.page === "login" ? "45vh" : "60vh")};
   margin-top: 1em;
-`;
-const LabelInput = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  div {
-    position: relative;
-    width: fit-content;
-    top: 10px;
-    left: 10px;
-    padding-inline: 10px;
-    font-size: 0.9rem;
-    color: ${(p) => p.theme.grey};
-  }
 `;
 
 const LoginButton = styled.button`
