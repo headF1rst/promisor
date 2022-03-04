@@ -1,4 +1,4 @@
-package promisor.promisor.domain.place;
+package promisor.promisor.domain.place.domain;
 
 import lombok.Getter;
 import promisor.promisor.domain.model.BaseEntity;

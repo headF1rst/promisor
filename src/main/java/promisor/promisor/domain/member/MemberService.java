@@ -12,6 +12,7 @@ import promisor.promisor.domain.member.exception.EmailDuplicatedException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
 import promisor.promisor.global.token.ConfirmationTokenService;
+import promisor.promisor.global.token.exception.TokenNotExistException;
 import promisor.promisor.infra.email.EmailSender;
 import promisor.promisor.infra.email.EmailValidator;
 import promisor.promisor.infra.email.exception.EmailConfirmedException;
@@ -96,7 +97,7 @@ public class MemberService implements UserDetailsService {
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(() -> new IllegalStateException("토큰이 존재하지 않습니다."));
+                .orElseThrow(() -> new TokenNotExistException());
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new EmailConfirmedException();

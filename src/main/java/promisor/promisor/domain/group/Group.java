@@ -2,7 +2,7 @@ package promisor.promisor.domain.group;
 
 import lombok.Getter;
 import promisor.promisor.domain.model.BaseEntity;
-import promisor.promisor.domain.place.Place;
+import promisor.promisor.domain.place.domain.Place;
 import promisor.promisor.domain.member.Member;
 
 import javax.persistence.*;
