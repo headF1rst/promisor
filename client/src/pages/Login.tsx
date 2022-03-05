@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import styled from "styled-components";
+import BasedTemplate from "../template/BasedTemplate";
 import * as S from "../atoms/_index";
 interface ILoginForm {
   name: string;
@@ -34,12 +35,18 @@ function Login() {
       navigate("/login");
     }
   };
-  return (
-    <S.Template>
-      <S.Header items={1}>
+  const Header = () => {
+    return (
+      <>
+        <span></span>
         <span>{loginMatch ? "LOGIN" : "REGISTER"}</span>
-      </S.Header>
-      <S.Container>
+        <span></span>
+      </>
+    );
+  };
+  const Container = () => {
+    return (
+      <>
         <S.Logo>Promisor</S.Logo>
         <LoginForm
           page={loginMatch ? "login" : "register"}
@@ -106,9 +113,10 @@ function Login() {
             {loginMatch ? "가입하기" : "로그인하기"}
           </span>
         </Tab>
-      </S.Container>
-    </S.Template>
-  );
+      </>
+    );
+  };
+  return <BasedTemplate header={<Header />} container={<Container />} />;
 }
 export default Login;
 

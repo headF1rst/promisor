@@ -3,13 +3,16 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { darkModeState } from "./states/darkmode";
-import Login from "./routes/Login";
 import { darkTheme, lightTheme } from "./Theme";
-import Test from "./Test";
-import Friend from "./routes/Friend";
-import Home from "./routes/Home";
-import Group from "./routes/Group";
-import CreateGroup from "./routes/CreateGroup";
+import {
+  Friend,
+  Login,
+  CreateGroup,
+  Promise,
+  GroupChatRoom,
+  Group,
+  Home,
+} from "./pages/_index";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
@@ -90,12 +93,13 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
+          <Route path="/group/create" element={<CreateGroup />} />
+          <Route path="/group/:id/promise" element={<Promise />} />
+          <Route path="/group/:id" element={<GroupChatRoom />} />
           <Route path="/" element={<Home />}>
-            <Route path="/group" element={<Group />} />
+            <Route path="/group" element={<Group />}></Route>
             <Route path="/friend" element={<Friend />} />
           </Route>
-          <Route path="/group/create" element={<CreateGroup />} />
-          <Route path="/test" element={<Test />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

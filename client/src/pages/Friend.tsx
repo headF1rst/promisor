@@ -1,8 +1,8 @@
-import { AnimatePresence } from "framer-motion";
 import React, { useState } from "react";
 import styled from "styled-components";
 import * as S from "../atoms/_index";
 import FriendList from "../organisms/FriendList";
+import { AnimatePresence } from "framer-motion";
 const TEST_PROFILE = [
   {
     id: 0,
@@ -39,7 +39,7 @@ function Friend() {
     setModal((prev) => !prev);
   };
   return (
-    <S.Container>
+    <>
       <FriendList friends_data={TEST_PROFILE} select={false} />
       {!modal && (
         <S.FixedRoundBtn onClick={onToggleClick}>친구 추가</S.FixedRoundBtn>
@@ -47,12 +47,6 @@ function Friend() {
       <AnimatePresence>
         {modal && (
           <>
-            <S.Overlay
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={onToggleClick}
-            />
             <AddFriendModal
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -66,10 +60,16 @@ function Friend() {
                 추가
               </S.RoundBtn>
             </AddFriendModal>
+            <S.Overlay
+              onClick={onToggleClick}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
           </>
         )}
       </AnimatePresence>
-    </S.Container>
+    </>
   );
 }
 
@@ -77,7 +77,11 @@ export default Friend;
 
 const AddFriendModal = styled(S.BoxModal)`
   width: 80%;
+  @media screen and (min-width: 900px) {
+    width: 40%;
+  }
   height: 30%;
   padding: 2em;
-  justify-content: space-around;
+  justify-content: space-between;
+  z-index: 3;
 `;
