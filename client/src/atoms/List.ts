@@ -14,4 +14,5 @@ export const FlatList = styled.div`
 `;
 export const ProfileList = styled(FlatList)`
   height: 10vh;
+  justify-content: space-between;
 `;

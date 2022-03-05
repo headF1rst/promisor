@@ -1,12 +1,13 @@
+import { motion } from "framer-motion";
 import styled from "styled-components";
-export const Template = styled.div`
+export const Template = styled(motion.div)`
   padding-inline: 2rem;
   padding-top: 1em;
   @media screen and (min-width: 900px) {
     padding-inline: 5rem;
   }
 `;
-export const Container = styled.div`
+export const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,7 +16,7 @@ export const Container = styled.div`
     padding: 2rem 20rem;
   }
 `;
-export const Header = styled.div<{ items: number }>`
+export const Header = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -26,8 +27,9 @@ export const Header = styled.div<{ items: number }>`
   top: 0;
   height: 10vh;
   width: 100%;
+  z-index: 1;
   @media screen and (min-width: 900px) {
     padding-inline: 20rem;
   }
-  justify-content: ${(p) => (p.items === 1 ? "center" : "space-between")};
+  justify-content: space-between;
 `;

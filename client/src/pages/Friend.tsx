@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import styled from "styled-components";
 import * as S from "../atoms/_index";
 import FriendList from "../organisms/FriendList";
+import { AnimatePresence } from "framer-motion";
 const TEST_PROFILE = [
   {
     id: 0,
@@ -31,12 +33,55 @@ const TEST_PROFILE = [
   },
 ];
 function Friend() {
+  const [modal, setModal] = useState(false);
+
+  const onToggleClick = () => {
+    setModal((prev) => !prev);
+  };
   return (
-    <S.Container>
+    <>
       <FriendList friends_data={TEST_PROFILE} select={false} />
-      <S.FixedRoundBtn>친구 추가</S.FixedRoundBtn>
-    </S.Container>
+      {!modal && (
+        <S.FixedRoundBtn onClick={onToggleClick}>친구 추가</S.FixedRoundBtn>
+      )}
+      <AnimatePresence>
+        {modal && (
+          <>
+            <AddFriendModal
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <span>친구 추가</span>
+              <S.LabelInput>
+                <S.Input placeholder="이메일 또는 전화번호" />
+              </S.LabelInput>
+              <S.RoundBtn style={{ width: "5em", margin: "0 auto" }}>
+                추가
+              </S.RoundBtn>
+            </AddFriendModal>
+            <S.Overlay
+              onClick={onToggleClick}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+          </>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
 
 export default Friend;
+
+const AddFriendModal = styled(S.BoxModal)`
+  width: 80%;
+  @media screen and (min-width: 900px) {
+    width: 40%;
+  }
+  height: 30%;
+  padding: 2em;
+  justify-content: space-between;
+  z-index: 3;
+`;

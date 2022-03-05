@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import styled from "styled-components";
+import BasedTemplate from "../template/BasedTemplate";
 import * as S from "../atoms/_index";
 interface ILoginForm {
   name: string;
@@ -34,12 +35,18 @@ function Login() {
       navigate("/login");
     }
   };
-  return (
-    <S.Template>
-      <S.Header items={1}>
+  const Header = () => {
+    return (
+      <>
+        <span></span>
         <span>{loginMatch ? "LOGIN" : "REGISTER"}</span>
-      </S.Header>
-      <S.Container>
+        <span></span>
+      </>
+    );
+  };
+  const Container = () => {
+    return (
+      <>
         <S.Logo>Promisor</S.Logo>
         <LoginForm
           page={loginMatch ? "login" : "register"}
@@ -50,16 +57,16 @@ function Login() {
           }
         >
           {!loginMatch && (
-            <LabelInput>
+            <S.LabelInput>
               <div>NAME</div>
               <S.Input
                 {...register("name", {
                   required: "Name is required.",
                 })}
               />
-            </LabelInput>
+            </S.LabelInput>
           )}
-          <LabelInput>
+          <S.LabelInput>
             <div>EMAIL</div>
             <S.Input
               type="email"
@@ -67,8 +74,8 @@ function Login() {
                 required: "Email is required.",
               })}
             />
-          </LabelInput>
-          <LabelInput>
+          </S.LabelInput>
+          <S.LabelInput>
             <div>PASSWORD</div>
             <S.Input
               {...register("password", {
@@ -76,10 +83,10 @@ function Login() {
               })}
               type="password"
             />
-          </LabelInput>
+          </S.LabelInput>
           {!loginMatch && (
             <>
-              <LabelInput>
+              <S.LabelInput>
                 <div>PASSWORD CONFIRM</div>
                 <S.Input
                   {...register("passwordConfirm", {
@@ -87,15 +94,15 @@ function Login() {
                   })}
                   type="password"
                 />
-              </LabelInput>
-              <LabelInput>
+              </S.LabelInput>
+              <S.LabelInput>
                 <div>PHONE NUMBER</div>
                 <S.Input
                   {...register("phoneNumber", {
                     required: "Phone number is required.",
                   })}
                 />
-              </LabelInput>
+              </S.LabelInput>
             </>
           )}
           <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton>
@@ -106,9 +113,10 @@ function Login() {
             {loginMatch ? "가입하기" : "로그인하기"}
           </span>
         </Tab>
-      </S.Container>
-    </S.Template>
-  );
+      </>
+    );
+  };
+  return <BasedTemplate header={<Header />} container={<Container />} />;
 }
 export default Login;
 
@@ -116,20 +124,6 @@ const LoginForm = styled.form<{ page: string }>`
   width: 60vw;
   height: ${(p) => (p.page === "login" ? "45vh" : "60vh")};
   margin-top: 1em;
-`;
-const LabelInput = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  div {
-    position: relative;
-    width: fit-content;
-    top: 10px;
-    left: 10px;
-    padding-inline: 10px;
-    font-size: 0.9rem;
-    color: ${(p) => p.theme.grey};
-  }
 `;
 
 const LoginButton = styled.button`

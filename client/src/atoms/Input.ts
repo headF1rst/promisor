@@ -18,3 +18,18 @@ export const Input = styled.input`
     -webkit-text-fill-color: ${(p) => p.theme.green};
   }
 `;
+
+export const LabelInput = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  div {
+    position: relative;
+    width: fit-content;
+    top: 10px;
+    left: 10px;
+    padding-inline: 10px;
+    font-size: 0.9rem;
+    color: ${(p) => p.theme.grey};
+  }
+`;

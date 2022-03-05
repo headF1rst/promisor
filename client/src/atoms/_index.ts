@@ -1,4 +1,4 @@
-export * from "./BaseTemplate";
+export * from "./Base";
 export * from "./Input";
 export * from "./Btn";
 export * from "./Logo";
