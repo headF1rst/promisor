@@ -9,6 +9,7 @@ import {
   Login,
   CreateGroup,
   Promise,
+  PromiseDetail,
   GroupChatRoom,
   Group,
   Home,
@@ -54,6 +55,10 @@ footer, header, hgroup, main, menu, nav, section {
 body {
   line-height: 1;
 }
+input{
+  font-family: "Nanum Gothic";
+
+}
 menu, ol, ul {
   list-style: none;
 }
@@ -95,6 +100,7 @@ function App() {
           <Route path="/register" element={<Login />} />
           <Route path="/group/create" element={<CreateGroup />} />
           <Route path="/group/:id/promise" element={<Promise />} />
+          <Route path="/group/:id/promise/:id" element={<PromiseDetail />} />
           <Route path="/group/:id" element={<GroupChatRoom />} />
           <Route path="/" element={<Home />}>
             <Route path="/group" element={<Group />}></Route>

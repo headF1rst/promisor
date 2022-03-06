@@ -56,7 +56,7 @@ function CreateGroup() {
     return (
       <>
         {" "}
-        <ArrowBack route={"group"} />
+        <ArrowBack />
         <span>그룹 생성</span>
         <span>완료</span>
       </>
