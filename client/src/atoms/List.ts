@@ -12,6 +12,29 @@ export const FlatList = styled.div`
   background-color: ${(p) => p.theme.smoke};
   align-items: center;
 `;
+
+export const FlatElement = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+
+  div,
+  span {
+    background-color: transparent;
+    height: 1.2em;
+    overflow: hidden;
+  }
+  div {
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  span {
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    color: ${(p) => p.theme.grey};
+  }
+`;
+
 export const ProfileList = styled(FlatList)`
   height: 10vh;
   justify-content: space-between;

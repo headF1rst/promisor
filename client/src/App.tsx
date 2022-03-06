@@ -9,6 +9,7 @@ import {
   Login,
   CreateGroup,
   Promise,
+  PromiseDetail,
   GroupChatRoom,
   Group,
   Home,
@@ -95,6 +96,7 @@ function App() {
           <Route path="/register" element={<Login />} />
           <Route path="/group/create" element={<CreateGroup />} />
           <Route path="/group/:id/promise" element={<Promise />} />
+          <Route path="/group/:id/promise/:id" element={<PromiseDetail />} />
           <Route path="/group/:id" element={<GroupChatRoom />} />
           <Route path="/" element={<Home />}>
             <Route path="/group" element={<Group />}></Route>

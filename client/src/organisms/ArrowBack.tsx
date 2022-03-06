@@ -1,14 +1,15 @@
 import React from "react";
 import { IoIosArrowBack } from "react-icons/io";
-import { Link } from "react-router-dom";
-interface IArrowBack {
-  route: string;
-}
-function ArrowBack({ route }: IArrowBack) {
+import { useNavigate } from "react-router-dom";
+
+function ArrowBack() {
+  const navigate = useNavigate();
+
+  const onArrowBackClick = () => {
+    navigate(-1);
+  };
   return (
-    <Link to={`/${route}`}>
-      <IoIosArrowBack />
-    </Link>
+    <IoIosArrowBack style={{ cursor: "pointer" }} onClick={onArrowBackClick} />
   );
 }
 

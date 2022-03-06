@@ -1,7 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import * as S from "../atoms/_index";
+import { selectedGroupState } from "../states/selectedGroup";
 
 const TEST_GROUP = [
   {
@@ -43,24 +45,27 @@ const TEST_GROUP = [
   },
 ];
 function Group() {
+  const setSelectedGroup = useSetRecoilState(selectedGroupState);
   const navigate = useNavigate();
   const onGroupClick = (id: number, name: string) => {
-    navigate(`/group/${id}`, { state: { name } });
+    navigate(`/group/${id}`);
+    setSelectedGroup({ id, name });
   };
   return (
     <>
-      {TEST_GROUP.map((value, index) => (
-        <S.FlatList
-          onClick={() => onGroupClick(value.id, value.title)}
-          key={index}
-        >
-          <S.ProfileImg type={"group"} src={value.img} />
-          <FlatElement>
-            <div>{value.title}</div>
-            {value.chat && <span>{value.chat}</span>}
-          </FlatElement>
-        </S.FlatList>
-      ))}
+      {TEST_GROUP &&
+        TEST_GROUP.map((value, index) => (
+          <S.FlatList
+            onClick={() => onGroupClick(value.id, value.title)}
+            key={index}
+          >
+            <S.ProfileImg type={"group"} src={value.img} />
+            <S.FlatElement>
+              <div>{value.title}</div>
+              {value.chat && <span>{value.chat}</span>}
+            </S.FlatElement>
+          </S.FlatList>
+        ))}
       <S.FixedRoundBtn
         onClick={() => {
           navigate("/group/create");
@@ -73,25 +78,3 @@ function Group() {
 }
 
 export default Group;
-
-const FlatElement = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: transparent;
-
-  div,
-  span {
-    background-color: transparent;
-    height: 1.2em;
-    overflow: hidden;
-  }
-  div {
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-  span {
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-    color: ${(p) => p.theme.grey};
-  }
-`;
