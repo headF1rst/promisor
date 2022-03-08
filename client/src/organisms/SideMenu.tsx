@@ -48,7 +48,12 @@ function SideMenu({ match, side, setSide }: ISideMenu) {
           >
             <S.Logo style={{ fontSize: "2.5em" }}>Promisor</S.Logo>
             <SideList
-              style={{ color: match.group ? "#04C994" : "none" }}
+              style={{
+                color:
+                  match.group || (!match.friend && !match.setting)
+                    ? "#04C994"
+                    : "none",
+              }}
               onClick={() => onTabClick("group")}
             >
               그룹

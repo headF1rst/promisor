@@ -8,6 +8,7 @@ import { BsFillCheckSquareFill } from "react-icons/bs";
 
 function FriendList({ select, friends_data }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
+  console.log(selected);
   const onListClick = (id: number) => {
     if (!select) return;
 
