@@ -32,6 +32,15 @@ spring:
           timeout: 3000
           writetimeout: 5000
 
+  security:
+    kakao:
+      apikey: 2a4dfce9ea2dadb607b872ae4a973922
+    jwt:
+      token:
+        secret-key:
+
+        expire-length:
+
 logging:
   level:
     org.hibernate.SQL: debug

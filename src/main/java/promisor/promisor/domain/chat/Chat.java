@@ -1,9 +1,9 @@
 package promisor.promisor.domain.chat;
 
 import lombok.Getter;
-import promisor.promisor.domain.group.Group;
 import promisor.promisor.domain.model.BaseEntity;
 import promisor.promisor.domain.member.Member;
+import promisor.promisor.domain.team.Team;
 
 import javax.persistence.*;
 
@@ -19,11 +19,11 @@ import static javax.persistence.FetchType.*;
 public class Chat extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Lob
