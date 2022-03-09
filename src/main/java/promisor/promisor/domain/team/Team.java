@@ -1,4 +1,4 @@
-package promisor.promisor.domain.group;
+package promisor.promisor.domain.team;
 
 import lombok.Getter;
 import promisor.promisor.domain.model.BaseEntity;
@@ -15,11 +15,11 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-public class Group extends BaseEntity {
+public class Team extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "leader_id")
-    private Member user;
+    private Member member;
 
     @Column(length = 10)
     private String groupName;

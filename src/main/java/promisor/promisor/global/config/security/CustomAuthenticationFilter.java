@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +22,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,12 +33,20 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
+        this.setAuthenticationManager(authenticationManager);
     }
 
+    /**
+     * 인증 절차 수행. username, password를 받아서 UsernamePasswordAuthenticationToken 생성
+     * @param request username, password
+     * @param response
+     * @return UsernamePasswordAuthenticationToken
+     * @throws AuthenticationException
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
@@ -49,6 +57,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             try {
                 LoginDto loginDto = objectMapper.readValue(request.getReader().lines().collect(Collectors.joining()), LoginDto.class);
                 log.info("Email is: {}", loginDto.getEmail()); log.info("Password is: {}", loginDto.getPassword());
+                // 아직 인증되지 않음
                 authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
                 log.info("Token = {}", authenticationToken);
             } catch (IOException err) {
@@ -63,7 +72,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
         }
 
-        return authenticationManager.authenticate(authenticationToken);
+        this.setDetails(request, authenticationToken);
+        Authentication auth = this.getAuthenticationManager().authenticate(authenticationToken);
+        log.info("auth is : {}", auth);
+        return auth;
+//        return authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
@@ -76,7 +89,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("memberRole", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .sign(algorithm);
 
         String refreshToken = JWT.create()

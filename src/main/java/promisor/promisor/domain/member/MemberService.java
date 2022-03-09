@@ -1,6 +1,7 @@
 package promisor.promisor.domain.member;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,6 +35,7 @@ public class MemberService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
         return memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 사용자를 찾을수 없습니다."));
     }
@@ -181,5 +183,14 @@ public class MemberService implements UserDetailsService {
                 "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
                 "\n" +
                 "</div></div>";
+    }
+
+    @Transactional
+    public String createRandomMemberId() {
+        String email = RandomStringUtils.randomAlphanumeric(8);
+        if (memberRepository.existsByEmail(email)) {
+            createRandomMemberId();
+        }
+        return email;
     }
 }

@@ -12,6 +12,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -51,12 +52,11 @@ public class Member extends Person implements UserDetails {
 
     private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
 
-        super(name);
+        super(name, LocalDateTime.now(), LocalDateTime.now());
         this.email = email;
         this.password = password;
         this.telephone = telephone;
         this.memberRole = memberRole;
-
     }
 
     public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {
