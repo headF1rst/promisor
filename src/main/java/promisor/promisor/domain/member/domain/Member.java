@@ -1,4 +1,4 @@
-package promisor.promisor.domain.member;
+package promisor.promisor.domain.member.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +10,6 @@ import promisor.promisor.domain.model.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -57,6 +56,10 @@ public class Member extends Person implements UserDetails {
         this.password = password;
         this.telephone = telephone;
         this.memberRole = memberRole;
+    }
+
+    public String getRole() {
+        return memberRole.role;
     }
 
     public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {

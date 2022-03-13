@@ -1,10 +1,9 @@
 package promisor.promisor.domain.member.dto;
 
 import lombok.Data;
-import promisor.promisor.domain.member.MemberRole;
+import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.global.error.exception.Enum;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
