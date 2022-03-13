@@ -1,6 +1,7 @@
 package promisor.promisor.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,11 +27,13 @@ import promisor.promisor.infra.email.exception.EmailNotValid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
@@ -195,4 +198,8 @@ public class MemberService implements UserDetailsService {
                 "</div></div>";
     }
 
+    public Optional<Member> getMember(String email) {
+        log.info("Fetching member '{}'", email);
+        return memberRepository.findByEmail(email);
+    }
 }
