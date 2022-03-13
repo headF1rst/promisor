@@ -2,7 +2,7 @@ package promisor.promisor.global.token;
 
 import lombok.Getter;
 import lombok.Setter;
-import promisor.promisor.domain.member.Member;
+import promisor.promisor.domain.member.domain.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

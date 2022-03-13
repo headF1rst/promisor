@@ -1,9 +1,9 @@
-package promisor.promisor.domain.team;
+package promisor.promisor.domain.team.domain;
 
 import lombok.Getter;
 import promisor.promisor.domain.model.BaseEntity;
 import promisor.promisor.domain.place.domain.Place;
-import promisor.promisor.domain.member.Member;
+import promisor.promisor.domain.member.domain.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,10 +15,11 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
+@Table(name = "Group")
 public class Team extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leader_id")
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @Column(length = 10)

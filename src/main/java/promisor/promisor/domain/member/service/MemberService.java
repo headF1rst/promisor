@@ -1,13 +1,17 @@
-package promisor.promisor.domain.member;
+package promisor.promisor.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import promisor.promisor.domain.member.dao.MemberRepository;
+import promisor.promisor.domain.member.domain.MemberRole;
+import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.SignUpDto;
 import promisor.promisor.domain.member.exception.EmailDuplicatedException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
@@ -20,6 +24,8 @@ import promisor.promisor.infra.email.exception.EmailConfirmedException;
 import promisor.promisor.infra.email.exception.EmailNotValid;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.UUID;
 
 @Service
@@ -36,12 +42,16 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        return memberRepository.findByEmail(email)
+        Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 사용자를 찾을수 없습니다."));
+
+        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(member.getRole()));
+        return new User(member.getEmail(), member.getPassword(), authorities);
     }
 
     @Transactional
-    public String register(SignUpDto request) {
+    public String save(SignUpDto request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
         if (!isValidEmail) {
@@ -185,12 +195,4 @@ public class MemberService implements UserDetailsService {
                 "</div></div>";
     }
 
-    @Transactional
-    public String createRandomMemberId() {
-        String email = RandomStringUtils.randomAlphanumeric(8);
-        if (memberRepository.existsByEmail(email)) {
-            createRandomMemberId();
-        }
-        return email;
-    }
 }

@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 @Getter
 public class Place extends BaseEntity {
 
-    @Column(name = "place_name", length = 30)
+    @Column(name = "place_name", length = 50)
     private String placeName;
 
     @Column(length = 100)
