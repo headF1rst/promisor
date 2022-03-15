@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.SignUpDto;
+import promisor.promisor.domain.member.exception.NameEmptyException;
 import promisor.promisor.domain.member.service.MemberService;
+import promisor.promisor.global.token.exception.TokenNotExistException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,10 +59,10 @@ public class MemberController {
 
                 Optional<Member> member = memberService.getMember(email);
                 String accessToken = JWT.create()
-                        .withSubject(member.get().getName())
+                        .withSubject(member.orElseThrow(NameEmptyException::new).getName())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
-                        .withClaim("memberRole", member.get().getRole())
+                        .withClaim("memberRole", member.orElseThrow(NameEmptyException::new).getRole())
                         .sign(algorithm);
 
                 Map<String, String> tokens = new HashMap<>();
@@ -79,7 +81,7 @@ public class MemberController {
 
             }
         } else {
-            throw new RuntimeException("Refresh 토큰이 존재하지 않습니다.");
+            throw new TokenNotExistException();
         }
     }
 }

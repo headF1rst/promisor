@@ -15,6 +15,7 @@ import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.SignUpDto;
 import promisor.promisor.domain.member.exception.EmailDuplicatedException;
+import promisor.promisor.domain.member.exception.MembernameNotFoundException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
 import promisor.promisor.global.token.ConfirmationTokenService;
@@ -46,7 +47,7 @@ public class MemberService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
         Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("해당 이메일의 사용자를 찾을수 없습니다."));
+                .orElseThrow(() -> new MembernameNotFoundException("해당 이메일의 사용자를 찾을수 없습니다."));
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(member.getRole()));
@@ -112,7 +113,7 @@ public class MemberService implements UserDetailsService {
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(() -> new TokenNotExistException());
+                .orElseThrow(TokenNotExistException::new);
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new EmailConfirmedException();
