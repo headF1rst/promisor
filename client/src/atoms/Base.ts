@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import styled from "styled-components";
 export const Template = styled(motion.div)`
   padding-inline: 2rem;
-  padding-top: 1em;
   @media screen and (min-width: 900px) {
     padding-inline: 5rem;
   }
@@ -11,7 +10,6 @@ export const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 3rem;
   @media screen and (min-width: 900px) {
     padding: 2rem 20rem;
   }
@@ -20,7 +18,7 @@ export const Header = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  position: fixed;
+  position: sticky;
   padding-inline: 3rem;
   background-color: ${(p) => p.theme.bgColor};
   left: 0;

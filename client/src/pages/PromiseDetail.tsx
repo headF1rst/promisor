@@ -60,6 +60,7 @@ const LineInput = styled.input`
   &:focus {
     outline: none;
   }
+  background-color: transparent;
 `;
 const NavBar = styled.div`
   display: flex;

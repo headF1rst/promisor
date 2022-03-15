@@ -11,6 +11,7 @@ export const RoundBtn = styled.div`
   cursor: pointer;
   font-size: 0.9em;
   height: 1.5em;
+  width: 6em;
 `;
 
 export const FixedRoundBtn = styled(RoundBtn)`
