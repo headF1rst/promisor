@@ -2,7 +2,10 @@ import styled from "styled-components";
 
 export const FlatList = styled.div`
   width: 100%;
-  height: 12vh;
+  height: 9vh;
+  @media screen and (min-width: 900px) {
+    height: 12vh;
+  }
   padding: 0.8rem;
   cursor: pointer;
   display: flex;

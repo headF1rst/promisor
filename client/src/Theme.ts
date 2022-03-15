@@ -7,6 +7,10 @@ export const lightTheme: DefaultTheme = {
   green: "#04C994",
   pink: "#FEEBE8",
   smoke: "whitesmoke",
+  highlight: "grey",
+  cgreen: "#a1d690",
+  cred: "#ff5454",
+  cyellow: "#ffc654",
 };
 export const darkTheme: DefaultTheme = {
   textColor: "#fcfcfc",
@@ -15,4 +19,8 @@ export const darkTheme: DefaultTheme = {
   green: "#04C994",
   pink: "#FEEBE8",
   smoke: "black",
+  highlight: "yellow",
+  cgreen: "#a1d690",
+  cred: "#ff5454",
+  cyellow: "#ffc654",
 };

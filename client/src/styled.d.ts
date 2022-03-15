@@ -8,5 +8,9 @@ declare module "styled-components" {
     green: string;
     pink: string;
     smoke: string;
+    highlight: string;
+    cgreen: string;
+    cred: string;
+    cyellow: string;
   }
 }
