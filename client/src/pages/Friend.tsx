@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 import FriendList from "../organisms/FriendList";
 import { AnimatePresence } from "framer-motion";
+import * as A from "../atoms/_index";
 const TEST_PROFILE = [
   {
     id: 0,
@@ -42,7 +43,7 @@ function Friend() {
     <>
       <FriendList friends_data={TEST_PROFILE} select={false} />
       {!modal && (
-        <S.FixedRoundBtn onClick={onToggleClick}>친구 추가</S.FixedRoundBtn>
+        <A.FixedRoundBtn value={"친구 추가"} onClick={onToggleClick} />
       )}
       <AnimatePresence>
         {modal && (
@@ -56,9 +57,7 @@ function Friend() {
               <S.LabelInput>
                 <S.Input placeholder="이메일 또는 전화번호" />
               </S.LabelInput>
-              <S.RoundBtn style={{ width: "5em", margin: "0 auto" }}>
-                추가
-              </S.RoundBtn>
+              <A.RoundBtn center={true} value={"추가"} />
             </AddFriendModal>
             <S.Overlay
               onClick={onToggleClick}

@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { IFriendList } from "../pages/CreateGroup";
 import { selectedState } from "../states/createGroup";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 
 function SelectedList({ friends_data }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);

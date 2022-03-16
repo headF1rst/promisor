@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 import { selectedState } from "../states/createGroup";
 import { IFriendList } from "../pages/CreateGroup";
 import { BsFillCheckSquareFill } from "react-icons/bs";

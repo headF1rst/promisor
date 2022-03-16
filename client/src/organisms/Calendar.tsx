@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 const RED = "RED";
 const YELLOW = "YELLOW";
 const GREEN = "GREEN";
@@ -87,6 +87,8 @@ function Calendar() {
           {year}-{String(month + 1).padStart(2, "0")}
         </span>
         <VscTriangleRight
+
+        
           style={{ cursor: "pointer" }}
           onClick={() => onBtnClick("next")}
         />

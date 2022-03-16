@@ -1,6 +1,6 @@
 import React from "react";
 import ArrowBack from "../organisms/ArrowBack";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 import { useLocation, useNavigate } from "react-router-dom";
 import BasedTemplate from "../template/BasedTemplate";
 import { useRecoilValue } from "recoil";
