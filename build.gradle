@@ -26,12 +26,18 @@ dependencies {
 	implementation group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
 	implementation group: 'org.javassist', name: 'javassist', version: '3.15.0-GA'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7")
 	implementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation group: 'com.auth0', name: 'java-jwt', version: '3.18.3'
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.7'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 	compileOnly 'org.projectlombok:lombok'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
 }
 
 tasks.named('test') {

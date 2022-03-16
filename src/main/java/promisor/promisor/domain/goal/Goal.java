@@ -1,9 +1,9 @@
 package promisor.promisor.domain.goal;
 
 import lombok.Getter;
-import promisor.promisor.domain.group.Group;
 import promisor.promisor.domain.model.BaseEntity;
-import promisor.promisor.domain.member.Member;
+import promisor.promisor.domain.member.domain.Member;
+import promisor.promisor.domain.team.domain.Team;
 
 import javax.persistence.*;
 
@@ -19,12 +19,12 @@ import static javax.persistence.FetchType.*;
 public class Goal extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
-    private Member user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "group_id")
-    private Group group;
+    @JoinColumn(name = "team_id")
+    private Team team;
 
     @Column(length = 100)
     private String goal;

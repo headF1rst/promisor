@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 
 /**
  * Person 도메인 객체를 나타내는 자바 빈
@@ -20,7 +21,9 @@ public class Person extends BaseEntity {
 
     protected Person() {}
 
-    protected Person(String name) {
+    protected Person(String name, LocalDateTime createdAt, LocalDateTime updatedAt) {
+
+        super(createdAt, updatedAt);
         this.name = name;
     }
 }
