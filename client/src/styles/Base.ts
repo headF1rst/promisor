@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import styled from "styled-components";
+
 export const Template = styled(motion.div)`
   padding-inline: 2rem;
   @media screen and (min-width: 900px) {

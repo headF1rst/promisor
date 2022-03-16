@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 import FriendList from "../organisms/FriendList";
 import { selectedState } from "../states/createGroup";
 import ArrowBack from "../organisms/ArrowBack";

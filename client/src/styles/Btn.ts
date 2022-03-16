@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const RoundBtn = styled.div`
+export const RoundBtn = styled.div<{ center?: boolean }>`
   background-color: ${(p) => p.theme.textColor};
   color: ${(p) => p.theme.bgColor};
   display: flex;
@@ -12,6 +12,7 @@ export const RoundBtn = styled.div`
   font-size: 0.9em;
   height: 1.5em;
   width: 6em;
+  margin: ${(p) => p.center && "0 auto"};
 `;
 
 export const FixedRoundBtn = styled(RoundBtn)`

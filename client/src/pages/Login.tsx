@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useMatch } from "react-router-dom";
 import styled from "styled-components";
 import BasedTemplate from "../template/BasedTemplate";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 interface ILoginForm {
   name: string;
   email: string;

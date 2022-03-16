@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link, useMatch } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 import { darkModeState } from "../states/darkmode";
 import Friend from "./Friend";
 import Group from "./Group";

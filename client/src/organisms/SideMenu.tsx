@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { darkModeState } from "../states/darkmode";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 
 interface ISideMenu {
   match: {

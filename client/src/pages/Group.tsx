@@ -2,8 +2,9 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
-import * as S from "../atoms/_index";
+import * as S from "../styles/_index";
 import { selectedGroupState } from "../states/selectedGroup";
+import * as A from "../atoms/_index";
 
 const TEST_GROUP = [
   {
@@ -66,13 +67,12 @@ function Group() {
             </S.FlatElement>
           </S.FlatList>
         ))}
-      <S.FixedRoundBtn
+      <A.FixedRoundBtn
+        value={"그룹 생성"}
         onClick={() => {
           navigate("/group/create");
         }}
-      >
-        그룹 생성
-      </S.FixedRoundBtn>
+      />
     </>
   );
 }
