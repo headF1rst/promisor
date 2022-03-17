@@ -1,6 +1,7 @@
 package promisor.promisor.domain.member.dto;
 
 import lombok.Data;
+import lombok.Getter;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.global.error.exception.Enum;
 

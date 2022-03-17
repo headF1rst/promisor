@@ -11,11 +11,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
+import promisor.promisor.domain.member.dao.RelationRepository;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
+import promisor.promisor.domain.member.domain.Relation;
+import promisor.promisor.domain.member.dto.FollowFriendRequest;
 import promisor.promisor.domain.member.dto.SignUpDto;
 import promisor.promisor.domain.member.exception.EmailDuplicatedException;
+import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.member.exception.MembernameNotFoundException;
+import promisor.promisor.global.error.ErrorCode;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
 import promisor.promisor.global.token.ConfirmationTokenService;
@@ -28,7 +33,6 @@ import promisor.promisor.infra.email.exception.EmailNotValid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -42,12 +46,13 @@ public class MemberService implements UserDetailsService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
+    private final RelationRepository relationRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Member member = memberRepository.findByEmail(email)
-                .orElseThrow(() -> new MembernameNotFoundException("해당 이메일의 사용자를 찾을수 없습니다."));
+//        TODO: 여기서 NPE 예외처리를 해줘야 하나?
+        Member member = memberRepository.findByEmail(email);
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(member.getRole()));
@@ -80,11 +85,9 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public String signUpUser(Member member) {
-        boolean userExists = memberRepository
-                .findByEmail(member.getEmail())
-                .isPresent();
+        Member userExists = memberRepository.findByEmail(member.getEmail());
 
-        if (userExists) {
+        if (userExists != null) {
             // TODO check of attributes are the same and
             // TODO if email not confirmed send confirmation email.
             throw new EmailDuplicatedException(member.getEmail());
@@ -199,8 +202,22 @@ public class MemberService implements UserDetailsService {
                 "</div></div>";
     }
 
-    public Optional<Member> getMember(String email) {
+    public Member getMember(String email) {
         log.info("Fetching member '{}'", email);
         return memberRepository.findByEmail(email);
+//        TODO: 여기서 NPE 예외처리를 해줘야 하나?
+    }
+
+    @Transactional
+    public void followFriend(String email, FollowFriendRequest request) {
+        Member requester = getMember(email);
+        Member receiver  = memberRepository.findByEmail(request.getReceiverEmail());
+        if (receiver != null) {
+            throw new MemberEmailNotFound();
+        }
+        if (requester.hasFriend(receiver) || relationRepository.existByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
+            throw new EmailDuplicatedException(request.getReceiverEmail());
+        }
+        relationRepository.save(new Relation(requester, receiver));
     }
 }
