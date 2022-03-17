@@ -38,7 +38,6 @@ const TEST_PROMISE = [
 
 function Promise() {
   const selectedGroup = useRecoilValue(selectedGroupState);
-
   const navigate = useNavigate();
   const dark = useRecoilValue(darkModeState);
   const Header = () => {
