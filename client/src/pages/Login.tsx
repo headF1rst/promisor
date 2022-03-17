@@ -5,6 +5,7 @@ import { useMatch } from "react-router-dom";
 import styled from "styled-components";
 import BasedTemplate from "../template/BasedTemplate";
 import * as S from "../styles/_index";
+import * as A from "../atoms/_index";
 interface ILoginForm {
   name: string;
   email: string;
@@ -47,7 +48,7 @@ function Login() {
   const Container = () => {
     return (
       <>
-        <S.Logo>Promisor</S.Logo>
+        <A.Logo value={"Promisor"} />
         <LoginForm
           page={loginMatch ? "login" : "register"}
           onSubmit={

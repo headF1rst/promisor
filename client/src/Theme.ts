@@ -6,9 +6,9 @@ export const lightTheme: DefaultTheme = {
   bgColor: "#dce8e5",
   green: "#04C994",
   pink: "#FEEBE8",
-  smoke: "white",
+  smoke: "#ffffff",
   highlight: "grey",
-  cgreen: "#ddf5d5",
+  cgreen: "#e7f7e1",
   cred: "#ffe7e3",
   cyellow: "#ffedc9",
 };
@@ -20,7 +20,7 @@ export const darkTheme: DefaultTheme = {
   pink: "#FEEBE8",
   smoke: "black",
   highlight: "yellow",
-  cgreen: "#ddf5d5",
+  cgreen: "#e7f7e1",
   cred: "#ffe7e3",
   cyellow: "#ffedc9",
 };

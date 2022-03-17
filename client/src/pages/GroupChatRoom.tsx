@@ -1,6 +1,6 @@
 import React from "react";
-import ArrowBack from "../organisms/ArrowBack";
-import * as S from "../styles/_index";
+import ArrowBack from "../atoms/ArrowBack";
+import * as A from "../atoms/_index";
 import { useLocation, useNavigate } from "react-router-dom";
 import BasedTemplate from "../template/BasedTemplate";
 import { useRecoilValue } from "recoil";
@@ -17,12 +17,7 @@ function GroupChatRoom() {
       <>
         <ArrowBack />
         <span>{selectedGroup.name}</span>
-        <S.Logo
-          onClick={onPromiseClick}
-          style={{ fontSize: "2.5em", cursor: "pointer" }}
-        >
-          P
-        </S.Logo>
+        <A.Logo onClick={onPromiseClick} value={"P"} />
       </>
     );
   };

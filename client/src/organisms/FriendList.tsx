@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import * as S from "../styles/_index";
+import * as A from "../atoms/_index";
 import { selectedState } from "../states/createGroup";
 import { IFriendList } from "../pages/CreateGroup";
 import { BsFillCheckSquareFill } from "react-icons/bs";
@@ -25,10 +26,12 @@ function FriendList({ select, friends_data }: IFriendList) {
     <>
       {friends_data.map((value, idx) => (
         <S.ProfileList onClick={() => onListClick(value.id)} key={idx}>
-          <Profile direction={"row"}>
-            <S.ProfileImg type={"profile"} src={value.img} />
-            {value.title}
-          </Profile>
+          <A.Profile
+            direction={"row"}
+            value={value.title}
+            type={"profile"}
+            imgSrc={value.img}
+          />
           {select && (
             <>
               {selected.includes(value.id) ? (

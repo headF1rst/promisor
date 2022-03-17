@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
-
+import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 const RED = "RED";
 const YELLOW = "YELLOW";
@@ -13,7 +13,7 @@ interface IColors {
   color: string;
 }
 
-function Calendar() {
+function PromiseDateCalendar() {
   const [groupView, setGroupView] = useState(true);
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
@@ -118,12 +118,11 @@ function Calendar() {
             가능
           </Button>
         </Buttons>
-        <S.RoundBtn
-          style={{ fontSize: "0.8em" }}
+        <A.RoundBtn
+          fontSize={0.7}
+          value={groupView ? "내 일정 등록" : "완료"}
           onClick={() => setGroupView((prev) => !prev)}
-        >
-          {groupView ? "내 일정 등록" : "완료"}
-        </S.RoundBtn>
+        />
       </Elements>
       <Month>
         <Week>
@@ -154,7 +153,7 @@ function Calendar() {
   );
 }
 
-export default Calendar;
+export default PromiseDateCalendar;
 
 const Container = styled.div`
   display: flex;
@@ -199,6 +198,7 @@ const DateBox = styled.div<{
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 0.9em;
 `;
 const Elements = styled.div`
   display: flex;
@@ -217,7 +217,7 @@ const Button = styled.div<{ selected: boolean }>`
   display: flex;
   flex-direction: row;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.7em;
   font-weight: ${(p) => (p.selected ? 600 : 500)};
   text-shadow: ${(p) => p.selected && `0px 0px 10px ${p.theme.highlight}`};
 `;

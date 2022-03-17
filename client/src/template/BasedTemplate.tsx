@@ -1,6 +1,6 @@
 import React from "react";
 import * as S from "../styles/_index";
-import ArrowBack from "../organisms/ArrowBack";
+import ArrowBack from "../atoms/ArrowBack";
 import { AnimatePresence } from "framer-motion";
 interface IBasedTemplate {
   header: object;

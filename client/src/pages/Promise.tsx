@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import * as S from "../styles/_index";
-import ArrowBack from "../organisms/ArrowBack";
+import ArrowBack from "../atoms/ArrowBack";
 import { darkModeState } from "../states/darkmode";
 import BasedTemplate from "../template/BasedTemplate";
 import { AiOutlinePlus } from "react-icons/ai";
