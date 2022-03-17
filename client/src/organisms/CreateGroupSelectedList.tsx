@@ -6,7 +6,7 @@ import { IFriendList } from "../pages/CreateGroup";
 import { selectedState } from "../states/createGroup";
 import * as S from "../styles/_index";
 
-function SelectedList({ friends_data }: IFriendList) {
+function CreateGroupSelectedList({ friends_data }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
 
   const onListClick = (id: number) => {
@@ -37,7 +37,7 @@ function SelectedList({ friends_data }: IFriendList) {
   );
 }
 
-export default React.memo(SelectedList);
+export default React.memo(CreateGroupSelectedList);
 
 const HoverImg = styled(motion.div)`
   position: absolute;

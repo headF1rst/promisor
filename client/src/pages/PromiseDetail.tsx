@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import ArrowBack from "../organisms/ArrowBack";
+import ArrowBack from "../atoms/ArrowBack";
 import { selectedGroupState } from "../states/selectedGroup";
 import BasedTemplate from "../template/BasedTemplate";
 import { PromiseTitle } from "./Promise";

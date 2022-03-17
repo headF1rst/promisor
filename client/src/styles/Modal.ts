@@ -16,6 +16,6 @@ export const BoxModal = styled(motion.div)`
   flex-direction: column;
   position: fixed;
   border-radius: 1em;
-  background-color: ${(p) => p.theme.bgColor};
+  background-color: ${(p) => p.theme.smoke};
   color: ${(p) => p.theme.textColor};
 `;

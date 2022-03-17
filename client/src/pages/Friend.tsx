@@ -83,4 +83,7 @@ const AddFriendModal = styled(S.BoxModal)`
   padding: 2em;
   justify-content: space-between;
   z-index: 3;
+  span {
+    background-color: transparent;
+  }
 `;

@@ -5,6 +5,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { darkModeState } from "../states/darkmode";
 import * as S from "../styles/_index";
+import * as A from "../atoms/_index";
 
 interface ISideMenu {
   match: {
@@ -46,7 +47,7 @@ function SideMenu({ match, side, setSide }: ISideMenu) {
             exit="exit"
             transition={{ type: "linear" }}
           >
-            <S.Logo style={{ fontSize: "2.5em" }}>Promisor</S.Logo>
+            <A.Logo value={"Promiser"} />
             <SideList
               style={{
                 color:
@@ -99,13 +100,13 @@ const SideBar = styled(motion.div)`
   position: fixed;
   top: 0;
   right: 0;
-  width: 60%;
+  width: 75%;
   @media screen and (min-width: 900px) {
     width: 30%;
   }
   height: 100%;
   z-index: 10;
-  background-color: ${(p) => p.theme.bgColor};
+  background-color: ${(p) => p.theme.smoke};
   display: flex;
   flex-direction: column;
   transform-origin: right center;
