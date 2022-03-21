@@ -3,6 +3,7 @@ package promisor.promisor.domain.model;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @Getter
 public class Person extends BaseEntity {
 
-    @NotEmpty(message = "이름이 안들어 왔습니다.")
+    @Column(nullable = false)
     private String name;
 
     protected Person() {}

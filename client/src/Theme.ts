@@ -3,14 +3,14 @@ import { DefaultTheme } from "styled-components";
 export const lightTheme: DefaultTheme = {
   textColor: "#000000",
   grey: "#595959",
-  bgColor: "#fcfcfc",
+  bgColor: "#dce8e5",
   green: "#04C994",
   pink: "#FEEBE8",
-  smoke: "whitesmoke",
+  smoke: "#ffffff",
   highlight: "grey",
-  cgreen: "#a1d690",
-  cred: "#ff5454",
-  cyellow: "#ffc654",
+  cgreen: "#e7f7e1",
+  cred: "#ffe7e3",
+  cyellow: "#ffedc9",
 };
 export const darkTheme: DefaultTheme = {
   textColor: "#fcfcfc",
@@ -20,7 +20,7 @@ export const darkTheme: DefaultTheme = {
   pink: "#FEEBE8",
   smoke: "black",
   highlight: "yellow",
-  cgreen: "#a1d690",
-  cred: "#ff5454",
-  cyellow: "#ffc654",
+  cgreen: "#e7f7e1",
+  cred: "#ffe7e3",
+  cyellow: "#ffedc9",
 };

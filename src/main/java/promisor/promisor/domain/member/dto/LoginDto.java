@@ -1,10 +1,10 @@
 package promisor.promisor.domain.member.dto;
 
 import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-
 
 @Data
 public class LoginDto {

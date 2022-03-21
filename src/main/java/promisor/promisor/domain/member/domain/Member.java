@@ -10,10 +10,9 @@ import promisor.promisor.domain.model.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Member 도메인 객체를 나타내는 자바 빈
@@ -24,6 +23,9 @@ import java.util.Collections;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Person implements UserDetails {
+
+    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Relation> friends = new HashSet<>();
 
     @Lob
     @Column(nullable = false, unique = true)
@@ -44,14 +46,11 @@ public class Member extends Person implements UserDetails {
     @Column(length = 100)
     private String location;
 
-    @Column
-    @NotEmpty
+    @Column(nullable = false)
     @Digits(fraction = 0, integer = 11)
     private String telephone;
 
     private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
-
-        super(name, LocalDateTime.now(), LocalDateTime.now());
         this.email = email;
         this.password = password;
         this.telephone = telephone;
@@ -84,11 +83,7 @@ public class Member extends Person implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        if (getStatus() == "ACTIVE") {
-            return true;
-        } else {
-            return false;
-        }
+        return Objects.equals(getStatus(), "ACTIVE");
     }
 
     @Override
@@ -98,14 +93,21 @@ public class Member extends Person implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        if (getStatus() == "ACTIVE") {
-            return true;
-        } else {
-            return false;
-        }
+        return Objects.equals(getStatus(), "ACTIVE");
     }
 
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
+    }
+
+    public List<Member> getMemberFriends() {
+        return this.friends.stream()
+                .map(Relation::getFriend)
+                .sorted(Comparator.comparing(Member::getName))
+                .collect(Collectors.toList());
+    }
+
+    public boolean hasFriend(Member receiver) {
+        return getMemberFriends().contains(receiver);
     }
 }

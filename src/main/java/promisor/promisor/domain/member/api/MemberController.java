@@ -57,12 +57,12 @@ public class MemberController {
                 DecodedJWT decodedJWT = verifier.verify(refreshToken); // Utility class로 리팩토링
                 String email = decodedJWT.getSubject(); // Utility class로 리팩토링
 
-                Optional<Member> member = memberService.getMember(email);
+                Member member = memberService.getMember(email);
                 String accessToken = JWT.create()
-                        .withSubject(member.orElseThrow(NameEmptyException::new).getName())
+                        .withSubject(member.getName())
                         .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
-                        .withClaim("memberRole", member.orElseThrow(NameEmptyException::new).getRole())
+                        .withClaim("memberRole", member.getRole())
                         .sign(algorithm);
 
                 Map<String, String> tokens = new HashMap<>();

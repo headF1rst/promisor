@@ -24,6 +24,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(400, "M005", "토큰이 만료되었습니다."),
     TOKEN_NOT_EXIST(400, "M006","토큰이 존재하지 않습니다."),
     USER_NAME_NOT_FOUND(400, "M007", "해당 이름의 사용자를 찾을수 없습니다."),
+    EMAIL_MEMBER_NOT_FOUND(400, "M008", "해당 이메일의 사용자가 존재하지 않습니다.");
 
     // Group
 

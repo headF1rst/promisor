@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
-
+import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 const RED = "RED";
 const YELLOW = "YELLOW";
@@ -13,7 +13,7 @@ interface IColors {
   color: string;
 }
 
-function Calendar() {
+function PromiseDateCalendar() {
   const [groupView, setGroupView] = useState(true);
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
@@ -23,7 +23,7 @@ function Calendar() {
   const [colors, setColors] = useState<IColors[]>([]);
   useEffect(() => {
     makeCalendar(year, month, colors);
-  }, [year, month, colors]);
+  }, [month, colors]);
 
   const makeCalendar = (year: number, month: number, colors: IColors[]) => {
     const FEB =
@@ -58,7 +58,6 @@ function Calendar() {
       }
       newWeeks.push(newWeek);
     }
-    console.log(newWeeks);
     setWeeks(newWeeks);
   };
 
@@ -66,15 +65,16 @@ function Calendar() {
     const newColors = [...colors, { id, color: currentColor }];
     setColors(newColors);
   };
-  const onBtnClick = (title: string) => {
+  const onBtnClick = (isPrev: string) => {
     const prevMonth = month;
-    if (title === "prev") {
+    if (isPrev === "prev") {
       setYear(prevMonth === 0 ? year - 1 : year);
       setMonth(prevMonth === 0 ? 11 : prevMonth - 1);
-    } else if (title === "next") {
+    } else if (isPrev === "next") {
       setYear(prevMonth === 11 ? year + 1 : year);
       setMonth(prevMonth === 11 ? 0 : prevMonth + 1);
     }
+    console.log(year, month);
   };
   return (
     <Container>
@@ -87,8 +87,6 @@ function Calendar() {
           {year}-{String(month + 1).padStart(2, "0")}
         </span>
         <VscTriangleRight
-
-        
           style={{ cursor: "pointer" }}
           onClick={() => onBtnClick("next")}
         />
@@ -100,7 +98,7 @@ function Calendar() {
             onClick={() => setCurrentColor(RED)}
             color={RED}
           >
-            <Circle color={"#ff5454"} />
+            <Circle color={"#ff7373"} />
             불가능
           </Button>
           <Button
@@ -108,7 +106,7 @@ function Calendar() {
             onClick={() => setCurrentColor(YELLOW)}
             color={YELLOW}
           >
-            <Circle color={"#ffc654"} />
+            <Circle color={"#ffd37a"} />
             애매함
           </Button>
           <Button
@@ -116,16 +114,15 @@ function Calendar() {
             onClick={() => setCurrentColor(GREEN)}
             color={GREEN}
           >
-            <Circle color={"#a1d690"} />
+            <Circle color={"#85ba73"} />
             가능
           </Button>
         </Buttons>
-        <S.RoundBtn
-          style={{ fontSize: "0.8em" }}
+        <A.RoundBtn
+          fontSize={0.7}
+          value={groupView ? "내 일정 등록" : "완료"}
           onClick={() => setGroupView((prev) => !prev)}
-        >
-          {groupView ? "내 일정 등록" : "완료"}
-        </S.RoundBtn>
+        />
       </Elements>
       <Month>
         <Week>
@@ -141,7 +138,7 @@ function Calendar() {
               {!(week[0].value === "" && week_idx === 5) &&
                 week.map((date, day_idx) => (
                   <DateBox
-                    key={date.id}
+                    key={String(week_idx) + String(day_idx)}
                     color={date.color}
                     onClick={() => onDateClick(date.id)}
                     style={{ color: "black" }}
@@ -156,7 +153,7 @@ function Calendar() {
   );
 }
 
-export default Calendar;
+export default PromiseDateCalendar;
 
 const Container = styled.div`
   display: flex;
@@ -187,7 +184,7 @@ const DateBox = styled.div<{
   @media screen and (min-width: 900px) {
     width: 5vw;
   }
-  height: ${(props) => (props.height ? props.height : "10vh")};
+  height: ${(props) => (props.height ? props.height : "8vh")};
   background-color: ${(p) =>
     p.isDay || !p.color || p.color === "null"
       ? `${p.theme.smoke}`
@@ -197,6 +194,11 @@ const DateBox = styled.div<{
       ? p.theme.cred
       : p.theme.cyellow};
   padding: 2px;
+  border: solid 0.1em ${(p) => p.theme.smoke};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9em;
 `;
 const Elements = styled.div`
   display: flex;
@@ -215,7 +217,7 @@ const Button = styled.div<{ selected: boolean }>`
   display: flex;
   flex-direction: row;
   cursor: pointer;
-  font-size: 0.9em;
+  font-size: 0.7em;
   font-weight: ${(p) => (p.selected ? 600 : 500)};
   text-shadow: ${(p) => p.selected && `0px 0px 10px ${p.theme.highlight}`};
 `;
