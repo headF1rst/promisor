@@ -24,12 +24,6 @@ public class Relation extends BaseEntity {
 
     protected Relation() {}
 
-    public Relation(LocalDateTime createdAt, LocalDateTime updatedAt, Member owner, Member friend) {
-        super(createdAt, updatedAt);
-        this.owner = owner;
-        this.friend = friend;
-    }
-
     public Relation(Member owner, Member friend) {
         this.owner = owner;
         this.friend = friend;

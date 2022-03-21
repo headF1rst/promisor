@@ -1,10 +1,8 @@
 package promisor.promisor.domain.member.dto;
 
 import lombok.Data;
-import lombok.Getter;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.global.error.exception.Enum;
-
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -24,5 +22,5 @@ public class SignUpDto {
     private String telephone;
 
     @Enum(enumClass = MemberRole.class, ignoreCase = true)
-    private String memberRole;
+    private MemberRole memberRole;
 }
