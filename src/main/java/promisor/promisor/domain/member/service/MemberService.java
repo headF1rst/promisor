@@ -73,7 +73,7 @@ public class MemberService implements UserDetailsService {
                         request.getEmail(),
                         request.getPassword(),
                         request.getTelephone(),
-                        MemberRole.USER
+                        request.getMemberRole()
                 )
         );
 
@@ -212,10 +212,10 @@ public class MemberService implements UserDetailsService {
     public void followFriend(String email, FollowFriendRequest request) {
         Member requester = getMember(email);
         Member receiver  = memberRepository.findByEmail(request.getReceiverEmail());
-        if (receiver != null) {
+        if (receiver == null) {
             throw new MemberEmailNotFound();
         }
-        if (requester.hasFriend(receiver) || relationRepository.existByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
+        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
             throw new EmailDuplicatedException(request.getReceiverEmail());
         }
         relationRepository.save(new Relation(requester, receiver));

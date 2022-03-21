@@ -22,9 +22,7 @@ public class Person extends BaseEntity {
 
     protected Person() {}
 
-    protected Person(String name, LocalDateTime createdAt, LocalDateTime updatedAt) {
-
-        super(createdAt, updatedAt);
+    protected Person(String name) {
         this.name = name;
     }
 }
