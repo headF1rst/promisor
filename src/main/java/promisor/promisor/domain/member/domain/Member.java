@@ -10,7 +10,6 @@ import promisor.promisor.domain.model.Person;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -51,6 +50,7 @@ public class Member extends Person implements UserDetails {
     private String telephone;
 
     private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
+        super(name);
         this.email = email;
         this.password = password;
         this.telephone = telephone;
@@ -108,6 +108,11 @@ public class Member extends Person implements UserDetails {
     }
 
     public boolean hasFriend(Member receiver) {
-        return getMemberFriends().contains(receiver);
+        List<Member> friends = getMemberFriends();
+        System.out.println("friends = " + friends);
+        if (friends.isEmpty()) {
+            return false;
+        }
+        return friends.contains(receiver);
     }
 }

@@ -14,6 +14,6 @@ public class InvalidValueException extends ApplicationException {
     }
 
     public InvalidValueException(ErrorCode errorCode) {
-        super(ErrorCode.INVALID_INPUT_VALUE);
+        super(errorCode);
     }
 }
