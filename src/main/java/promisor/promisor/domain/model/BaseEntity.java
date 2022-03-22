@@ -33,12 +33,4 @@ public abstract class BaseEntity implements Serializable {
     @Column(length = 10)
     @Value("ACTIVE")
     private String status;
-
-    public BaseEntity(LocalDateTime createdAt, LocalDateTime updatedAt) {
-
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    protected BaseEntity() {}
 }

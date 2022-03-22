@@ -209,13 +209,14 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public void followFriend(String email, FollowFriendRequest request) {
-        Member requester = getMember(email);
+    public void followFriend(FollowFriendRequest request) {
+        Member requester = getMember(request.getRequesterEmail());
         Member receiver  = memberRepository.findByEmail(request.getReceiverEmail());
+        log.info("requester: '{}', receiver: '{}'", requester, receiver);
         if (receiver == null) {
             throw new MemberEmailNotFound();
         }
-        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
+        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(request.getRequesterEmail(), request.getReceiverEmail())) {
             throw new EmailDuplicatedException(request.getReceiverEmail());
         }
         relationRepository.save(new Relation(requester, receiver));
