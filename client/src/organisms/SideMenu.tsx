@@ -112,10 +112,23 @@ const SideBar = styled(motion.div)`
   transform-origin: right center;
 `;
 
-const SideList = styled(S.ProfileList)`
+const SideList = styled.div`
   background-color: transparent;
   font-weight: bold;
   margin-left: 1em;
+  width: 100%;
+  height: 9vh;
+  @media screen and (min-width: 900px) {
+    height: 12vh;
+  }
+  padding: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0.5em;
+  border-radius: 1em;
+  background-color: ${(p) => p.theme.smoke};
+  align-items: center;
 `;
 
 const DarkmodeToggle = styled(motion.div)<{ dark: string }>`

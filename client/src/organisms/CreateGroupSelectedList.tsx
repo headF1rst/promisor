@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { IFriendList } from "../pages/CreateGroup";
 import { selectedState } from "../states/createGroup";
 import * as S from "../styles/_index";
+import * as A from "../atoms/_index";
 
 function CreateGroupSelectedList({ friends_data }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
@@ -14,22 +15,22 @@ function CreateGroupSelectedList({ friends_data }: IFriendList) {
     const newSelected = selectedCopy.filter((value) => value !== id);
     setSelected(newSelected);
   };
+  const animationProps = {
+    initial: { scale: 0 },
+    animate: { scale: 1 },
+    exit: { scale: 0 },
+    transition: { type: "linear" },
+  };
   return (
     <RowList>
       {friends_data.map((value) => (
         <span key={value.id}>
           {selected.includes(value.id) && (
-            <S.Profile transition={{ type: "linear" }} direction={"column"}>
-              <S.ProfileImg type={"profile"} src={value.img} />
-              <HoverImg
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                onClick={() => onListClick(value.id)}
-              >
-                X
-              </HoverImg>
-              <span>{value.title}</span>
-            </S.Profile>
+            <A.Profile
+              profileProps={{ direction: "column", value: `${value.title}` }}
+              imgProps={{ type: "profile", imgSrc: `${value.img}` }}
+              animateProps={animationProps}
+            />
           )}
         </span>
       ))}

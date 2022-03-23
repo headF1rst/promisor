@@ -34,6 +34,7 @@ export const LabelInput = styled.div`
   }
   background-color: ${(p) => p.theme.smoke};
 `;
+
 export const BoxInput = styled.input`
   width: 80%;
   height: 5vh;
