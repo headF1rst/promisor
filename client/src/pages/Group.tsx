@@ -5,6 +5,7 @@ import styled from "styled-components";
 import * as S from "../styles/_index";
 import { selectedGroupState } from "../states/selectedGroup";
 import * as A from "../atoms/_index";
+import * as O from "../organisms/_index";
 
 const TEST_GROUP = [
   {
@@ -56,16 +57,12 @@ function Group() {
     <>
       {TEST_GROUP &&
         TEST_GROUP.map((value, index) => (
-          <S.FlatList
-            onClick={() => onGroupClick(value.id, value.title)}
+          <O.RoundList
             key={index}
-          >
-            <S.ProfileImg type={"group"} src={value.img} />
-            <S.FlatElement>
-              <div>{value.title}</div>
-              {value.chat && <span>{value.chat}</span>}
-            </S.FlatElement>
-          </S.FlatList>
+            onClick={() => onGroupClick(value.id, value.title)}
+            imgProps={{ type: "group", imgSrc: `${value.img}` }}
+            elementProps={{ title: value.title, chat: value.chat }}
+          />
         ))}
       <A.FixedRoundBtn
         value={"그룹 생성"}
