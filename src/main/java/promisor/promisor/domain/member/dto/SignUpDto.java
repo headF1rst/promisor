@@ -21,6 +21,5 @@ public class SignUpDto {
     @Pattern(regexp = "\\d{11}", message = "\"-\"없이 전화번호 11자리를 입력해주세요.")
     private String telephone;
 
-    @Enum(enumClass = MemberRole.class, ignoreCase = true)
-    private MemberRole memberRole;
+    private String memberRole;
 }

@@ -73,7 +73,7 @@ public class MemberService implements UserDetailsService {
                         request.getEmail(),
                         request.getPassword(),
                         request.getTelephone(),
-                        request.getMemberRole()
+                        MemberRole.valueOf(request.getMemberRole())
                 )
         );
 
