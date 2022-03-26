@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    triggers {
+        pollSCM('*/3 * * * *')
+    }
+
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('awsAccessKeyId')
+        AWS_SECRET_ACCESS_KEY = credentials('awsSecretAccessKey')
+        AWS_DEFAULT_REGION = 'ap-northeast-2'
+        HOME = '.'
+    }
+
+    stages {
+        stage('Prepare') {
+            agent any
+
+            steps {
+                echo "Lets start Long Journey! ENV: ${ENV}"
+                echo 'Clonning Repository'
+
+                git url: "https://github.com/headF1rst/promisor",
+                    branch: 'develop',
+                    credentialsId: 'promisor-jenkins'
+            }
+
+            post {
+
+                success {
+                    echo "Successfully Pulled Repository"
+                }
+
+                always {
+                    echo "i tired..."
+                }
+
+                cleanup {
+                    echo "after all other post condition"
+                }
+            }
+
+        }
+    }
+}

@@ -15,7 +15,7 @@ public class ApplicationExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException err) {
         log.error("handleMethodArgumentNotValidException", err);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, err.getMessage());
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, err.getBindingResult());
         response.changeMessage(err.getFieldError().getDefaultMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
