@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.SignUpDto;
-import promisor.promisor.domain.member.exception.NameEmptyException;
 import promisor.promisor.domain.member.service.MemberService;
 import promisor.promisor.global.token.exception.TokenNotExistException;
 

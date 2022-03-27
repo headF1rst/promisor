@@ -15,6 +15,7 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND(204, "C003", "자원을 찾지 못했습니다."),
     ENTITY_NOT_FOUND(400, "C004", "엔티티를 찾지 못했습니다."),
     NAME_EMPTY(400, "C005", "이름이 존재하지 않습니다."),
+    INTERNAL_SERVER_ERROR(400, "C006", "서버에 문제가 발생했습니다."),
 
     // Member
     EMAIL_ALREADY_TAKEN(400, "M001", "이미 존재하는 이메일입니다."),
@@ -24,7 +25,7 @@ public enum ErrorCode {
     TOKEN_EXPIRED(400, "M005", "토큰이 만료되었습니다."),
     TOKEN_NOT_EXIST(400, "M006","토큰이 존재하지 않습니다."),
     USER_NAME_NOT_FOUND(400, "M007", "해당 이름의 사용자를 찾을수 없습니다."),
-    EMAIL_MEMBER_NOT_FOUND(400, "M008", "해당 이메일의 사용자가 존재하지 않습니다.");
+    EMAIL_MEMBER_NOT_FOUND(400, "M008", "해당 이메일의 사용자가 존재하지 않습니다."),
 
     // Group
 
