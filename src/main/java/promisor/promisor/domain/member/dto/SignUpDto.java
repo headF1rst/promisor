@@ -21,5 +21,6 @@ public class SignUpDto {
     @Pattern(regexp = "\\d{11}", message = "\"-\"없이 전화번호 11자리를 입력해주세요.")
     private String telephone;
 
+    @NotBlank(message = "관리자와 사용자 중 하나를 선택해 주세요.")
     private String memberRole;
 }
