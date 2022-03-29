@@ -27,7 +27,7 @@ export const RoundList = ({
   );
 };
 
-const SFlatList = styled.div`
+export const SFlatList = styled.div`
   width: 100%;
   height: 9vh;
   @media screen and (min-width: 900px) {
@@ -43,7 +43,7 @@ const SFlatList = styled.div`
   align-items: center;
 `;
 
-const SFlatElement = styled.div`
+export const SFlatElement = styled.div`
   display: flex;
   flex-direction: column;
   background-color: transparent;

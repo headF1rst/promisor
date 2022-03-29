@@ -9,6 +9,7 @@ import BasedTemplate from "../template/BasedTemplate";
 import { AiOutlinePlus } from "react-icons/ai";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { selectedGroupState } from "../states/selectedGroup";
+import { PromiseList } from "../organisms/PromiseList";
 const TEST_PROMISE = [
   {
     id: 1,
@@ -36,6 +37,12 @@ const TEST_PROMISE = [
   },
 ];
 
+interface IPromiseList {
+  month?: string;
+  date?: string;
+  location?: string;
+}
+
 function Promise() {
   const selectedGroup = useRecoilValue(selectedGroupState);
   const navigate = useNavigate();
@@ -58,33 +65,43 @@ function Promise() {
       </>
     );
   };
+
+  const Head = ({ month, date }: IPromiseList) => {
+    return <FlatDate>{month + "/" + date}</FlatDate>;
+  };
+
+  const Sub = ({ location }: IPromiseList) => {
+    return (
+      <span>
+        <HiOutlineLocationMarker
+          color={dark ? "#c4c4c4" : "#595959"}
+          style={{
+            position: "relative",
+            top: "0.1em",
+            marginRight: "0.2em",
+          }}
+        />
+        {location}
+      </span>
+    );
+  };
   const Container = () => {
     return (
       <>
         {" "}
         {TEST_PROMISE &&
           TEST_PROMISE.map((value, index) => (
-            <S.FlatList key={value.id}>
-              <FlatDate>
-                {value.date.split("-")[1] + "/" + value.date.split("-")[2]}
-              </FlatDate>
-              <S.FlatElement>
-                <div>{value.title}</div>
-                {value.location && (
-                  <span>
-                    <HiOutlineLocationMarker
-                      color={dark ? "#c4c4c4" : "#595959"}
-                      style={{
-                        position: "relative",
-                        top: "0.1em",
-                        marginRight: "0.2em",
-                      }}
-                    />
-                    {value.location}
-                  </span>
-                )}
-              </S.FlatElement>
-            </S.FlatList>
+            <PromiseList
+              key={value.id}
+              head={
+                <Head
+                  month={value.date.split("-")[1]}
+                  date={value.date.split("-")[2]}
+                />
+              }
+              main={<div>{value.title}</div>}
+              sub={value.location && <Sub location={value.location} />}
+            />
           ))}
       </>
     );
