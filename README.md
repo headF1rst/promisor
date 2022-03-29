@@ -32,9 +32,9 @@
 - 약속 시간과 장소를 정하는 데에 소모되는 시간, 감정적 스트레스를 최소화할 수 있는 환경을 제공한다.
 - 서비스 이용자를 증가시켜 가게 홍보 효과를 제공한다.
 
-### 비전 달성을 위한 요구사항
+### 비즈니스 목표 달성을 위한 요구사항
 
-![image](https://user-images.githubusercontent.com/85024598/159658658-2de11813-6914-48d3-8158-24904d2e730a.png)
+![image](https://user-images.githubusercontent.com/85024598/160569147-453eec26-104e-4936-8fe1-7dfc9dbc2d6b.png)
 
 ## 요구사항 우선 순위 ⬆️
 
