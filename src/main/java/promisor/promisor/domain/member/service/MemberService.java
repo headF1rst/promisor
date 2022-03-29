@@ -16,11 +16,11 @@ import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.domain.Relation;
 import promisor.promisor.domain.member.dto.FollowFriendRequest;
+import promisor.promisor.domain.member.dto.MemberResponse;
 import promisor.promisor.domain.member.dto.SignUpDto;
 import promisor.promisor.domain.member.exception.EmailDuplicatedException;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
-import promisor.promisor.domain.member.exception.MembernameNotFoundException;
-import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
 import promisor.promisor.global.token.ConfirmationTokenService;
@@ -73,7 +73,7 @@ public class MemberService implements UserDetailsService {
                         request.getEmail(),
                         request.getPassword(),
                         request.getTelephone(),
-                        request.getMemberRole()
+                        MemberRole.valueOf(request.getMemberRole())
                 )
         );
 
@@ -113,10 +113,13 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public String confirmToken(String token) {
+    public MemberResponse confirmToken(String token) {
+        if (token.isEmpty()) {
+            throw new TokenNotExistException();
+        }
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(TokenNotExistException::new);
+                .orElseThrow(InvalidTokenException::new);
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new EmailConfirmedException();
@@ -130,7 +133,8 @@ public class MemberService implements UserDetailsService {
 
         confirmationTokenService.setConfirmedAt(token);
         memberRepository.enableMember(confirmationToken.getMember().getEmail());
-        return "인증되었습니다.";
+
+        return new MemberResponse(confirmationToken.getMember());
     }
 
     public String buildEmail(String name, String link) {
