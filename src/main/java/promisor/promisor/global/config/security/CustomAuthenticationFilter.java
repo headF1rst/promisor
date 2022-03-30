@@ -3,9 +3,7 @@ package promisor.promisor.global.config.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,6 +14,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.MimeTypeUtils;
 import promisor.promisor.domain.member.dto.LoginDto;
+import promisor.promisor.domain.member.exception.LoginInfoNotFoundException;
+import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.domain.member.exception.EmailEmptyException;
+import promisor.promisor.domain.member.exception.PasswordEmptyException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -48,7 +50,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
      * @throws AuthenticationException
      */
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
 
         UsernamePasswordAuthenticationToken authenticationToken;
 
@@ -56,6 +58,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             // 요청이 Json 형태인 경우
             try {
                 LoginDto loginDto = objectMapper.readValue(request.getReader().lines().collect(Collectors.joining()), LoginDto.class);
+                if (loginDto.getEmail().isEmpty()) {
+                    throw new EmailEmptyException();
+                }
+
+                if (loginDto.getPassword().isEmpty()) {
+                    throw new PasswordEmptyException();
+                }
                 log.info("Email is: {}", loginDto.getEmail()); log.info("Password is: {}", loginDto.getPassword());
                 // 아직 인증되지 않음
                 authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
@@ -75,6 +84,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         this.setDetails(request, authenticationToken);
         Authentication auth = this.getAuthenticationManager().authenticate(authenticationToken);
         log.info("auth is : {}", auth);
+
+        if (!auth.isAuthenticated()) {
+            throw new LoginInfoNotFoundException();
+        }
         return auth;
     }
 

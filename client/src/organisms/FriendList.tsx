@@ -3,6 +3,7 @@ import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
+import * as O from "../organisms/_index";
 import { selectedState } from "../states/createGroup";
 import { IFriendList } from "../pages/CreateGroup";
 import { BsFillCheckSquareFill } from "react-icons/bs";
@@ -25,34 +26,18 @@ function FriendList({ select, friends_data }: IFriendList) {
   return (
     <>
       {friends_data.map((value, idx) => (
-        <S.ProfileList onClick={() => onListClick(value.id)} key={idx}>
-          <A.Profile
-            direction={"row"}
-            value={value.title}
-            type={"profile"}
-            imgSrc={value.img}
-          />
-          {select && (
-            <>
-              {selected.includes(value.id) ? (
-                <BsFillCheckSquareFill
-                  color="#04C994"
-                  style={{ marginRight: "0.2em" }}
-                />
-              ) : (
-                "⬜"
-              )}
-            </>
-          )}
-        </S.ProfileList>
+        <O.RoundList
+          elementProps={{ title: value.title }}
+          imgProps={{
+            type: "group",
+            imgSrc: `${value.img}`,
+          }}
+          onClick={() => onListClick(value.id)}
+          key={idx}
+        />
       ))}
     </>
   );
 }
 
 export default FriendList;
-
-export const Profile = styled(S.Profile)`
-  align-items: center;
-  background-color: transparent;
-`;

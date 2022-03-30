@@ -15,6 +15,7 @@ public enum ErrorCode {
     RESOURCE_NOT_FOUND(204, "C003", "자원을 찾지 못했습니다."),
     ENTITY_NOT_FOUND(400, "C004", "엔티티를 찾지 못했습니다."),
     NAME_EMPTY(400, "C005", "이름이 존재하지 않습니다."),
+    INTERNAL_SERVER_ERROR(500, "C006", "서버에 문제가 발생했습니다."),
 
     // Member
     EMAIL_ALREADY_TAKEN(400, "M001", "이미 존재하는 이메일입니다."),
@@ -22,13 +23,15 @@ public enum ErrorCode {
     EMAIL_CONFIRMED(400, "M003", "이미 인증된 이메일입니다."),
     EMAIL_NOT_VALID(400,"M004" ,"유효하지 않은 이메일입니다. 다시 입력해주세요."),
     TOKEN_EXPIRED(400, "M005", "토큰이 만료되었습니다."),
-    TOKEN_NOT_EXIST(400, "M006","토큰이 존재하지 않습니다."),
+    INVALID_TOKEN(400, "M006","잘못된 토큰입니다."),
     USER_NAME_NOT_FOUND(400, "M007", "해당 이름의 사용자를 찾을수 없습니다."),
-    EMAIL_MEMBER_NOT_FOUND(400, "M008", "해당 이메일의 사용자가 존재하지 않습니다.");
+    EMAIL_MEMBER_NOT_FOUND(400, "M008", "해당 이메일의 사용자가 존재하지 않습니다."),
+    Token_Not_Exist(400, "M009", "토큰을 입력해 주세요."),
+    EMAIL_EMPTY(400, "M010", "이메일을 입력해주세요."),
+    PASSWORD_EMPTY(400, "M011", "비밀번호를 입력해주세요."),
+    INVALID_LOGIN_INFO(400, "M012", "이메일 또는 비밀번호를 다시 확인해 주세요.");
 
     // Group
-
-    ;
 
     private int httpStatus;
     private final String code;

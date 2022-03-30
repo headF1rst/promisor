@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 export const Template = styled(motion.div)`
   padding-inline: 1rem;
-  @media screen and (min-width: 900px) {
+  @media screen and (min-width: 1100px) {
     padding-inline: 5rem;
   }
 `;
@@ -11,7 +11,8 @@ export const Container = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  @media screen and (min-width: 900px) {
+  padding-inline: 1rem;
+  @media screen and (min-width: 1100px) {
     padding: 2rem 20rem;
   }
   margin-top: 15vh;

@@ -2,12 +2,10 @@ package promisor.promisor.domain.member.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import promisor.promisor.domain.auth.EnableAuth;
 import promisor.promisor.domain.member.dto.FollowFriendRequest;
+import promisor.promisor.domain.member.dto.FollowFriendResponse;
 import promisor.promisor.domain.member.service.MemberService;
 
 @RestController
@@ -18,9 +16,8 @@ public class RelationController {
     private final MemberService memberService;
 
     @PostMapping
-    public ResponseEntity<Void> followFriend(@EnableAuth String email,
-                                             @RequestBody FollowFriendRequest request) {
-        memberService.followFriend(email, request);
+    public ResponseEntity<FollowFriendResponse> followFriend(@RequestBody FollowFriendRequest request) {
+        memberService.followFriend(request);
         return ResponseEntity.ok().build();
     }
 

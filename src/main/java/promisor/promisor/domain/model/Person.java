@@ -25,4 +25,9 @@ public class Person extends BaseEntity {
     protected Person(String name) {
         this.name = name;
     }
+
+    protected Person(String name, String status) {
+        super(status);
+        this.name = name;
+    }
 }

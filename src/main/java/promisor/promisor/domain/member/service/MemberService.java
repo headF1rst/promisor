@@ -16,11 +16,13 @@ import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.domain.Relation;
 import promisor.promisor.domain.member.dto.FollowFriendRequest;
+import promisor.promisor.domain.member.dto.MemberResponse;
 import promisor.promisor.domain.member.dto.SignUpDto;
 import promisor.promisor.domain.member.exception.EmailDuplicatedException;
+import promisor.promisor.domain.member.exception.EmailEmptyException;
+import promisor.promisor.domain.member.exception.LoginInfoNotFoundException;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
-import promisor.promisor.domain.member.exception.MembernameNotFoundException;
-import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
 import promisor.promisor.global.token.ConfirmationTokenService;
@@ -33,6 +35,7 @@ import promisor.promisor.infra.email.exception.EmailNotValid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -49,10 +52,14 @@ public class MemberService implements UserDetailsService {
     private final RelationRepository relationRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
 
-//        TODO: 여기서 NPE 예외처리를 해줘야 하나?
-        Member member = memberRepository.findByEmail(email);
+        if (email.isBlank()) {
+            throw new EmailEmptyException();
+        }
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.orElseThrow(LoginInfoNotFoundException::new);
 
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(member.getRole()));
@@ -73,7 +80,7 @@ public class MemberService implements UserDetailsService {
                         request.getEmail(),
                         request.getPassword(),
                         request.getTelephone(),
-                        request.getMemberRole()
+                        MemberRole.valueOf(request.getMemberRole())
                 )
         );
 
@@ -85,7 +92,8 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public String signUpUser(Member member) {
-        Member userExists = memberRepository.findByEmail(member.getEmail());
+        Optional<Member> optionalUserExists = memberRepository.findByEmail(member.getEmail());
+        Member userExists = optionalUserExists.orElseThrow(() -> new EmailNotValid(member.getEmail()));
 
         if (userExists != null) {
             // TODO check of attributes are the same and
@@ -113,10 +121,13 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public String confirmToken(String token) {
+    public MemberResponse confirmToken(String token) {
+        if (token.isEmpty()) {
+            throw new TokenNotExistException();
+        }
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(TokenNotExistException::new);
+                .orElseThrow(InvalidTokenException::new);
 
         if (confirmationToken.getConfirmedAt() != null) {
             throw new EmailConfirmedException();
@@ -130,7 +141,8 @@ public class MemberService implements UserDetailsService {
 
         confirmationTokenService.setConfirmedAt(token);
         memberRepository.enableMember(confirmationToken.getMember().getEmail());
-        return "인증되었습니다.";
+
+        return new MemberResponse(confirmationToken.getMember());
     }
 
     public String buildEmail(String name, String link) {
@@ -204,18 +216,20 @@ public class MemberService implements UserDetailsService {
 
     public Member getMember(String email) {
         log.info("Fetching member '{}'", email);
-        return memberRepository.findByEmail(email);
-//        TODO: 여기서 NPE 예외처리를 해줘야 하나?
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.orElseThrow(() -> new EmailNotValid(email));
+        return member;
     }
 
     @Transactional
-    public void followFriend(String email, FollowFriendRequest request) {
-        Member requester = getMember(email);
-        Member receiver  = memberRepository.findByEmail(request.getReceiverEmail());
-        if (receiver == null) {
-            throw new MemberEmailNotFound();
-        }
-        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
+    public void followFriend(FollowFriendRequest request) {
+        Member requester = getMember(request.getRequesterEmail());
+        Optional<Member> optionalReceiver  = memberRepository.findByEmail(request.getReceiverEmail());
+        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
+
+        log.info("requester: '{}', receiver: '{}'", requester, receiver);
+
+        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(request.getRequesterEmail(), request.getReceiverEmail())) {
             throw new EmailDuplicatedException(request.getReceiverEmail());
         }
         relationRepository.save(new Relation(requester, receiver));
