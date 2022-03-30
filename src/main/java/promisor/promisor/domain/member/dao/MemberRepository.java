@@ -8,10 +8,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
 
+import java.util.Optional;
+
 @Transactional(readOnly = true)
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Member findByEmail(String email);
+    Optional<Member> findByEmail(String email);
 
     @Transactional
     @Modifying

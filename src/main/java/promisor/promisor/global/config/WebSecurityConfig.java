@@ -10,10 +10,15 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import promisor.promisor.domain.member.service.MemberLoginFailHandler;
 import promisor.promisor.domain.member.service.MemberService;
 import promisor.promisor.global.PasswordEncoder;
 import promisor.promisor.global.config.security.CustomAuthenticationFilter;
+import promisor.promisor.global.error.CustomAuthenticationEntryPoint;
+
+import java.util.logging.Filter;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
@@ -41,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers(GET, "/members/**").permitAll();
         http.authorizeRequests().antMatchers(POST, "/store/save/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
+        http.exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint()).and().addFilter(customAuthenticationFilter);
         http.addFilterAt(getAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -77,6 +83,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler authenticationFailureHandler() {
+        return new MemberLoginFailHandler();
     }
 
 }
