@@ -26,7 +26,10 @@ public enum ErrorCode {
     INVALID_TOKEN(400, "M006","잘못된 토큰입니다."),
     USER_NAME_NOT_FOUND(400, "M007", "해당 이름의 사용자를 찾을수 없습니다."),
     EMAIL_MEMBER_NOT_FOUND(400, "M008", "해당 이메일의 사용자가 존재하지 않습니다."),
-    Token_Not_Exist(400, "M009", "토큰을 입력해 주세요.");
+    Token_Not_Exist(400, "M009", "토큰을 입력해 주세요."),
+    EMAIL_EMPTY(400, "M010", "이메일을 입력해주세요."),
+    PASSWORD_EMPTY(400, "M011", "비밀번호를 입력해주세요."),
+    INVALID_LOGIN_INFO(400, "M012", "이메일 또는 비밀번호를 다시 확인해 주세요.");
 
     // Group
 

@@ -31,6 +31,12 @@ public abstract class BaseEntity implements Serializable {
     private LocalDateTime updatedAt;
 
     @Column(length = 10)
-    @Value("ACTIVE")
+    @Value(value = "ACTIVE")
     private String status;
+
+    protected BaseEntity() {}
+
+    protected BaseEntity(String status) {
+        this.status = status;
+    }
 }
