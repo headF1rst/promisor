@@ -6,6 +6,7 @@ import * as S from "../styles/_index";
 import { selectedGroupState } from "../states/selectedGroup";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
+import { GoPerson } from "react-icons/go";
 
 const TEST_GROUP = [
   {
@@ -49,7 +50,7 @@ function Group() {
   const setSelectedGroup = useSetRecoilState(selectedGroupState);
   const navigate = useNavigate();
   const onGroupClick = (id: number, name: string) => {
-    navigate(`/group/${id}`);
+    navigate(`/group/${id}/promise`);
     setSelectedGroup({ id, name });
   };
   return (
@@ -59,8 +60,19 @@ function Group() {
           <O.RoundList
             key={index}
             onClick={() => onGroupClick(value.id, value.title)}
-            imgProps={{ type: "group", imgSrc: `${value.img}` }}
-            elementProps={{ title: value.title, chat: value.chat }}
+            head={
+              <A.ProfileImg
+                imgProps={{ type: "group", imgSrc: `${value.img}` }}
+              />
+            }
+            main={value.title}
+            sub={
+              <A.IconText
+                icon={<GoPerson />}
+                text={"고산하, 김채은, 이준석, 황승환"}
+              />
+            }
+            tail={true}
           />
         ))}
       <A.FixedRoundBtn

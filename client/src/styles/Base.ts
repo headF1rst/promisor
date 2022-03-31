@@ -29,6 +29,7 @@ export const Header = styled.div`
   height: 10vh;
   width: 100vw;
   z-index: 1;
+  border-bottom: solid ${(p) => p.theme.textColor} 1px;
 
   justify-content: space-between;
   span,

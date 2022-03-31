@@ -4,6 +4,7 @@ import * as S from "../styles/_index";
 import FriendList from "../organisms/FriendList";
 import { AnimatePresence } from "framer-motion";
 import * as A from "../atoms/_index";
+import FriendAdd from "../organisms/FriendAdd";
 const TEST_PROFILE = [
   {
     id: 0,
@@ -46,44 +47,10 @@ function Friend() {
         <A.FixedRoundBtn value={"친구 추가"} onClick={onToggleClick} />
       )}
       <AnimatePresence>
-        {modal && (
-          <>
-            <AddFriendModal
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            >
-              <span>친구 추가</span>
-              <S.LabelInput>
-                <S.Input placeholder="이메일 또는 전화번호" />
-              </S.LabelInput>
-              <A.RoundBtn center={true} value={"추가"} />
-            </AddFriendModal>
-            <S.Overlay
-              onClick={onToggleClick}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-            />
-          </>
-        )}
+        {modal && <FriendAdd setModal={setModal} onClick={onToggleClick} />}
       </AnimatePresence>
     </>
   );
 }
 
 export default Friend;
-
-const AddFriendModal = styled(S.BoxModal)`
-  width: 80%;
-  @media screen and (min-width: 900px) {
-    width: 40%;
-  }
-  height: 30%;
-  padding: 2em;
-  justify-content: space-between;
-  z-index: 3;
-  span {
-    background-color: transparent;
-  }
-`;

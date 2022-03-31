@@ -9,7 +9,9 @@ import BasedTemplate from "../template/BasedTemplate";
 import { AiOutlinePlus } from "react-icons/ai";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { selectedGroupState } from "../states/selectedGroup";
-import { PromiseList } from "../organisms/PromiseList";
+import { RoundList } from "../organisms/RoundList";
+import * as A from "../atoms/_index";
+
 const TEST_PROMISE = [
   {
     id: 1,
@@ -37,7 +39,7 @@ const TEST_PROMISE = [
   },
 ];
 
-interface IPromiseList {
+interface IPromise {
   month?: string;
   date?: string;
   location?: string;
@@ -66,32 +68,17 @@ function Promise() {
     );
   };
 
-  const Head = ({ month, date }: IPromiseList) => {
+  const Head = ({ month, date }: IPromise) => {
     return <FlatDate>{month + "/" + date}</FlatDate>;
   };
 
-  const Sub = ({ location }: IPromiseList) => {
-    return (
-      <span>
-        <HiOutlineLocationMarker
-          color={dark ? "#c4c4c4" : "#595959"}
-          style={{
-            position: "relative",
-            top: "0.1em",
-            marginRight: "0.2em",
-          }}
-        />
-        {location}
-      </span>
-    );
-  };
   const Container = () => {
     return (
       <>
         {" "}
         {TEST_PROMISE &&
           TEST_PROMISE.map((value, index) => (
-            <PromiseList
+            <RoundList
               key={value.id}
               head={
                 <Head
@@ -99,8 +86,19 @@ function Promise() {
                   date={value.date.split("-")[2]}
                 />
               }
-              main={<div>{value.title}</div>}
-              sub={value.location && <Sub location={value.location} />}
+              main={value.title}
+              sub={
+                value.location && (
+                  <A.IconText
+                    icon={
+                      <HiOutlineLocationMarker
+                        color={dark ? "#c4c4c4" : "#595959"}
+                      />
+                    }
+                    text={value.location}
+                  />
+                )
+              }
             />
           ))}
       </>
@@ -124,4 +122,7 @@ const FlatDate = styled.span`
   font-size: 0.9em;
   margin-right: 1em;
   background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
