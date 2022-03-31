@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-@Table(name = "group")
+@Table(name = "Group")
 public class Team extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)

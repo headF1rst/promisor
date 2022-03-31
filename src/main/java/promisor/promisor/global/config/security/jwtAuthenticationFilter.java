@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RequiredArgsConstructor
-public class jwtAuthenticationFilter implements GenericFilterBean {
+public class jwtAuthenticationFilter extends GenericFilterBean {
 
     private final JwtProvider jwtProvider;
 
