@@ -1,6 +1,7 @@
 package promisor.promisor.global.error;
 
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,30 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
         String exception = (String) request.getAttribute("exception");
         ErrorCode errorCode;
 
-        log.debug("log: exception: '{}' ", exception);
+        /*
+            * 토큰이 만료된 경우 예외처리
+         */
+        if (exception == null) {
+            errorCode = ErrorCode.UNAUTHORIZED_USER;
+            setResponse(response, errorCode);
+            return;
+        }
 
-        log.info("log: exception: '{}' ", exception);
+        if (exception.equals("ExpiredJwtException")) {
+            errorCode = ErrorCode.TOKEN_EXPIRED;
+            setResponse(response, errorCode);
+            return;
+        }
+    }
+
+    private void setResponse(HttpServletResponse response, ErrorCode errorCode) throws IOException {
+        JSONObject json = new JSONObject();
+        response.setContentType("application/json;charset=UTF-8");
+        response.setCharacterEncoding("utf-8");
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+
+        json.put("code", errorCode.getCode());
+        json.put("message", errorCode.getMessage());
+        response.getWriter().print(json);
     }
 }

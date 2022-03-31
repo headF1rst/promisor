@@ -6,6 +6,6 @@ import promisor.promisor.global.error.exception.EntityNotFoundException;
 public class TokenNotExistException extends EntityNotFoundException {
 
     public TokenNotExistException() {
-        super(ErrorCode.Token_Not_Exist);
+        super(ErrorCode.TOKEN_NOT_EXIST);
     }
 }
