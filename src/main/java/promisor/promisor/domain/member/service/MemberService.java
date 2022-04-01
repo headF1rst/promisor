@@ -16,12 +16,11 @@ import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.domain.Relation;
 import promisor.promisor.domain.member.dto.FollowFriendRequest;
+import promisor.promisor.domain.member.dto.FollowFriendResponse;
 import promisor.promisor.domain.member.dto.MemberResponse;
 import promisor.promisor.domain.member.dto.SignUpDto;
-import promisor.promisor.domain.member.exception.EmailDuplicatedException;
-import promisor.promisor.domain.member.exception.EmailEmptyException;
-import promisor.promisor.domain.member.exception.LoginInfoNotFoundException;
-import promisor.promisor.domain.member.exception.MemberEmailNotFound;
+import promisor.promisor.domain.member.exception.*;
+import promisor.promisor.global.error.ErrorCode;
 import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
@@ -230,8 +229,21 @@ public class MemberService implements UserDetailsService {
         log.info("requester: '{}', receiver: '{}'", requester, receiver);
 
         if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(request.getRequesterEmail(), request.getReceiverEmail())) {
-            throw new EmailDuplicatedException(request.getReceiverEmail());
+            throw new ExistFriendException(request.getReceiverEmail());
         }
         relationRepository.save(new Relation(requester, receiver));
+    }
+
+    public MemberResponse searchFriend(Long id, String email) {
+        Optional<Member> optionalMember1 = memberRepository.findById(id);
+        Member member1 = optionalMember1.orElseThrow(MemberEmailNotFound::new);
+
+        if (email.isBlank()) {
+            throw new EmailEmptyException();
+        }
+        Optional<Member> optionalMember2 = memberRepository.findByEmail(email);
+        Member member2 = optionalMember2.orElseThrow(MemberEmailNotFound::new);
+
+        return new MemberResponse(member2);
     }
 }

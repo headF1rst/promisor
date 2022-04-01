@@ -1,6 +1,8 @@
 package promisor.promisor.domain.team.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import promisor.promisor.domain.model.BaseEntity;
 import promisor.promisor.domain.place.domain.Place;
 import promisor.promisor.domain.member.domain.Member;
@@ -16,6 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "Group")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,4 +36,9 @@ public class Team extends BaseEntity {
     private Place place;
 
     private LocalDateTime date;
+
+    public Team(String groupName) {
+        this.groupName=groupName;
+    }
+
 }

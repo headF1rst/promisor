@@ -1,48 +1,54 @@
+import { motion } from "framer-motion";
 import styled from "styled-components";
-import { IProfile } from "../atoms/Profile";
-import * as A from "../atoms/_index";
-
-interface IRoundList extends IProfile {
-  onClick: React.MouseEventHandler;
-  elementProps: {
-    title: string;
-    chat?: string;
-  };
+import { DotsVertical } from "../atoms/DotsVertical";
+interface IRoundList {
+  onClick?: React.MouseEventHandler;
+  head: Object;
+  main: string;
+  sub?: Object;
+  tail?: boolean;
 }
 
-export const RoundList = ({
-  onClick,
-  profileProps,
-  imgProps,
-  elementProps,
-}: IRoundList) => {
+export const RoundList = ({ onClick, head, main, sub, tail }: IRoundList) => {
   return (
-    <SFlatList onClick={onClick}>
-      <A.ProfileImg profileProps={profileProps} imgProps={imgProps} />
-      <SFlatElement>
-        <div>{elementProps.title}</div>
-        {elementProps.chat && <span>{elementProps.chat}</span>}
-      </SFlatElement>
+    <SFlatList
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <Row onClick={onClick}>
+        {head}
+        <SFlatElement>
+          <div>{main}</div>
+          {sub}
+        </SFlatElement>
+      </Row>
+      {tail && <DotsVertical />}
     </SFlatList>
   );
 };
 
-export const SFlatList = styled.div`
+export const SFlatList = styled(motion.div)`
   width: 100%;
-  height: 9vh;
   @media screen and (min-width: 900px) {
     height: 12vh;
   }
   padding: 0.8rem;
-  cursor: pointer;
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
   margin-bottom: 0.5em;
   border-radius: 1em;
   background-color: ${(p) => p.theme.smoke};
   align-items: center;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
 `;
-
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  background-color: ${(p) => p.theme.smoke};
+  cursor: pointer;
+`;
 export const SFlatElement = styled.div`
   display: flex;
   flex-direction: column;

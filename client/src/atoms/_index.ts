@@ -6,3 +6,5 @@ export * from "./Logo";
 export * from "./Profile";
 // export * from "./Modal";
 export * from "./ArrowBack";
+export * from "./IconText";
+export * from "./DotsVertical";

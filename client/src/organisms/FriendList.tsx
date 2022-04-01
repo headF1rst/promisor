@@ -6,8 +6,7 @@ import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
 import { selectedState } from "../states/createGroup";
 import { IFriendList } from "../pages/CreateGroup";
-import { BsFillCheckSquareFill } from "react-icons/bs";
-
+import { BsFillTelephoneFill } from "react-icons/bs";
 function FriendList({ select, friends_data }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
   console.log(selected);
@@ -27,11 +26,16 @@ function FriendList({ select, friends_data }: IFriendList) {
     <>
       {friends_data.map((value, idx) => (
         <O.RoundList
-          elementProps={{ title: value.title }}
-          imgProps={{
-            type: "group",
-            imgSrc: `${value.img}`,
-          }}
+          head={
+            <A.ProfileImg
+              imgProps={{ type: "group", imgSrc: `${value.img}` }}
+            />
+          }
+          main={value.title}
+          sub={
+            <A.IconText icon={<BsFillTelephoneFill />} text={"010-0000-0000"} />
+          }
+          tail={select ? false : true}
           onClick={() => onListClick(value.id)}
           key={idx}
         />
