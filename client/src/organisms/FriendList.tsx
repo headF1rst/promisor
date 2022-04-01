@@ -5,11 +5,10 @@ import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
 import { selectedState } from "../states/createGroup";
-import { IFriendList } from "../pages/CreateGroup";
+import { IFriendList } from "../pages/GroupMaker";
 import { BsFillTelephoneFill } from "react-icons/bs";
-function FriendList({ select, friends_data }: IFriendList) {
+function FriendList({ select, friendsData }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
-  console.log(selected);
   const onListClick = (id: number) => {
     if (!select) return;
 
@@ -24,7 +23,7 @@ function FriendList({ select, friends_data }: IFriendList) {
   };
   return (
     <>
-      {friends_data.map((value, idx) => (
+      {friendsData.map((value, idx) => (
         <O.RoundList
           head={
             <A.ProfileImg

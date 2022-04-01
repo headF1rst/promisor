@@ -37,3 +37,7 @@ export const Header = styled.div`
     background-color: transparent;
   }
 `;
+export const ListContainer = styled.div`
+  width: 100%;
+  margin-bottom: 5em;
+`;
