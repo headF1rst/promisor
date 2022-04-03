@@ -2,17 +2,18 @@ package promisor.promisor.global.config.security;
 
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import promisor.promisor.domain.member.dto.LoginDto;
+import promisor.promisor.domain.member.service.CustomUserDetailService;
 import promisor.promisor.domain.member.service.MemberService;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -25,7 +26,7 @@ public class JwtProvider {
     private final String secretKey = "sd92dfs0-1544-32da-bd21-bd234slkj";
     private final Long accessExpireTime = 60 * 60 * 1000L; // 3시간
     private final Long refreshExpireTime = ((60 * 60 * 1000L) * 24) * 60; // 60일
-    private final MemberService memberService;
+    private final CustomUserDetailService customUserDetailService;
 
     public String createAccessToken(LoginDto loginDto) {
         Map<String, Object> headers = new HashMap<>();
@@ -37,7 +38,7 @@ public class JwtProvider {
         Date expiration = new Date();
         expiration.setTime(expiration.getTime() + accessExpireTime);
 
-        String jwt = Jwts
+        return Jwts
                 .builder()
                 .setHeader(headers)
                 .setClaims(payloads)
@@ -45,7 +46,6 @@ public class JwtProvider {
                 .setExpiration(expiration)
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
-        return jwt;
     }
 
     public Map<String, String> createRefreshToken(LoginDto loginDto) {
@@ -76,10 +76,11 @@ public class JwtProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = memberService.loadUserByUsername(this.getUserInfo(token));
+        UserDetails userDetails = customUserDetailService.loadUserByUsername(this.getUserInfo(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
+    // JWT decoding 이메일
     public String getUserInfo(String token) {
         return (String) Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("email");
     }
