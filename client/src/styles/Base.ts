@@ -29,10 +29,15 @@ export const Header = styled.div`
   height: 10vh;
   width: 100vw;
   z-index: 1;
+  border-bottom: solid ${(p) => p.theme.textColor} 1px;
 
   justify-content: space-between;
   span,
   div {
     background-color: transparent;
   }
+`;
+export const ListContainer = styled.div`
+  width: 100%;
+  margin-bottom: 5em;
 `;

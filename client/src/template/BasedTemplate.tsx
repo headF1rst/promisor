@@ -50,6 +50,7 @@ export const SHeader = styled.div`
   height: 10vh;
   width: 100vw;
   z-index: 1;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
 
   justify-content: space-between;
   span,
