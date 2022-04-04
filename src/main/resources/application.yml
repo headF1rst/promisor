@@ -32,14 +32,14 @@ spring:
           timeout: 3000
           writetimeout: 5000
 
-  security:
-    kakao:
-      apikey: 2a4dfce9ea2dadb607b872ae4a973922
-    jwt:
-      token:
-        secret-key:
-
-        expire-length:
+security:
+  kakao:
+    apikey: 2a4dfce9ea2dadb607b872ae4a973922
+  jwt:
+    token:
+      secret-key: sd92dfs0-1544-32da-bd21-bd234slkj
+      expire-length: 3600000
+      expire-length-refresh: 5184000000
 
 logging:
   level:
