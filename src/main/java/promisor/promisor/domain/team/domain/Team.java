@@ -41,4 +41,8 @@ public class Team extends BaseEntity {
         this.groupName=groupName;
     }
 
+    public void EditGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
 }
