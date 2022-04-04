@@ -202,35 +202,33 @@ public class MemberService {
     }
 
     @Transactional
-    public void followFriend(FollowFriendRequest request, String token) {
+    public void followFriend(String email, FollowFriendRequest request) {
 
-        if (!Objects.equals(request.getRequesterEmail(), jwtProvider.getUserInfo(token))) {
-            throw new ForbiddenUserException(request.getRequesterEmail());
-        }
+        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
+        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
 
-        Member requester = getMember(request.getRequesterEmail());
         Optional<Member> optionalReceiver  = memberRepository.findByEmail(request.getReceiverEmail());
         Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
 
         log.info("requester: '{}', receiver: '{}'", requester, receiver);
 
-        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(request.getRequesterEmail(), request.getReceiverEmail())) {
+        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
             throw new ExistFriendException(request.getReceiverEmail());
         }
         relationRepository.save(new Relation(requester, receiver));
     }
 
-    public MemberResponse searchFriend(Long id, String email) {
-        Optional<Member> optionalMember1 = memberRepository.findById(id);
-        Member member1 = optionalMember1.orElseThrow(MemberEmailNotFound::new);
+    public MemberResponse searchFriend(String email, String findEmail) {
+        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
+        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
 
-        if (email.isBlank()) {
+        if (findEmail.isBlank()) {
             throw new EmailEmptyException();
         }
-        Optional<Member> optionalMember2 = memberRepository.findByEmail(email);
-        Member member2 = optionalMember2.orElseThrow(MemberEmailNotFound::new);
+        Optional<Member> optionalReceiver = memberRepository.findByEmail(email);
+        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
 
-        return new MemberResponse(member2);
+        return new MemberResponse(receiver);
     }
 
     public LoginResponse login(LoginDto loginDto) {
@@ -247,8 +245,8 @@ public class MemberService {
     public LoginResponse refreshToken(LoginDto.GetRefreshTokenDto getRefreshTokenDto, HttpServletRequest request) {
         String refreshToken = refreshTokenRepository.findRefreshTokenById(getRefreshTokenDto.getRefreshId());
 
-        if (jwtProvider.validateJwtToken(request, refreshToken)) {
-            String email = jwtProvider.getUserInfo(refreshToken);
+        if (jwtProvider.validateJwtToken(refreshToken)) {
+            String email = jwtProvider.extractEmail(refreshToken);
             LoginDto loginDto = new LoginDto();
             loginDto.setEmail(email);
 
@@ -266,9 +264,9 @@ public class MemberService {
     private Map<String, String> createTokenReturn(LoginDto loginDto) {
         Map result = new HashMap();
 
-        String accessToken = jwtProvider.createAccessToken(loginDto);
-        String refreshToken = jwtProvider.createRefreshToken(loginDto).get("refreshToken");
-        String refreshTokenExpirationAt = jwtProvider.createRefreshToken(loginDto).get("refreshTokenExpirationAt");
+        String accessToken = jwtProvider.createAccessToken(loginDto.getEmail());
+        String refreshToken = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshToken");
+        String refreshTokenExpirationAt = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshTokenExpirationAt");
 
         RefreshToken insertRefreshToken = new RefreshToken(
                 loginDto.getEmail(),

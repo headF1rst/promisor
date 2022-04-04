@@ -20,6 +20,7 @@ import promisor.promisor.global.config.security.JwtProvider;
 import promisor.promisor.global.config.security.jwtAuthenticationFilter;
 import promisor.promisor.global.error.CustomAuthenticationEntryPoint;
 import promisor.promisor.global.error.WebAccessDeniedHandler;
+import promisor.promisor.global.secret.SecretKey;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.*;
 
@@ -34,6 +35,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomAuthenticationEntryPoint authenticationEntryPointHandler;
     private final CustomUserDetailService customUserDetailService;
     private final PasswordEncoder passwordEncoder;
+    private final SecretKey secretKey;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
