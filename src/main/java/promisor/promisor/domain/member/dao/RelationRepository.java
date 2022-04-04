@@ -14,4 +14,6 @@ public interface RelationRepository extends JpaRepository<Relation, Long> {
     List<Relation> findByFriendEmail(String requesterEmail);
 
     boolean existsByOwnerEmailAndFriendEmail(String requesterEmail, String receiverEmail);
+
+
 }
