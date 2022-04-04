@@ -133,7 +133,7 @@ const SideList = styled.div`
 
 const DarkmodeToggle = styled(motion.div)<{ dark: string }>`
   background-color: ${(p) =>
-    p.dark === "dark" ? p.theme.green : p.theme.bgColor};
+    p.dark === "dark" ? p.theme.green : p.theme.smoke};
   border: solid 2px
     ${(p) => (p.dark === "dark" ? "transparent" : p.theme.green)};
   left: 1em;

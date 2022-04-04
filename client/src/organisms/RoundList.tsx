@@ -37,11 +37,15 @@ export const SFlatList = styled(motion.div)`
   display: flex;
   justify-content: space-between;
   flex-direction: row;
-  margin-bottom: 0.5em;
-  border-radius: 1em;
-  background-color: ${(p) => p.theme.smoke};
+  margin-bottom: 0.1em;
+  border-radius: 0.2em;
+  background-color: ${(p) => p.theme.opacity50};
   align-items: center;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+  div,
+  span {
+    background-color: transparent;
+  }
 `;
 const Row = styled.div`
   display: flex;

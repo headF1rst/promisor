@@ -20,7 +20,7 @@ export function FixedRoundBtn({ value, onClick }: IBtn) {
 }
 
 const SRoundBtn = styled.div<{ center?: boolean; fontSize?: number }>`
-  background-color: ${(p) => p.theme.textColor};
+  background-color: ${(p) => p.theme.btnColor};
   color: ${(p) => p.theme.bgColor};
   display: flex;
   flex-direction: column;
