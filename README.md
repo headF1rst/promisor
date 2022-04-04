@@ -81,13 +81,8 @@ Client-Driven : 많이 사용되는 기술일 수록 우선순위를 높게 설�
 
 ### 채택 이유
 
-<<<<<<< HEAD
-
-=======
 ['남들이 다 쓰니까'라는 이유는 없다! - 백엔드 편](https://headf1rst.github.io/etc/promisor-diary-3/)<br>
-
-> > > > > > > 4de4ef1eeea046b1bdee760830409866c2fef7b8
-> > > > > > > ['남들이 다 쓰니까'라는 이유는 없다! - 프론트엔드 편](https://velog.io/@chchaeun/%EB%82%A8%EB%93%A4%EC%9D%B4-%EB%8B%A4-%EC%93%B0%EB%8B%88%EA%B9%8C%EB%9D%BC%EB%8A%94-%EC%9D%B4%EC%9C%A0%EB%8A%94-%EC%97%86%EB%8B%A4-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%ED%8E%B8)
+['남들이 다 쓰니까'라는 이유는 없다! - 프론트엔드 편](https://velog.io/@chchaeun/%EB%82%A8%EB%93%A4%EC%9D%B4-%EB%8B%A4-%EC%93%B0%EB%8B%88%EA%B9%8C%EB%9D%BC%EB%8A%94-%EC%9D%B4%EC%9C%A0%EB%8A%94-%EC%97%86%EB%8B%A4-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%ED%8E%B8)
 
 ### Back-end
 
