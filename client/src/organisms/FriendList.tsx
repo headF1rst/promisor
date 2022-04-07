@@ -5,11 +5,11 @@ import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
 import { selectedState } from "../states/createGroup";
-import { IFriendList } from "../pages/CreateGroup";
+import { IFriendList } from "../pages/GroupMaker";
 import { BsFillTelephoneFill } from "react-icons/bs";
-function FriendList({ select, friends_data }: IFriendList) {
+import { AnimatePresence, motion } from "framer-motion";
+function FriendList({ select, friendsData }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
-  console.log(selected);
   const onListClick = (id: number) => {
     if (!select) return;
 
@@ -23,25 +23,39 @@ function FriendList({ select, friends_data }: IFriendList) {
     setSelected(newSelected);
   };
   return (
-    <>
-      {friends_data.map((value, idx) => (
-        <O.RoundList
-          head={
-            <A.ProfileImg
-              imgProps={{ type: "group", imgSrc: `${value.img}` }}
-            />
-          }
-          main={value.title}
-          sub={
-            <A.IconText icon={<BsFillTelephoneFill />} text={"010-0000-0000"} />
-          }
-          tail={select ? false : true}
-          onClick={() => onListClick(value.id)}
-          key={idx}
-        />
-      ))}
-    </>
+    <AnimatePresence>
+      <AnimationContainer
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        exit={{ scaleY: 0 }}
+        transition={{ type: "linear" }}
+      >
+        {friendsData.map((value, idx) => (
+          <O.RoundList
+            head={
+              <A.ProfileImg
+                imgProps={{ type: "group", imgSrc: `${value.img}` }}
+              />
+            }
+            main={value.title}
+            sub={
+              <A.IconText
+                icon={<BsFillTelephoneFill />}
+                text={"010-0000-0000"}
+              />
+            }
+            tail={select ? false : true}
+            onClick={() => onListClick(value.id)}
+            key={idx}
+          />
+        ))}
+      </AnimationContainer>
+    </AnimatePresence>
   );
 }
 
 export default FriendList;
+
+const AnimationContainer = styled(motion.div)`
+  transform-origin: top;
+`;

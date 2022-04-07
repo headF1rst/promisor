@@ -1,8 +1,8 @@
 package promisor.promisor.global.secret;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,20 +10,18 @@ import org.springframework.stereotype.Component;
  *
  * @author Sanha Ko
  */
-@Component("SecretKey")
 @Getter
 public class SecretKey {
 
-    @Value("${spring.security.kakao.apikey}")
-    private String kakaoApiKey;
+    private final String kakaoApiKey;
+    private final String jwtSecretKey;
+    private final Long jwtValidityTime;
+    private final Long refreshValidityTime;
 
-    @Value("${spring.security.jwt.token.secret-key}")
-    private String jwtSecretKey;
-
-    @Value("${spring.security.jwt.token.expire-length}")
-    private Integer jwtValidityTime;
-
-    private SecretKey() {}
-
-
+    public SecretKey(String kakaoApiKey, String jwtSecretKey, Long jwtValidityTime, Long refreshValidityTime) {
+        this.kakaoApiKey = kakaoApiKey;
+        this.jwtSecretKey = jwtSecretKey;
+        this.jwtValidityTime = jwtValidityTime;
+        this.refreshValidityTime = refreshValidityTime;
+    }
 }

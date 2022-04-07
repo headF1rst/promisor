@@ -1,15 +1,28 @@
 import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { IFriendList } from "../pages/CreateGroup";
+import { IFriendList, IFriendsData } from "../pages/GroupMaker";
 import { selectedState } from "../states/createGroup";
 import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 
-function CreateGroupSelectedList({ friends_data }: IFriendList) {
-  const [selected, setSelected] = useRecoilState(selectedState);
-
+function GroupMakerSelectedList({ friendsData }: IFriendList) {
+  const [friendsDict, setFriendsDict] = useState<IFriendsData[]>();
+  const [selected, setSelected] = useState<number[]>([]);
+  useEffect(() => {
+    const dict = new Array();
+    for (let i = 0; i < friendsData.length; i++) {
+      dict[friendsData[i].id] = friendsData[i];
+    }
+    setFriendsDict(friendsDict);
+  }, []);
+  useEffect(() => {
+    const selectedString = localStorage.getItem("groupMaker");
+    if (selectedString) {
+      const arr = selectedString.split(",").map((value) => parseInt(value));
+    }
+  }, []);
   const onListClick = (id: number) => {
     const selectedCopy = [...selected];
     const newSelected = selectedCopy.filter((value) => value !== id);
@@ -23,12 +36,18 @@ function CreateGroupSelectedList({ friends_data }: IFriendList) {
   };
   return (
     <RowList>
-      {friends_data.map((value) => (
-        <span key={value.id}>
-          {selected.includes(value.id) && (
+      {selected?.map((value, index) => (
+        <span key={index}>
+          {friendsDict && friendsDict[value] && (
             <A.Profile
-              profileProps={{ direction: "column", value: `${value.title}` }}
-              imgProps={{ type: "profile", imgSrc: `${value.img}` }}
+              profileProps={{
+                direction: "column",
+                value: `${friendsDict[value].title}`,
+              }}
+              imgProps={{
+                type: "profile",
+                imgSrc: `${friendsDict[value].img}`,
+              }}
               animateProps={animationProps}
             />
           )}
@@ -38,7 +57,7 @@ function CreateGroupSelectedList({ friends_data }: IFriendList) {
   );
 }
 
-export default React.memo(CreateGroupSelectedList);
+export default GroupMakerSelectedList;
 
 const HoverImg = styled(motion.div)`
   position: absolute;

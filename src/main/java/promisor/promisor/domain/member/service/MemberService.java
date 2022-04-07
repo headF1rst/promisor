@@ -2,25 +2,21 @@ package promisor.promisor.domain.member.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
+import promisor.promisor.domain.member.domain.RefreshToken;
+import promisor.promisor.domain.member.dao.RefreshTokenRepository;
 import promisor.promisor.domain.member.dao.RelationRepository;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.domain.Relation;
-import promisor.promisor.domain.member.dto.FollowFriendRequest;
-import promisor.promisor.domain.member.dto.FollowFriendResponse;
-import promisor.promisor.domain.member.dto.MemberResponse;
-import promisor.promisor.domain.member.dto.SignUpDto;
+import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.exception.*;
-import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.config.security.JwtProvider;
 import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
@@ -31,17 +27,15 @@ import promisor.promisor.infra.email.EmailValidator;
 import promisor.promisor.infra.email.exception.EmailConfirmedException;
 import promisor.promisor.infra.email.exception.EmailNotValid;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j
-public class MemberService implements UserDetailsService {
+public class MemberService {
 
     private final MemberRepository memberRepository;
     private final EmailValidator emailValidator;
@@ -49,21 +43,9 @@ public class MemberService implements UserDetailsService {
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
     private final RelationRepository relationRepository;
-
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-
-        if (email.isBlank()) {
-            throw new EmailEmptyException();
-        }
-
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member member = optionalMember.orElseThrow(LoginInfoNotFoundException::new);
-
-        Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(member.getRole()));
-        return new User(member.getEmail(), member.getPassword(), authorities);
-    }
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
     public String save(SignUpDto request) {
@@ -91,10 +73,9 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public String signUpUser(Member member) {
-        Optional<Member> optionalUserExists = memberRepository.findByEmail(member.getEmail());
-        Member userExists = optionalUserExists.orElseThrow(() -> new EmailNotValid(member.getEmail()));
+        Optional<Member> userExists = memberRepository.findByEmail(member.getEmail());
 
-        if (userExists != null) {
+        if (userExists.isPresent()) {
             // TODO check of attributes are the same and
             // TODO if email not confirmed send confirmation email.
             throw new EmailDuplicatedException(member.getEmail());
@@ -221,29 +202,83 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public void followFriend(FollowFriendRequest request) {
-        Member requester = getMember(request.getRequesterEmail());
+    public void followFriend(String email, FollowFriendRequest request) {
+
+        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
+        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
+
         Optional<Member> optionalReceiver  = memberRepository.findByEmail(request.getReceiverEmail());
         Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
 
         log.info("requester: '{}', receiver: '{}'", requester, receiver);
 
-        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(request.getRequesterEmail(), request.getReceiverEmail())) {
+        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
             throw new ExistFriendException(request.getReceiverEmail());
         }
         relationRepository.save(new Relation(requester, receiver));
     }
 
-    public MemberResponse searchFriend(Long id, String email) {
-        Optional<Member> optionalMember1 = memberRepository.findById(id);
-        Member member1 = optionalMember1.orElseThrow(MemberEmailNotFound::new);
+    public MemberResponse searchFriend(String email, String findEmail) {
+        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
+        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
 
-        if (email.isBlank()) {
+        if (findEmail.isBlank()) {
             throw new EmailEmptyException();
         }
-        Optional<Member> optionalMember2 = memberRepository.findByEmail(email);
-        Member member2 = optionalMember2.orElseThrow(MemberEmailNotFound::new);
+        Optional<Member> optionalReceiver = memberRepository.findByEmail(email);
+        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
 
-        return new MemberResponse(member2);
+        return new MemberResponse(receiver);
+    }
+
+    public LoginResponse login(LoginDto loginDto) {
+
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+        Map<String, String> createToken = createTokenReturn(loginDto);
+
+        return new LoginResponse(
+                createToken.get("accessToken"),
+                createToken.get("refreshIdx")
+        );
+    }
+
+    public LoginResponse refreshToken(LoginDto.GetRefreshTokenDto getRefreshTokenDto, HttpServletRequest request) {
+        String refreshToken = refreshTokenRepository.findRefreshTokenById(getRefreshTokenDto.getRefreshId());
+
+        if (jwtProvider.validateJwtToken(refreshToken)) {
+            String email = jwtProvider.extractEmail(refreshToken);
+            LoginDto loginDto = new LoginDto();
+            loginDto.setEmail(email);
+
+            Map<String, String> createToken = createTokenReturn(loginDto);
+
+            return new LoginResponse(
+                    createToken.get("accessToken"),
+                    createToken.get("refreshIdx")
+            );
+        } else {
+            throw new LoginAgainException();
+        }
+    }
+
+    private Map<String, String> createTokenReturn(LoginDto loginDto) {
+        Map result = new HashMap();
+
+        String accessToken = jwtProvider.createAccessToken(loginDto.getEmail());
+        String refreshToken = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshToken");
+        String refreshTokenExpirationAt = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshTokenExpirationAt");
+
+        RefreshToken insertRefreshToken = new RefreshToken(
+                loginDto.getEmail(),
+                accessToken,
+                refreshToken,
+                refreshTokenExpirationAt
+        );
+
+        refreshTokenRepository.save(insertRefreshToken);
+
+        result.put("accessToken", accessToken);
+        result.put("refreshId", insertRefreshToken.getId());
+        return result;
     }
 }

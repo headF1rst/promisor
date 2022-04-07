@@ -3,13 +3,11 @@
 다수의 인원이 만날 때, 모두의 일정과 위치 접근성을 고려하여 약속 시간과 장소를 선정할 수 있는 서비스
 
 ## TEAM 우아한 남매들 👨‍👨‍👧‍👦
+|![image](https://user-images.githubusercontent.com/85024598/162111859-7fe5f829-ea40-4175-af51-24bc82d7c52e.png)|![image](https://user-images.githubusercontent.com/85024598/161661535-974fd170-5cb4-45d6-b878-13f2588827b9.png)|![image](https://user-images.githubusercontent.com/85024598/161661751-e07b43ac-bdfc-44d1-9b05-83d960a0deb1.png)|![image](https://user-images.githubusercontent.com/85024598/161661594-12ece4da-fb7f-42bb-9f0f-8f7a7ea3f8d8.png)|
+|---|---|---|---|
+|고산하([@headf1rst](https://github.com/headf1rst))|김채은([@chchaeun](https://github.com/chchaeun))|이준석([@juy4556](https://github.com/juy4556))|황승환([@xx0hn](https://github.com/xx0hn))|
+|Leader / Back End|PM / Front End|Infra / Back End|DBA / Back End|
 
-| 팀원   | 역할                               | Github                                     |
-| ------ | ---------------------------------- | ------------------------------------------ |
-| 고산하 | Project Leader / Back End          | [@headf1rst](https://github.com/headf1rst) |
-| 김채은 | Project Manager / Front End        | [@chchaeun](https://github.com/chchaeun)   |
-| 이준석 | Infra / Back End                   | [@juy4556](https://github.com/juy4556)     |
-| 황승환 | Database Administration / Back End | [@xx0hn](https://github.com/xx0hn)         |
 
 ## 프로젝트 개요 💁‍♀️
 
@@ -81,13 +79,8 @@ Client-Driven : 많이 사용되는 기술일 수록 우선순위를 높게 설�
 
 ### 채택 이유
 
-<<<<<<< HEAD
-
-=======
 ['남들이 다 쓰니까'라는 이유는 없다! - 백엔드 편](https://headf1rst.github.io/etc/promisor-diary-3/)<br>
-
-> > > > > > > 4de4ef1eeea046b1bdee760830409866c2fef7b8
-> > > > > > > ['남들이 다 쓰니까'라는 이유는 없다! - 프론트엔드 편](https://velog.io/@chchaeun/%EB%82%A8%EB%93%A4%EC%9D%B4-%EB%8B%A4-%EC%93%B0%EB%8B%88%EA%B9%8C%EB%9D%BC%EB%8A%94-%EC%9D%B4%EC%9C%A0%EB%8A%94-%EC%97%86%EB%8B%A4-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%ED%8E%B8)
+['남들이 다 쓰니까'라는 이유는 없다! - 프론트엔드 편](https://velog.io/@chchaeun/%EB%82%A8%EB%93%A4%EC%9D%B4-%EB%8B%A4-%EC%93%B0%EB%8B%88%EA%B9%8C%EB%9D%BC%EB%8A%94-%EC%9D%B4%EC%9C%A0%EB%8A%94-%EC%97%86%EB%8B%A4-%ED%94%84%EB%A1%A0%ED%8A%B8%EC%97%94%EB%93%9C-%ED%8E%B8)
 
 ### Back-end
 

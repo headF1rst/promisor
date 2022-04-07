@@ -6,6 +6,4 @@ import promisor.promisor.domain.team.domain.Team;
 
 
 @Transactional(readOnly = true)
-public interface TeamRepository extends JpaRepository<Team, Long> {
-
-}
+public interface TeamRepository extends JpaRepository<Team, Long> { }

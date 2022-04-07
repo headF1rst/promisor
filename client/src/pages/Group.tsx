@@ -7,6 +7,7 @@ import { selectedGroupState } from "../states/selectedGroup";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
 import { GoPerson } from "react-icons/go";
+import { ListContainer } from "../styles/Base";
 
 const TEST_GROUP = [
   {
@@ -55,26 +56,28 @@ function Group() {
   };
   return (
     <>
-      {TEST_GROUP &&
-        TEST_GROUP.map((value, index) => (
-          <O.RoundList
-            key={index}
-            onClick={() => onGroupClick(value.id, value.title)}
-            head={
-              <A.ProfileImg
-                imgProps={{ type: "group", imgSrc: `${value.img}` }}
-              />
-            }
-            main={value.title}
-            sub={
-              <A.IconText
-                icon={<GoPerson />}
-                text={"고산하, 김채은, 이준석, 황승환"}
-              />
-            }
-            tail={true}
-          />
-        ))}
+      <ListContainer>
+        {TEST_GROUP &&
+          TEST_GROUP.map((value, index) => (
+            <O.RoundList
+              key={index}
+              onClick={() => onGroupClick(value.id, value.title)}
+              head={
+                <A.ProfileImg
+                  imgProps={{ type: "group", imgSrc: `${value.img}` }}
+                />
+              }
+              main={value.title}
+              sub={
+                <A.IconText
+                  icon={<GoPerson />}
+                  text={"고산하, 김채은, 이준석, 황승환"}
+                />
+              }
+              tail={true}
+            />
+          ))}
+      </ListContainer>
       <A.FixedRoundBtn
         value={"그룹 생성"}
         onClick={() => {

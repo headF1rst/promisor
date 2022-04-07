@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Link, useMatch } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import * as S from "../styles/_index";
+import * as A from "../atoms/_index";
 import { darkModeState } from "../states/darkmode";
 import Friend from "./Friend";
 import Group from "./Group";
@@ -31,7 +31,7 @@ function Home() {
   const Header = () => {
     return (
       <>
-        <span></span>
+        <A.Logo value={"P"} />
         {friendMatch ? "친구" : settingMatch ? "설정" : "그룹"}
         <AiOutlineMenu style={{ cursor: "pointer" }} onClick={onSideClick} />
       </>

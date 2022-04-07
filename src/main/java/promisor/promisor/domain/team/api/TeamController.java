@@ -3,12 +3,10 @@ package promisor.promisor.domain.team.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import promisor.promisor.domain.team.dto.CreateGroupDto;
+import promisor.promisor.domain.team.dto.EditGroupDto;
 import promisor.promisor.domain.team.service.TeamService;
 
 import javax.validation.Valid;
@@ -27,5 +25,12 @@ public class TeamController {
         teamService.createGroup(request);
         return ResponseEntity.ok().build();
     }
+
+    @PatchMapping
+    public ResponseEntity<Void> editGroup(@RequestBody @Valid final EditGroupDto request) {
+        teamService.editGroup(request);
+        return ResponseEntity.ok().build();
+    }
+
 
 }

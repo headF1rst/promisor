@@ -15,6 +15,7 @@ public enum ErrorCode {
     ENTITY_NOT_FOUND(400, "C004", "엔티티를 찾지 못했습니다."),
     NAME_EMPTY(400, "C005", "이름이 존재하지 않습니다."),
     INTERNAL_SERVER_ERROR(500, "C006", "서버에 문제가 발생했습니다."),
+    FORBIDDEN_USER(403, "C007", "해당 요청에 대한 권한이 없습니다."),
 
     // Member
     EMAIL_ALREADY_TAKEN(400, "M001", "이미 존재하는 이메일입니다."),
@@ -29,11 +30,15 @@ public enum ErrorCode {
     EMAIL_EMPTY(400, "M010", "이메일을 입력해주세요."),
     PASSWORD_EMPTY(400, "M011", "비밀번호를 입력해주세요."),
     INVALID_LOGIN_INFO(400, "M012", "이메일 또는 비밀번호를 다시 확인해 주세요."),
+<<<<<<< Updated upstream
     EXIST_FRIEND(400,"M013", "이미 등록된 친구입니다."),
     UNAUTHORIZED_USER(401, "M014", "로그인 후 이용가능합니다."),
-    FORBIDDEN_USER(403, "M015", "해당 요청에 대한 권한이 없습니다.");
+    LOGIN_AGAIN(400, "M016", "로그인을 다시 시도해 주세요");
+=======
+>>>>>>> Stashed changes
 
     // Group
+    GROUP_ID_NOT_FOUND( 400, "G001", "해당 그룹이 존재하지 않습니다.");
 
     private int httpStatus;
     private final String code;

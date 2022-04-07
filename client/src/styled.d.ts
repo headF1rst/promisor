@@ -12,5 +12,7 @@ declare module "styled-components" {
     cgreen: string;
     cred: string;
     cyellow: string;
+    opacity50: string;
+    btnColor: string;
   }
 }
