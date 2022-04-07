@@ -32,14 +32,14 @@ export const LabelInput = styled.div`
     font-size: 0.9rem;
     color: ${(p) => p.theme.grey};
   }
-  background-color: ${(p) => p.theme.smoke};
+  background-color: ${(p) => p.theme.bgColor};
 `;
 
 export const BoxInput = styled.input`
   width: 80%;
   height: 5vh;
   border: none;
-  background-color: ${(p) => p.theme.smoke};
+  background-color: ${(p) => p.theme.bgColor};
   border-radius: 8px;
   &:focus {
     outline: none;
