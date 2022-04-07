@@ -50,7 +50,7 @@ public class Member extends Person implements UserDetails {
     private String telephone;
 
     private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
-        super(name, "SLEEP");
+        super(name, "INACTIVE");
         this.email = email;
         this.password = password;
         this.telephone = telephone;

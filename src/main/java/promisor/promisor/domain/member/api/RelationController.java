@@ -3,9 +3,8 @@ package promisor.promisor.domain.member.api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import promisor.promisor.domain.member.dto.FollowFriendRequest;
 import promisor.promisor.domain.member.dto.MemberResponse;
-import promisor.promisor.domain.member.service.MemberService;
+import promisor.promisor.domain.member.service.RelationService;
 import promisor.promisor.global.auth.JwtAuth;
 
 @RestController
@@ -13,20 +12,19 @@ import promisor.promisor.global.auth.JwtAuth;
 @RequiredArgsConstructor
 public class RelationController {
 
-    private final MemberService memberService;
+    private final RelationService relationService;
 
-    @PostMapping
+    @PostMapping("/{friendId}")
     public ResponseEntity<Void> followFriend(@JwtAuth String email,
-                                            @RequestBody FollowFriendRequest request) {
-        memberService.followFriend(email, request);
+                                             @PathVariable("friendId") Long friendId) {
+        relationService.followFriend(email, friendId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping
     public ResponseEntity<MemberResponse> searchFriend(@JwtAuth String email,
                                                        @RequestParam String findEmail) {
-        MemberResponse response = memberService.searchFriend(email, findEmail);
+        MemberResponse response = relationService.searchFriend(email, findEmail);
         return ResponseEntity.ok().body(response);
     }
-
 }

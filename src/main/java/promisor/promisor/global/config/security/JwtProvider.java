@@ -3,7 +3,6 @@ package promisor.promisor.global.config.security;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -96,10 +95,8 @@ public class JwtProvider {
         try {
             Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(authToken);
             return true;
-        } catch (MalformedJwtException | IllegalArgumentException | UnsupportedJwtException err) {
-            throw new InvalidTokenException();
-        } catch (ExpiredJwtException err) {
-            throw new TokenExpiredException();
+        } catch (Exception err) {
+            return false;
         }
     }
 }
