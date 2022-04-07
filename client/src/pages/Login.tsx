@@ -28,6 +28,7 @@ function Login() {
     phoneNumber,
   }: ILoginForm) => {
     console.log(name, email, password, passwordConfirm, phoneNumber);
+    alert(`${email} 로 인증 메일을 전송하였습니다.`);
   };
   const onPushClick = () => {
     if (loginMatch) {
