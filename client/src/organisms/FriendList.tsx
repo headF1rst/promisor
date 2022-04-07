@@ -7,6 +7,7 @@ import * as O from "../organisms/_index";
 import { selectedState } from "../states/createGroup";
 import { IFriendList } from "../pages/GroupMaker";
 import { BsFillTelephoneFill } from "react-icons/bs";
+import { AnimatePresence, motion } from "framer-motion";
 function FriendList({ select, friendsData }: IFriendList) {
   const [selected, setSelected] = useRecoilState(selectedState);
   const onListClick = (id: number) => {
@@ -22,25 +23,39 @@ function FriendList({ select, friendsData }: IFriendList) {
     setSelected(newSelected);
   };
   return (
-    <>
-      {friendsData.map((value, idx) => (
-        <O.RoundList
-          head={
-            <A.ProfileImg
-              imgProps={{ type: "group", imgSrc: `${value.img}` }}
-            />
-          }
-          main={value.title}
-          sub={
-            <A.IconText icon={<BsFillTelephoneFill />} text={"010-0000-0000"} />
-          }
-          tail={select ? false : true}
-          onClick={() => onListClick(value.id)}
-          key={idx}
-        />
-      ))}
-    </>
+    <AnimatePresence>
+      <AnimationContainer
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        exit={{ scaleY: 0 }}
+        transition={{ type: "linear" }}
+      >
+        {friendsData.map((value, idx) => (
+          <O.RoundList
+            head={
+              <A.ProfileImg
+                imgProps={{ type: "group", imgSrc: `${value.img}` }}
+              />
+            }
+            main={value.title}
+            sub={
+              <A.IconText
+                icon={<BsFillTelephoneFill />}
+                text={"010-0000-0000"}
+              />
+            }
+            tail={select ? false : true}
+            onClick={() => onListClick(value.id)}
+            key={idx}
+          />
+        ))}
+      </AnimationContainer>
+    </AnimatePresence>
   );
 }
 
 export default FriendList;
+
+const AnimationContainer = styled(motion.div)`
+  transform-origin: top;
+`;
