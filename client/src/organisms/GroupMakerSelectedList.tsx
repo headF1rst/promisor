@@ -21,7 +21,6 @@ function GroupMakerSelectedList({ friendsData }: IFriendList) {
     const selectedString = localStorage.getItem("groupMaker");
     if (selectedString) {
       const arr = selectedString.split(",").map((value) => parseInt(value));
-      setSelected;
     }
   }, []);
   const onListClick = (id: number) => {
