@@ -10,20 +10,20 @@ import promisor.promisor.domain.member.domain.Member;
 public class MemberResponse {
 
     private Long id;
-    private String email;
-    private String name;
     private String profileImage;
+    private String name;
+    private String telephone;
     private String status;
 
     public MemberResponse(Member member) {
-        this(member.getId(), member.getEmail(), member.getName(), member.getImageUrl(), member.getStatus());
+        this(member.getId(), member.getImageUrl(), member.getName(), member.getTelephone(), member.getStatus());
     }
 
-    public MemberResponse(Long id, String email, String name, String profileImage, String status) {
+    public MemberResponse(Long id, String profileImage, String name, String telephone, String status) {
         this.id = id;
-        this.email = email;
-        this.name = name;
         this.profileImage = profileImage;
+        this.name = name;
+        this.telephone = telephone;
         this.status = status;
     }
 }

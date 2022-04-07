@@ -42,7 +42,6 @@ public class MemberService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
-    private final RelationRepository relationRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -192,43 +191,6 @@ public class MemberService {
                 "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
                 "\n" +
                 "</div></div>";
-    }
-
-    public Member getMember(String email) {
-        log.info("Fetching member '{}'", email);
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member member = optionalMember.orElseThrow(() -> new EmailNotValid(email));
-        return member;
-    }
-
-    @Transactional
-    public void followFriend(String email, FollowFriendRequest request) {
-
-        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
-        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
-
-        Optional<Member> optionalReceiver  = memberRepository.findByEmail(request.getReceiverEmail());
-        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
-
-        log.info("requester: '{}', receiver: '{}'", requester, receiver);
-
-        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
-            throw new ExistFriendException(request.getReceiverEmail());
-        }
-        relationRepository.save(new Relation(requester, receiver));
-    }
-
-    public MemberResponse searchFriend(String email, String findEmail) {
-        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
-        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
-
-        if (findEmail.isBlank()) {
-            throw new EmailEmptyException();
-        }
-        Optional<Member> optionalReceiver = memberRepository.findByEmail(email);
-        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
-
-        return new MemberResponse(receiver);
     }
 
     public LoginResponse login(LoginDto loginDto) {

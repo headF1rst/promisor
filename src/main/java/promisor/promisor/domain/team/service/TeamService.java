@@ -34,6 +34,6 @@ public class TeamService {
     @Transactional
     public void editGroup(EditGroupDto request) {
         Team group = getGroup(request.getGroupId());
-        group.EditGroupName(request.getGroupName());
+        group.changeGroupName(request.getGroupName());
     }
 }

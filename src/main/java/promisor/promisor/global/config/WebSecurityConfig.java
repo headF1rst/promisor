@@ -16,8 +16,8 @@ import promisor.promisor.domain.member.service.CustomUserDetailService;
 import promisor.promisor.domain.member.service.MemberLoginFailHandler;
 import promisor.promisor.global.PasswordEncoder;
 import promisor.promisor.global.config.security.CustomAuthenticationFilter;
+import promisor.promisor.global.config.security.JwtAuthenticationFilter;
 import promisor.promisor.global.config.security.JwtProvider;
-import promisor.promisor.global.config.security.jwtAuthenticationFilter;
 import promisor.promisor.global.error.CustomAuthenticationEntryPoint;
 import promisor.promisor.global.error.WebAccessDeniedHandler;
 import promisor.promisor.global.secret.SecretKey;
@@ -31,8 +31,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.*;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtProvider jwtProvider;
-    private final WebAccessDeniedHandler webAccessDeniedHandler;
-    private final CustomAuthenticationEntryPoint authenticationEntryPointHandler;
     private final CustomUserDetailService customUserDetailService;
     private final PasswordEncoder passwordEncoder;
     private final SecretKey secretKey;
@@ -50,10 +48,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .anyRequest().authenticated()
                         .and()
                                 .exceptionHandling()
-                                        .authenticationEntryPoint(authenticationEntryPointHandler)
-                                                .accessDeniedHandler(webAccessDeniedHandler)
+                                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                                                .accessDeniedHandler(new WebAccessDeniedHandler())
                                                         .and()
-                                                                .addFilterBefore(new jwtAuthenticationFilter(jwtProvider),
+                                                                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
                                                                         UsernamePasswordAuthenticationFilter.class);
     }
 
