@@ -198,11 +198,11 @@ public class MemberService {
     public LoginResponse login(LoginDto loginDto) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-        Map<String, String> createToken = createTokenReturn(loginDto);
+        TokenResponse createToken = createTokenReturn(loginDto);
 
         return new LoginResponse(
-                createToken.get("accessToken"),
-                createToken.get("refreshIdx")
+                createToken.getAccessToken(),
+                createToken.getRefreshId()
         );
     }
 
@@ -214,19 +214,18 @@ public class MemberService {
             LoginDto loginDto = new LoginDto();
             loginDto.setEmail(email);
 
-            Map<String, String> createToken = createTokenReturn(loginDto);
+            TokenResponse createToken = createTokenReturn(loginDto);
 
             return new LoginResponse(
-                    createToken.get("accessToken"),
-                    createToken.get("refreshIdx")
+                    createToken.getAccessToken(),
+                    createToken.getRefreshId()
             );
         } else {
             throw new LoginAgainException();
         }
     }
 
-    private Map<String, String> createTokenReturn(LoginDto loginDto) {
-        Map result = new HashMap();
+    private TokenResponse createTokenReturn(LoginDto loginDto) {
 
         String accessToken = jwtProvider.createAccessToken(loginDto.getEmail());
         String refreshToken = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshToken");
@@ -238,11 +237,7 @@ public class MemberService {
                 refreshToken,
                 refreshTokenExpirationAt
         );
-
         refreshTokenRepository.save(insertRefreshToken);
-
-        result.put("accessToken", accessToken);
-        result.put("refreshId", insertRefreshToken.getId());
-        return result;
+        return new TokenResponse(accessToken, insertRefreshToken.getId());
     }
 }
