@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //무분별한 객체 생성에 대해 한 번 더 체크
 public class Member extends Person implements UserDetails {
 
     @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -114,5 +114,11 @@ public class Member extends Person implements UserDetails {
             return false;
         }
         return friends.contains(receiver);
+    }
+
+    public void modifyMemberInfo(String name, String imageUrl, String location){
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.location = location;
     }
 }
