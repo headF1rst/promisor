@@ -38,7 +38,7 @@ security:
   jwt:
     token:
       secret-key: sd92dfs0-1544-32da-bd21-bd234slkj
-      expire-length: 3600000
+      expire-length: 36000000
       expire-length-refresh: 5184000000
 
 logging:
