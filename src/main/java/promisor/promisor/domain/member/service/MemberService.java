@@ -246,8 +246,8 @@ public class MemberService {
 
 
     @Transactional
-    public ModifyMemberResponse modifyInfo(Long id, ModifyMemberDto modifyMemberDto){
-        Optional<Member> optionalMember = memberRepository.findById(id);
+    public ModifyMemberResponse modifyInfo(String email , ModifyMemberDto modifyMemberDto){
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
         member.modifyMemberInfo(modifyMemberDto.getName(), modifyMemberDto.getImageUrl(), modifyMemberDto.getLocation());
         return new ModifyMemberResponse(
