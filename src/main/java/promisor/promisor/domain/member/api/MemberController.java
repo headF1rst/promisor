@@ -7,6 +7,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.service.MemberService;
+import promisor.promisor.global.auth.JwtAuth;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -52,9 +53,9 @@ public class MemberController {
         return ResponseEntity.ok().body(response);
     }
 
-    @PatchMapping("/modify/{memberId}")
-    public ResponseEntity<ModifyMemberResponse> modifyInfo(@PathVariable("memberId") Long id,
-                                                 @RequestBody @Valid final ModifyMemberDto modifyMemberDto) {
-        return ResponseEntity.ok().body(memberService.modifyInfo(id, modifyMemberDto));
+    @PatchMapping("/modify")
+    public ResponseEntity<ModifyMemberResponse> modifyInfo(@JwtAuth String email,
+                                                           @RequestBody @Valid final ModifyMemberDto modifyMemberDto) {
+        return ResponseEntity.ok().body(memberService.modifyInfo(email, modifyMemberDto));
     }
 }

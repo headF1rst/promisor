@@ -33,5 +33,9 @@ public class TeamController {
     }
 
 
+//    @PatchMapping("/leave/{groupId}")
+//    public ResponseEntity<> leaveGroup(){
+//        teamService.
+//    }
 
 }
