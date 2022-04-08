@@ -7,6 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import promisor.promisor.domain.model.Person;
+import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.error.exception.ApplicationException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -120,5 +122,13 @@ public class Member extends Person implements UserDetails {
         this.name = name;
         this.imageUrl = imageUrl;
         this.location = location;
+    public void deleteFriend(Member friend) {
+
+        if (getMemberFriends().contains(friend) && friend.getMemberFriends().contains(this)) {
+            friends.removeIf(friendShip -> friendShip.getFriend().equals(friend));
+            friend.friends.removeIf(friendShip -> friendShip.getFriend().equals(this));
+            return;
+        }
+        throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
     }
 }

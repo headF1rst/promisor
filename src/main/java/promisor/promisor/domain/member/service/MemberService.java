@@ -15,6 +15,8 @@ import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.exception.*;
 import promisor.promisor.global.config.security.JwtProvider;
+import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.error.exception.ApplicationException;
 import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;

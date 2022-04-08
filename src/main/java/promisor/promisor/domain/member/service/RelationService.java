@@ -31,6 +31,13 @@ public class RelationService {
         return member;
     }
 
+    public Member getMemberById(Long id) {
+        log.info("Fetching member '{}'", id);
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        Member member = optionalMember.orElseThrow(MemberEmailNotFound::new);
+        return member;
+    }
+
     /*
      *   친구 요청 API
      *   @Param: 친구 요청자 이메일, 수락자 id
@@ -40,9 +47,7 @@ public class RelationService {
     public void followFriend(String email, Long friendId) {
 
         Member requester = getMember(email);
-
-        Optional<Member> optionalReceiver  = memberRepository.findById(friendId);
-        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
+        Member receiver = getMemberById(friendId);
 
         log.info("requester: '{}', receiver: '{}'", requester, receiver);
 
@@ -67,5 +72,18 @@ public class RelationService {
         Member receiver = getMember(findEmail);
 
         return new MemberResponse(receiver);
+    }
+
+    /*
+     *   친구 삭제 API
+     *   @Param: 요청자 이메일, 대상자 id
+     *   @author: Sanha Ko
+     */
+    @Transactional
+    public void deleteFriend(String email, Long friendId) {
+
+        Member member = getMember(email);
+        Member friend = getMemberById(friendId);
+        member.deleteFriend(friend);
     }
 }
