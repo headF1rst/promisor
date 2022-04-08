@@ -28,4 +28,10 @@ public class Relation extends BaseEntity {
         this.owner = owner;
         this.friend = friend;
     }
+
+    public Relation(Member owner, Member friend, String status) {
+        super(status);
+        this.owner = owner;
+        this.friend = friend;
+    }
 }
