@@ -4,15 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import promisor.promisor.domain.member.dto.LoginDto;
-import promisor.promisor.domain.member.dto.LoginResponse;
-import promisor.promisor.domain.member.dto.MemberResponse;
-import promisor.promisor.domain.member.dto.SignUpDto;
+import promisor.promisor.domain.member.domain.Member;
+import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
+
+import java.util.*;
+import java.util.logging.Logger;
+
+import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("/members")
@@ -20,6 +25,7 @@ import java.net.URI;
 public class MemberController {
 
     private final MemberService memberService;
+    private final static Logger log = Logger.getGlobal();
 
     @PostMapping
     public ResponseEntity<String> register(@RequestBody @Valid final SignUpDto request) {
@@ -44,5 +50,11 @@ public class MemberController {
                                                       HttpServletRequest request) {
         LoginResponse response = memberService.refreshToken(getRefreshTokenDto, request);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PatchMapping("/modify/{memberId}")
+    public ResponseEntity<ModifyMemberResponse> modifyInfo(@PathVariable("memberId") Long id,
+                                                 @RequestBody @Valid final ModifyMemberDto modifyMemberDto) {
+        return ResponseEntity.ok().body(memberService.modifyInfo(id, modifyMemberDto));
     }
 }

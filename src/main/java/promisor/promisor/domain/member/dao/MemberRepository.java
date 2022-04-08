@@ -1,11 +1,13 @@
 package promisor.promisor.domain.member.dao;
 
+import org.mapstruct.Mapper;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
+import promisor.promisor.domain.member.dto.ModifyMemberDto;
 
 import java.util.Optional;
 
@@ -13,7 +15,6 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
-
     @Transactional
     @Modifying
     @Query("update Member m " +
@@ -21,4 +22,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int enableMember(@Param("email") String email);
 
     boolean existsByEmail(String email);
+
 }
+

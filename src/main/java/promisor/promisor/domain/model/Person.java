@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class Person extends BaseEntity {
 
     @Column(nullable = false)
-    private String name;
+    protected String name;
 
     protected Person() {}
 

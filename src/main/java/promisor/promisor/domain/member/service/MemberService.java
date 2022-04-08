@@ -10,10 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.RefreshToken;
 import promisor.promisor.domain.member.dao.RefreshTokenRepository;
-import promisor.promisor.domain.member.dao.RelationRepository;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
-import promisor.promisor.domain.member.domain.Relation;
 import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.exception.*;
 import promisor.promisor.global.config.security.JwtProvider;
@@ -32,8 +30,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
+@Transactional(readOnly = true) // 조회 시 성능 향상 위해 사용
+@RequiredArgsConstructor // final이 붙거나 @NotNull 이 붙은 필드의 생성자를 자동 생성해주는 롬복 어노테이션
 @Slf4j
 public class MemberService {
 
@@ -242,5 +240,18 @@ public class MemberService {
         result.put("accessToken", accessToken);
         result.put("refreshId", insertRefreshToken.getId());
         return result;
+    }
+
+
+    @Transactional
+    public ModifyMemberResponse modifyInfo(Long id, ModifyMemberDto modifyMemberDto){
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
+        member.modifyMemberInfo(modifyMemberDto.getName(), modifyMemberDto.getImageUrl(), modifyMemberDto.getLocation());
+        return new ModifyMemberResponse(
+                member.getName(),
+                member.getImageUrl(),
+                member.getLocation()
+        );
     }
 }
