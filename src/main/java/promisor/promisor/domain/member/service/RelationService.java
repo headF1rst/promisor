@@ -7,13 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.dao.RelationRepository;
 import promisor.promisor.domain.member.domain.Member;
-import promisor.promisor.domain.member.domain.Relation;
 import promisor.promisor.domain.member.dto.MemberResponse;
 import promisor.promisor.domain.member.exception.EmailEmptyException;
 import promisor.promisor.domain.member.exception.ExistFriendException;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -54,7 +55,7 @@ public class RelationService {
         if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, receiver.getEmail())) {
             throw new ExistFriendException(receiver.getEmail());
         }
-        relationRepository.save(new Relation(requester, receiver, "INACTIVE"));
+        requester.addFriend(receiver);
     }
 
     /*
@@ -85,5 +86,18 @@ public class RelationService {
         Member member = getMember(email);
         Member friend = getMemberById(friendId);
         member.deleteFriend(friend);
+    }
+
+    /*
+     *   친구 전체 조회 API
+     *   @Param: 이메일
+     *   @author: Sanha Ko
+     */
+    public List<MemberResponse> getFriendList(String email) {
+
+        Member member = getMember(email);
+        return member.getMemberFriends().stream()
+                .map(MemberResponse::new)
+                .collect(Collectors.toList());
     }
 }

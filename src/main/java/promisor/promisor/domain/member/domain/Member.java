@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED) //무분별한 객체 생성에 대해 한 번 더 체크
 public class Member extends Person implements UserDetails {
 
-    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Relation> friends = new HashSet<>();
 
     @Lob
@@ -118,15 +118,19 @@ public class Member extends Person implements UserDetails {
         return friends.contains(receiver);
     }
 
+    public void addFriend(Member friend) {
+        this.friends.add(new Relation(this, friend, "ACTIVE"));
+    }
+
     public void modifyMemberInfo(String name, String imageUrl, String location){
         this.name = name;
         this.imageUrl = imageUrl;
         this.location = location;
+    }
     public void deleteFriend(Member friend) {
 
-        if (getMemberFriends().contains(friend) && friend.getMemberFriends().contains(this)) {
+        if (getMemberFriends().contains(friend)) {
             friends.removeIf(friendShip -> friendShip.getFriend().equals(friend));
-            friend.friends.removeIf(friendShip -> friendShip.getFriend().equals(this));
             return;
         }
         throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
