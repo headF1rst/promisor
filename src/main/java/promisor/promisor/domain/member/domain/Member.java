@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //무분별한 객체 생성에 대해 한 번 더 체크
 public class Member extends Person implements UserDetails {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -122,6 +122,11 @@ public class Member extends Person implements UserDetails {
         this.friends.add(new Relation(this, friend, "ACTIVE"));
     }
 
+    public void modifyMemberInfo(String name, String imageUrl, String location){
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.location = location;
+    }
     public void deleteFriend(Member friend) {
 
         if (getMemberFriends().contains(friend)) {
