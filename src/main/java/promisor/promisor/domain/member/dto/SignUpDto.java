@@ -3,6 +3,8 @@ package promisor.promisor.domain.member.dto;
 import lombok.Data;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.global.error.exception.Enum;
+
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -11,6 +13,9 @@ public class SignUpDto {
 
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;
+
+    @NotBlank(message = "이메일을 입력해주세요.")
+    @Email(message = "이메일 형식이 잘못되었습니다.")
     private String email;
 
     @NotBlank(message = "비밀번호를 입력해주세요")
