@@ -3,7 +3,7 @@
 다수의 인원이 만날 때, 모두의 일정과 위치 접근성을 고려하여 약속 시간과 장소를 선정할 수 있는 서비스
 
 ## TEAM 우아한 남매들 👨‍👨‍👧‍👦
-|![image](https://user-images.githubusercontent.com/85024598/162111859-7fe5f829-ea40-4175-af51-24bc82d7c52e.png)|![image](https://user-images.githubusercontent.com/85024598/161661535-974fd170-5cb4-45d6-b878-13f2588827b9.png)|![image](https://user-images.githubusercontent.com/85024598/161661751-e07b43ac-bdfc-44d1-9b05-83d960a0deb1.png)|![image](https://user-images.githubusercontent.com/85024598/161661594-12ece4da-fb7f-42bb-9f0f-8f7a7ea3f8d8.png)|
+|![image](https://user-images.githubusercontent.com/85024598/162111859-7fe5f829-ea40-4175-af51-24bc82d7c52e.png)|![image](https://user-images.githubusercontent.com/85024598/161661535-974fd170-5cb4-45d6-b878-13f2588827b9.png)|![image](https://user-images.githubusercontent.com/85024598/162609064-7b2b117c-7102-4dea-9a4d-e80519d703e4.png)|![image](https://user-images.githubusercontent.com/85024598/161661594-12ece4da-fb7f-42bb-9f0f-8f7a7ea3f8d8.png)|
 |---|---|---|---|
 |고산하([@headf1rst](https://github.com/headf1rst))|김채은([@chchaeun](https://github.com/chchaeun))|이준석([@juy4556](https://github.com/juy4556))|황승환([@xx0hn](https://github.com/xx0hn))|
 |Leader / Back End|PM / Front End|Infra / Back End|DBA / Back End|
