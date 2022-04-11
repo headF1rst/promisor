@@ -28,7 +28,6 @@ function GroupMakerSelectedList({ props }: IGroupMaker) {
                 type: "profile",
                 imgSrc: `${value.img}`,
               }}
-              animateProps={animationProps}
             />
           )}
         </span>
@@ -52,7 +51,7 @@ const HoverImg = styled(motion.div)`
   cursor: pointer;
 `;
 
-const RowList = styled.div`
+export const RowList = styled.div`
   position: fixed;
   padding-inline: 1em;
   padding-top: 1em;

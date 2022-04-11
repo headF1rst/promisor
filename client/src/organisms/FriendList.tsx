@@ -22,12 +22,7 @@ function FriendList({ select, props }: IGroupMaker) {
   };
   return (
     <AnimatePresence>
-      <AnimationContainer
-        initial={{ scaleY: 0 }}
-        animate={{ scaleY: 1 }}
-        exit={{ scaleY: 0 }}
-        transition={{ type: "linear" }}
-      >
+      <AnimationContainer>
         {props.state.map((value, idx) => (
           <O.RoundList
             head={
@@ -56,4 +51,8 @@ export default FriendList;
 
 const AnimationContainer = styled(motion.div)`
   transform-origin: top;
+  /* initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        exit={{ scaleY: 0 }}
+        transition={{ type: "linear" }} */
 `;

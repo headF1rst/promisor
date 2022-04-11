@@ -11,11 +11,7 @@ interface IRoundList {
 
 export const RoundList = ({ onClick, head, main, sub, tail }: IRoundList) => {
   return (
-    <SFlatList
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
+    <SFlatList>
       <Row onClick={onClick}>
         {head}
         <SFlatElement>
