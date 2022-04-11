@@ -5,22 +5,20 @@ import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
 import { selectedState } from "../states/createGroup";
-import { IFriendList } from "../pages/GroupMaker";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
-function FriendList({ select, friendsData }: IFriendList) {
-  const [selected, setSelected] = useRecoilState(selectedState);
+import { IGroupMaker } from "../pages/GroupMaker";
+function FriendList({ select, props }: IGroupMaker) {
   const onListClick = (id: number) => {
     if (!select) return;
-
-    let newSelected;
-    if (selected.includes(id)) {
-      const selectedCopy = [...selected];
-      newSelected = selectedCopy.filter((value) => value !== id);
-    } else {
-      newSelected = [...selected, id];
+    if (props.state && props.setState) {
+      const friendsCopy = [...props.state];
+      friendsCopy[id] = {
+        ...friendsCopy[id],
+        selected: !friendsCopy[id].selected,
+      };
+      props.setState(friendsCopy);
     }
-    setSelected(newSelected);
   };
   return (
     <AnimatePresence>
@@ -30,7 +28,7 @@ function FriendList({ select, friendsData }: IFriendList) {
         exit={{ scaleY: 0 }}
         transition={{ type: "linear" }}
       >
-        {friendsData.map((value, idx) => (
+        {props.state.map((value, idx) => (
           <O.RoundList
             head={
               <A.ProfileImg
