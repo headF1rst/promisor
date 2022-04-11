@@ -116,7 +116,7 @@ function Friend() {
           onShowClick={() => setShowRequest((p) => !p)}
           text={"친구 요청"}
         />
-        {showRequest && <FriendList friendsData={TEST_PROFILE1} />}
+        {showRequest && <FriendList props={{ state: TEST_PROFILE1 }} />}
       </ListContainer>
       <ListContainer show={showFriends}>
         <ThinBar
@@ -124,7 +124,7 @@ function Friend() {
           onShowClick={() => setShowFriends((p) => !p)}
           text={"내 친구"}
         />
-        {showFriends && <FriendList friendsData={TEST_PROFILE2} />}
+        {showFriends && <FriendList props={{ state: TEST_PROFILE2 }} />}
       </ListContainer>
       {!modal && (
         <A.FixedRoundBtn value={"친구 추가"} onClick={onToggleClick} />

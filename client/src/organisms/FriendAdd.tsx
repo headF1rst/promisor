@@ -28,7 +28,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
         <span>친구 추가</span>
         {search && (
           <S.LabelInput>
-            <S.Input placeholder="이메일 또는 전화번호" />
+            <S.Input placeholder="그룹 이름" />
           </S.LabelInput>
         )}
         {!search && !error && (
@@ -69,7 +69,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
 
 export default FriendAdd;
 
-const FriendModal = styled(S.BoxModal)`
+export const FriendModal = styled(S.BoxModal)`
   width: 80%;
   @media screen and (min-width: 900px) {
     width: 40%;

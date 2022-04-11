@@ -37,7 +37,8 @@ export const Header = styled.div`
     background-color: transparent;
   }
 `;
-export const ListContainer = styled.div<{ show?: boolean }>`
+export const ListContainer = styled(motion.div)<{ show?: boolean }>`
   width: 100%;
   margin-bottom: ${(p) => (p.show == null || p.show ? "5em" : "1em")};
+  transform-origin: top;
 `;
