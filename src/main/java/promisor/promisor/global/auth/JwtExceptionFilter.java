@@ -2,10 +2,14 @@ package promisor.promisor.global.auth;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import promisor.promisor.domain.member.exception.EmailEmptyException;
 import promisor.promisor.global.token.JwtExceptionResponse;
+import promisor.promisor.infra.email.exception.EmailNotValid;
 
+import javax.security.sasl.AuthenticationException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +26,8 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         } catch (JwtException err) {
             setErrorResponse(HttpStatus.UNAUTHORIZED, response, err);
+        } catch (BadCredentialsException err) {
+            setErrorResponse(HttpStatus.BAD_REQUEST, response, err);
         }
     }
 

@@ -7,7 +7,7 @@ import { darkTheme, lightTheme } from "./Theme";
 import {
   Friend,
   Login,
-  CreateGroup,
+  GroupMaker,
   Promise,
   PromiseDetail,
   GroupChatRoom,
@@ -98,7 +98,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
-          <Route path="/group/create" element={<CreateGroup />} />
+          <Route path="/group/:id/invite" element={<GroupMaker />} />
           <Route path="/group/:id/promise" element={<Promise />} />
           <Route path="/group/:id/promise/:id" element={<PromiseDetail />} />
           <Route path="/group/:id" element={<GroupChatRoom />} />
