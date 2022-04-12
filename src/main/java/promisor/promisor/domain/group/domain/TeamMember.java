@@ -1,4 +1,4 @@
-package promisor.promisor.domain.team.domain;
+package promisor.promisor.domain.group.domain;
 
 import lombok.Getter;
 import promisor.promisor.domain.member.domain.Member;
@@ -19,7 +19,7 @@ public class TeamMember extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "group_id")
-    private Team team;
+    private Group group;
 
     @Column(length = 100)
     private String curLocate;

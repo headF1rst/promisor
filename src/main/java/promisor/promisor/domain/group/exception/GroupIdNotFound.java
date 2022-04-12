@@ -1,4 +1,4 @@
-package promisor.promisor.domain.team.exception;
+package promisor.promisor.domain.group.exception;
 
 
 import promisor.promisor.global.error.ErrorCode;
