@@ -17,14 +17,12 @@ import promisor.promisor.domain.member.domain.Member;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-<<<<<<< Updated upstream
 @SpringBootTest
 @Transactional
 class MemberServiceTest {
 
     @Autowired
     MemberRepository memberRepository;
-=======
 @RunWith(SpringRunner.class)
 @SpringBootTest //runwith와 springboottest 어노테이션 두 가지가 있어야 spring integration하여 spring 올려서 테스트 할 수 있음
 @Transactional

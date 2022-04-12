@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import promisor.promisor.domain.team.dto.CreateGroupDto;
 import promisor.promisor.domain.team.dto.EditGroupDto;
+import promisor.promisor.domain.team.dto.LeaveGroupResponse;
 import promisor.promisor.domain.team.service.TeamService;
+import promisor.promisor.global.auth.JwtAuth;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -33,9 +35,9 @@ public class TeamController {
     }
 
 
-//    @PatchMapping("/leave/{groupId}")
-//    public ResponseEntity<> leaveGroup(){
-//        teamService.
-//    }
+    @PatchMapping("/leave/{groupId}")
+    public ResponseEntity<LeaveGroupResponse> leaveGroup(@JwtAuth String email, @PathVariable("groupId")Long groupId){
+        return ResponseEntity.ok().body(teamService.leaveGroup(email, groupId));
+    }
 
 }

@@ -118,10 +118,11 @@ public class Member extends Person implements UserDetails {
         return friends.contains(receiver);
     }
 
-    public void modifyMemberInfo(String name, String imageUrl, String location){
+    public void modifyMemberInfo(String name, String imageUrl, String location) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.location = location;
+    }
     public void deleteFriend(Member friend) {
 
         if (getMemberFriends().contains(friend) && friend.getMemberFriends().contains(this)) {
