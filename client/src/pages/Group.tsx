@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import styled from "styled-components";
-import * as S from "../styles/_index";
 import { selectedGroupState } from "../states/selectedGroup";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
 import { GoPerson } from "react-icons/go";
 import { ListContainer } from "../styles/Base";
-import GroupAdd from "../organisms/GroupAdd";
+import AddModal from "../organisms/AddModal";
 
 const TEST_GROUP = [
   {
@@ -50,14 +48,14 @@ const TEST_GROUP = [
 ];
 function Group() {
   const setSelectedGroup = useSetRecoilState(selectedGroupState);
-  const [createModal, setCreateModal] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
   const onGroupClick = (id: number, name: string) => {
     navigate(`/group/${id}/promise`);
     setSelectedGroup({ id, name });
   };
   const onCreateClick = () => {
-    setCreateModal((prev) => !prev);
+    setShowModal((prev) => !prev);
   };
   return (
     <>
@@ -89,10 +87,13 @@ function Group() {
           ))}
       </ListContainer>
       <A.FixedRoundBtn value={"그룹 생성"} onClick={onCreateClick} />
-      <GroupAdd
+      <AddModal
         props={{
-          state: createModal,
-          setState: setCreateModal,
+          titleText: "그룹 생성",
+          placeholderText: "그룹 이름",
+          btnText: "생성",
+          showModal,
+          setShowModal,
         }}
       />
     </>

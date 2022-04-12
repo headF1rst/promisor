@@ -1,11 +1,10 @@
-package promisor.promisor.domain.team.domain;
+package promisor.promisor.domain.group.domain;
 
 import lombok.Getter;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.model.BaseEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
@@ -21,7 +20,7 @@ public class Invite extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "group_id")
-    private Team team;
+    private Group group;
 
     private char accept;
 }

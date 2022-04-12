@@ -1,11 +1,15 @@
 package promisor.promisor.global.auth;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import promisor.promisor.domain.member.exception.EmailEmptyException;
+import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.error.ErrorResponse;
 import promisor.promisor.global.token.JwtExceptionResponse;
 import promisor.promisor.infra.email.exception.EmailNotValid;
 
@@ -32,10 +36,11 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     }
 
     public void setErrorResponse(HttpStatus status, HttpServletResponse response, Throwable err) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JwtExceptionResponse jwtExceptionResponse = new JwtExceptionResponse(401, "C008", err.getMessage());
+
         response.setStatus(status.value());
         response.setContentType("application/json; charset=UTF-8");
-
-        JwtExceptionResponse jwtExceptionResponse = new JwtExceptionResponse(err.getMessage(), HttpStatus.UNAUTHORIZED);
-        response.getWriter().write(jwtExceptionResponse.convertToJson());
+        response.getWriter().println(mapper.writeValueAsString(jwtExceptionResponse.convertToJson()));
     }
 }
