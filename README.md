@@ -73,8 +73,9 @@ Client-Driven : 많이 사용되는 기술일 수록 우선순위를 높게 설�
 
 ## 유스케이스 다이어그램 🧑🏼‍🤝‍🧑🏿
 
-![image](https://user-images.githubusercontent.com/85024598/159659440-a3fbdd4c-a0af-48cd-86d6-86f13ae60d75.png)
+![image](https://user-images.githubusercontent.com/55884834/163176576-895a5818-5694-4e1d-b805-aac055712c37.png)
 
+[유스케이스 총 정리](https://headf1rst.github.io/etc/promisor-diary-4/)
 ## 사용 기술 🛠️
 
 ### 채택 이유
