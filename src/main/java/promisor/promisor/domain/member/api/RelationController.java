@@ -1,5 +1,6 @@
 package promisor.promisor.domain.member.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ public class RelationController {
 
     private final RelationService relationService;
 
+    @Operation(summary = "Follow friend", description = "친구 추가")
     @PostMapping("/{friendId}")
     public ResponseEntity<Void> followFriend(@JwtAuth String email,
                                              @PathVariable("friendId") Long friendId) {
@@ -24,6 +26,7 @@ public class RelationController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Search friend by email", description = "이메일 통한 친구 검색")
     @GetMapping
     public ResponseEntity<MemberResponse> searchFriend(@JwtAuth String email,
                                                        @RequestParam String findEmail) {
@@ -31,6 +34,7 @@ public class RelationController {
         return ResponseEntity.ok().body(response);
     }
 
+    @Operation(summary = "Get friend list", description = "친구 리스트 조회")
     @GetMapping("/list")
     public ResponseEntity<List<MemberResponse>> getFriendList(@JwtAuth String email) {
 
@@ -38,6 +42,7 @@ public class RelationController {
         return ResponseEntity.ok().body(response);
     }
 
+    @Operation(summary = "Delete Friend", description = "친구 삭제")
     @PatchMapping("/{friendId}")
     public ResponseEntity<Void> deleteFriend(@JwtAuth String email,
                                              @PathVariable("friendId") Long friendId) {
