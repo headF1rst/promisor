@@ -50,11 +50,15 @@ function Group() {
   const setSelectedGroup = useSetRecoilState(selectedGroupState);
   const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const onBtnClick = () => {
+    // api 요청 -> id 받고 navigate
+    navigate(`/group/1/invite`);
+  };
   const onGroupClick = (id: number, name: string) => {
     navigate(`/group/${id}/promise`);
     setSelectedGroup({ id, name });
   };
-  const onCreateClick = () => {
+  const onToggleClick = () => {
     setShowModal((prev) => !prev);
   };
   return (
@@ -86,12 +90,15 @@ function Group() {
             />
           ))}
       </ListContainer>
-      <A.FixedRoundBtn value={"그룹 생성"} onClick={onCreateClick} />
+      {!showModal && (
+        <A.FixedRoundBtn value={"그룹 생성"} onClick={onToggleClick} />
+      )}
       <AddModal
         props={{
           titleText: "그룹 생성",
           placeholderText: "그룹 이름",
           btnText: "생성",
+          onBtnClick,
           showModal,
           setShowModal,
         }}

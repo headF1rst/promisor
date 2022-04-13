@@ -25,6 +25,7 @@ export default ThinBar;
 
 const Bar = styled.div`
   width: 100%;
+  height: 3vh;
   @media screen and (min-width: 900px) {
     height: 5vh;
   }
