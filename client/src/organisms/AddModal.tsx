@@ -2,25 +2,22 @@ import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import { useNavigate } from "react-router";
 import styled from "styled-components";
+import FriendProfileSearch from "../atoms/FriendProfileSearch";
 import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 
 interface IAddModal {
   props: {
     titleText: string;
-    placeholderText: string;
+    placeholderText?: string;
     btnText: string;
+    onBtnClick: React.MouseEventHandler;
     showModal: boolean;
     setShowModal: Function;
   };
 }
 
 function AddModal({ props }: IAddModal) {
-  const navigate = useNavigate();
-  const onBtnClick = (id: number) => {
-    // api 요청 -> id 받고 navigate
-    navigate(`/group/${id}/invite`);
-  };
   const onModalToggle = () => {
     props.setShowModal((p: boolean) => !p);
   };
@@ -46,11 +43,13 @@ function AddModal({ props }: IAddModal) {
             exit="exit"
           >
             <span>{props.titleText}</span>
-            <S.LabelInput>
-              <S.Input placeholder={props.placeholderText} />
-            </S.LabelInput>
+            {props.placeholderText && (
+              <S.LabelInput>
+                <S.Input placeholder={props.placeholderText} />
+              </S.LabelInput>
+            )}
             <A.RoundBtn
-              onClick={() => onBtnClick(1)}
+              onClick={props.onBtnClick}
               center={true}
               value={props.btnText}
             />
