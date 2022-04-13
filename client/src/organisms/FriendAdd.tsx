@@ -4,6 +4,7 @@ import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 import { RoundList } from "./RoundList";
 import { BsFillTelephoneFill } from "react-icons/bs";
+import FriendProfileSearch from "../atoms/FriendProfileSearch";
 interface IFriendAdd {
   onClick: React.MouseEventHandler;
   setModal: Function;
@@ -32,24 +33,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
           </S.LabelInput>
         )}
         {!search && !error && (
-          <RoundList
-            head={
-              <A.ProfileImg
-                imgProps={{
-                  type: "group",
-                  imgSrc:
-                    "https://i.pinimg.com/474x/e9/5e/ca/e95ecaa2f1035bb5acf0d381cd0b3c79.jpg",
-                }}
-              />
-            }
-            main={"김채은"}
-            sub={
-              <A.IconText
-                icon={<BsFillTelephoneFill />}
-                text={"010-0000-0000"}
-              />
-            }
-          />
+          <FriendProfileSearch email={"kce3615@naver.com"} />
         )}
         <A.RoundBtn
           onClick={onBtnClick}
