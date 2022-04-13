@@ -4,6 +4,7 @@ import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 import { RoundList } from "./RoundList";
 import { BsFillTelephoneFill } from "react-icons/bs";
+import FriendProfileSearch from "../atoms/FriendProfileSearch";
 interface IFriendAdd {
   onClick: React.MouseEventHandler;
   setModal: Function;
@@ -29,28 +30,11 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
         <span>친구 추가</span>
         {search && (
           <S.LabelInput>
-            <S.Input placeholder="이메일 또는 전화번호" />
+            <S.Input placeholder="그룹 이름" />
           </S.LabelInput>
         )}
         {!search && !error && (
-          <RoundList
-            head={
-              <A.ProfileImg
-                imgProps={{
-                  type: "group",
-                  imgSrc:
-                    "https://i.pinimg.com/474x/e9/5e/ca/e95ecaa2f1035bb5acf0d381cd0b3c79.jpg",
-                }}
-              />
-            }
-            main={"김채은"}
-            sub={
-              <A.IconText
-                icon={<BsFillTelephoneFill />}
-                text={"010-0000-0000"}
-              />
-            }
-          />
+          <FriendProfileSearch email={"kce3615@naver.com"} />
         )}
         <A.RoundBtn
           onClick={onBtnClick}
@@ -70,7 +54,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
 
 export default FriendAdd;
 
-const FriendModal = styled(S.BoxModal)`
+export const FriendModal = styled(S.BoxModal)`
   width: 80%;
   @media screen and (min-width: 900px) {
     width: 40%;

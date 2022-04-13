@@ -2,32 +2,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import { IFriendList, IFriendsData } from "../pages/GroupMaker";
+import { IFriendsData, IGroupMaker } from "../pages/GroupMaker";
 import { selectedState } from "../states/createGroup";
 import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 
-function GroupMakerSelectedList({ friendsData }: IFriendList) {
-  const [friendsDict, setFriendsDict] = useState<IFriendsData[]>();
-  const [selected, setSelected] = useState<number[]>([]);
-  useEffect(() => {
-    const dict = new Array();
-    for (let i = 0; i < friendsData.length; i++) {
-      dict[friendsData[i].id] = friendsData[i];
-    }
-    setFriendsDict(friendsDict);
-  }, []);
-  useEffect(() => {
-    const selectedString = localStorage.getItem("groupMaker");
-    if (selectedString) {
-      const arr = selectedString.split(",").map((value) => parseInt(value));
-    }
-  }, []);
-  const onListClick = (id: number) => {
-    const selectedCopy = [...selected];
-    const newSelected = selectedCopy.filter((value) => value !== id);
-    setSelected(newSelected);
-  };
+function GroupMakerSelectedList({ props }: IGroupMaker) {
   const animationProps = {
     initial: { scale: 0 },
     animate: { scale: 1 },
@@ -36,19 +16,18 @@ function GroupMakerSelectedList({ friendsData }: IFriendList) {
   };
   return (
     <RowList>
-      {selected?.map((value, index) => (
+      {props.state?.map((value, index) => (
         <span key={index}>
-          {friendsDict && friendsDict[value] && (
+          {value.selected && (
             <A.Profile
               profileProps={{
                 direction: "column",
-                value: `${friendsDict[value].title}`,
+                value: `${value.title}`,
               }}
               imgProps={{
                 type: "profile",
-                imgSrc: `${friendsDict[value].img}`,
+                imgSrc: `${value.img}`,
               }}
-              animateProps={animationProps}
             />
           )}
         </span>
@@ -72,7 +51,7 @@ const HoverImg = styled(motion.div)`
   cursor: pointer;
 `;
 
-const RowList = styled.div`
+export const RowList = styled.div`
   position: fixed;
   padding-inline: 1em;
   padding-top: 1em;

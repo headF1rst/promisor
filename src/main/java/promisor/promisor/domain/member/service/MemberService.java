@@ -10,13 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.RefreshToken;
 import promisor.promisor.domain.member.dao.RefreshTokenRepository;
-import promisor.promisor.domain.member.dao.RelationRepository;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
-import promisor.promisor.domain.member.domain.Relation;
 import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.exception.*;
 import promisor.promisor.global.config.security.JwtProvider;
+import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.error.exception.ApplicationException;
 import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
@@ -32,8 +32,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true)
-@RequiredArgsConstructor
+@Transactional(readOnly = true) // 조회 시 성능 향상 위해 사용
+@RequiredArgsConstructor // final이 붙거나 @NotNull 이 붙은 필드의 생성자를 자동 생성해주는 롬복 어노테이션
 @Slf4j
 public class MemberService {
 
@@ -42,7 +42,6 @@ public class MemberService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ConfirmationTokenService confirmationTokenService;
     private final EmailSender emailSender;
-    private final RelationRepository relationRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -194,51 +193,14 @@ public class MemberService {
                 "</div></div>";
     }
 
-    public Member getMember(String email) {
-        log.info("Fetching member '{}'", email);
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member member = optionalMember.orElseThrow(() -> new EmailNotValid(email));
-        return member;
-    }
-
-    @Transactional
-    public void followFriend(String email, FollowFriendRequest request) {
-
-        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
-        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
-
-        Optional<Member> optionalReceiver  = memberRepository.findByEmail(request.getReceiverEmail());
-        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
-
-        log.info("requester: '{}', receiver: '{}'", requester, receiver);
-
-        if (requester.hasFriend(receiver) || relationRepository.existsByOwnerEmailAndFriendEmail(email, request.getReceiverEmail())) {
-            throw new ExistFriendException(request.getReceiverEmail());
-        }
-        relationRepository.save(new Relation(requester, receiver));
-    }
-
-    public MemberResponse searchFriend(String email, String findEmail) {
-        Optional<Member> optionalRequester = memberRepository.findByEmail(email);
-        Member requester = optionalRequester.orElseThrow(MemberEmailNotFound::new);
-
-        if (findEmail.isBlank()) {
-            throw new EmailEmptyException();
-        }
-        Optional<Member> optionalReceiver = memberRepository.findByEmail(email);
-        Member receiver = optionalReceiver.orElseThrow(MemberEmailNotFound::new);
-
-        return new MemberResponse(receiver);
-    }
-
     public LoginResponse login(LoginDto loginDto) {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-        Map<String, String> createToken = createTokenReturn(loginDto);
+        TokenResponse createToken = createTokenReturn(loginDto);
 
         return new LoginResponse(
-                createToken.get("accessToken"),
-                createToken.get("refreshIdx")
+                createToken.getAccessToken(),
+                createToken.getRefreshId()
         );
     }
 
@@ -250,19 +212,18 @@ public class MemberService {
             LoginDto loginDto = new LoginDto();
             loginDto.setEmail(email);
 
-            Map<String, String> createToken = createTokenReturn(loginDto);
+            TokenResponse createToken = createTokenReturn(loginDto);
 
             return new LoginResponse(
-                    createToken.get("accessToken"),
-                    createToken.get("refreshIdx")
+                    createToken.getAccessToken(),
+                    createToken.getRefreshId()
             );
         } else {
             throw new LoginAgainException();
         }
     }
 
-    private Map<String, String> createTokenReturn(LoginDto loginDto) {
-        Map result = new HashMap();
+    private TokenResponse createTokenReturn(LoginDto loginDto) {
 
         String accessToken = jwtProvider.createAccessToken(loginDto.getEmail());
         String refreshToken = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshToken");
@@ -274,11 +235,20 @@ public class MemberService {
                 refreshToken,
                 refreshTokenExpirationAt
         );
-
         refreshTokenRepository.save(insertRefreshToken);
+        return new TokenResponse(accessToken, insertRefreshToken.getId());
+    }
 
-        result.put("accessToken", accessToken);
-        result.put("refreshId", insertRefreshToken.getId());
-        return result;
+
+    @Transactional
+    public ModifyMemberResponse modifyInfo(String email , ModifyMemberDto modifyMemberDto){
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
+        member.modifyMemberInfo(modifyMemberDto.getName(), modifyMemberDto.getImageUrl(), modifyMemberDto.getLocation());
+        return new ModifyMemberResponse(
+                member.getName(),
+                member.getImageUrl(),
+                member.getLocation()
+        );
     }
 }

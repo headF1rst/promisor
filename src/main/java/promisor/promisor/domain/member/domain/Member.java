@@ -7,6 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import promisor.promisor.domain.model.Person;
+import promisor.promisor.global.error.ErrorCode;
+import promisor.promisor.global.error.exception.ApplicationException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
@@ -20,10 +22,10 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED) //무분별한 객체 생성에 대해 한 번 더 체크
 public class Member extends Person implements UserDetails {
 
-    @OneToMany(mappedBy = "friend", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Relation> friends = new HashSet<>();
 
     @Lob
@@ -50,7 +52,7 @@ public class Member extends Person implements UserDetails {
     private String telephone;
 
     private Member(String name, String email, String password, String telephone, MemberRole memberRole) {
-        super(name, "SLEEP");
+        super(name, "INACTIVE");
         this.email = email;
         this.password = password;
         this.telephone = telephone;
@@ -114,5 +116,23 @@ public class Member extends Person implements UserDetails {
             return false;
         }
         return friends.contains(receiver);
+    }
+
+    public void addFriend(Member friend) {
+        this.friends.add(new Relation(this, friend, "ACTIVE"));
+    }
+
+    public void modifyMemberInfo(String name, String imageUrl, String location){
+        this.name = name;
+        this.imageUrl = imageUrl;
+        this.location = location;
+    }
+    public void deleteFriend(Member friend) {
+
+        if (getMemberFriends().contains(friend)) {
+            friends.removeIf(friendShip -> friendShip.getFriend().equals(friend));
+            return;
+        }
+        throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
     }
 }

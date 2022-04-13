@@ -4,8 +4,10 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import promisor.promisor.global.error.ErrorCode;
 
+import java.util.function.Supplier;
+
 @Getter
-public abstract class ApplicationException extends RuntimeException {
+public class ApplicationException extends RuntimeException {
 
     private ErrorCode errorCode;
 
@@ -14,7 +16,7 @@ public abstract class ApplicationException extends RuntimeException {
         this.errorCode = errorCode;
     }
 
-    protected ApplicationException(ErrorCode errorCode) {
+    public ApplicationException(ErrorCode errorCode) {
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,9 +16,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import promisor.promisor.domain.member.service.CustomUserDetailService;
 import promisor.promisor.domain.member.service.MemberLoginFailHandler;
 import promisor.promisor.global.PasswordEncoder;
+import promisor.promisor.global.auth.JwtExceptionFilter;
 import promisor.promisor.global.config.security.CustomAuthenticationFilter;
+import promisor.promisor.global.config.security.JwtAuthenticationFilter;
 import promisor.promisor.global.config.security.JwtProvider;
-import promisor.promisor.global.config.security.jwtAuthenticationFilter;
 import promisor.promisor.global.error.CustomAuthenticationEntryPoint;
 import promisor.promisor.global.error.WebAccessDeniedHandler;
 import promisor.promisor.global.secret.SecretKey;
@@ -31,8 +33,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.*;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final JwtProvider jwtProvider;
-    private final WebAccessDeniedHandler webAccessDeniedHandler;
-    private final CustomAuthenticationEntryPoint authenticationEntryPointHandler;
     private final CustomUserDetailService customUserDetailService;
     private final PasswordEncoder passwordEncoder;
     private final SecretKey secretKey;
@@ -46,15 +46,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .sessionManagement().sessionCreationPolicy(STATELESS)
                         .and()
                                 .authorizeRequests()
-                                        .antMatchers("/members/**", "/login/**", "/friends/**").permitAll()
+                                        .antMatchers("/members/**", "/login/**",
+                                                "/friends/**", "/groups/**").permitAll()
                         .anyRequest().authenticated()
                         .and()
                                 .exceptionHandling()
-                                        .authenticationEntryPoint(authenticationEntryPointHandler)
-                                                .accessDeniedHandler(webAccessDeniedHandler)
+                                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                                                .accessDeniedHandler(new WebAccessDeniedHandler())
                                                         .and()
-                                                                .addFilterBefore(new jwtAuthenticationFilter(jwtProvider),
-                                                                        UsernamePasswordAuthenticationFilter.class);
+                                                                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
+                                                                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
     }
 
     protected CustomAuthenticationFilter getAuthenticationFilter() throws Exception {

@@ -32,10 +32,10 @@ export function ProfileImg({ imgProps }: IProfile) {
 export function Profile({ profileProps, imgProps, animateProps }: IProfile) {
   return (
     <SProfile
-      initial={animateProps?.initial}
-      animate={animateProps?.animate}
-      exit={animateProps?.exit}
-      transition={animateProps?.transition}
+      // initial={animateProps?.initial}
+      // animate={animateProps?.animate}
+      // exit={animateProps?.exit}
+      // transition={animateProps?.transition}
       direction={profileProps?.direction}
       type={imgProps.type}
     >

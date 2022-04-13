@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import styled from "styled-components";
-import * as S from "../styles/_index";
 import { selectedGroupState } from "../states/selectedGroup";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
 import { GoPerson } from "react-icons/go";
 import { ListContainer } from "../styles/Base";
+import AddModal from "../organisms/AddModal";
 
 const TEST_GROUP = [
   {
@@ -49,14 +48,27 @@ const TEST_GROUP = [
 ];
 function Group() {
   const setSelectedGroup = useSetRecoilState(selectedGroupState);
+  const [showModal, setShowModal] = useState(false);
   const navigate = useNavigate();
+  const onBtnClick = () => {
+    // api 요청 -> id 받고 navigate
+    navigate(`/group/1/invite`);
+  };
   const onGroupClick = (id: number, name: string) => {
     navigate(`/group/${id}/promise`);
     setSelectedGroup({ id, name });
   };
+  const onToggleClick = () => {
+    setShowModal((prev) => !prev);
+  };
   return (
     <>
-      <ListContainer>
+      <ListContainer
+        initial={{ scaleY: 0 }}
+        animate={{ scaleY: 1 }}
+        exit={{ scaleY: 0 }}
+        transition={{ type: "linear" }}
+      >
         {TEST_GROUP &&
           TEST_GROUP.map((value, index) => (
             <O.RoundList
@@ -78,10 +90,17 @@ function Group() {
             />
           ))}
       </ListContainer>
-      <A.FixedRoundBtn
-        value={"그룹 생성"}
-        onClick={() => {
-          navigate("/group/create");
+      {!showModal && (
+        <A.FixedRoundBtn value={"그룹 생성"} onClick={onToggleClick} />
+      )}
+      <AddModal
+        props={{
+          titleText: "그룹 생성",
+          placeholderText: "그룹 이름",
+          btnText: "생성",
+          onBtnClick,
+          showModal,
+          setShowModal,
         }}
       />
     </>

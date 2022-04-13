@@ -1,4 +1,4 @@
-package promisor.promisor.domain.team.domain;
+package promisor.promisor.domain.group.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,9 +17,9 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-@Table(name = "Group")
+@Table(name = "groups")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Team extends BaseEntity {
+public class Group extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -37,12 +37,11 @@ public class Team extends BaseEntity {
 
     private LocalDateTime date;
 
-    public Team(String groupName) {
+    public Group(String groupName) {
         this.groupName=groupName;
     }
 
-    public void EditGroupName(String groupName) {
+    public void changeGroupName(String groupName) {
         this.groupName = groupName;
     }
-
 }
