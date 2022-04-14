@@ -23,5 +23,7 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 //    @Query("select t.id, t.groupName, t.imageUrl " +
 //            "from Team t " +
 //            "where t.member.id = :id")
-//  List<GetMyTeamResponse> findMemberGroups(@Param("id") Long id);
+//    List<GetMyTeamResponse> findMemberGroups(@Param("id") Long id);
+
+    Optional<Team> findByMember(Member member);
 }

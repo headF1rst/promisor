@@ -20,7 +20,8 @@ public enum ErrorCode {
     // Group
     GROUP_ID_NOT_FOUND( 400, "G001", "해당 그룹이 존재하지 않습니다."),
     NO_RIGHTS(401, "G002", "해당 그룹에 대한 수정 권한이 없습니다."),
-    GROUP_EMPTY(400,"G003","해당 그룹이 없습니다."),
+    TEAM_NOT_FOUND_FOR_MEMBER(400, "G003", "해당 멤버가 속한 그룹을 찾을 수 없습니다."),  
+    GROUP_EMPTY(400,"G004","해당 그룹이 없습니다."),
 
     // Invite
     NO_RIGHT_TO_INVITE(401,"I001","초대 권한이 없습니다."),
