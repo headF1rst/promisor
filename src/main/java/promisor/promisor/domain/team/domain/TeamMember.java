@@ -1,6 +1,8 @@
-package promisor.promisor.domain.group.domain;
+package promisor.promisor.domain.team.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.model.BaseEntity;
 
@@ -11,6 +13,7 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 @Table(name = "GroupMember")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamMember extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
@@ -19,10 +22,15 @@ public class TeamMember extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "group_id")
-    private Group group;
+    private Team team;
 
     @Column(length = 100)
     private String curLocate;
 
     private char arrived;
+
+    public TeamMember(Member member, Team team) {
+        this.member = member;
+        this.team = team;
+    }
 }
