@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 import promisor.promisor.domain.member.service.CustomUserDetailService;
 import promisor.promisor.global.secret.SecretConfig;
 import promisor.promisor.global.secret.SecretKey;
-import promisor.promisor.global.token.exception.InvalidTokenException;
-import promisor.promisor.global.token.exception.TokenExpiredException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
@@ -82,21 +80,20 @@ public class JwtProvider {
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // JWT decoding 이메일
     public String extractEmail(String token) {
         return (String) Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(token).getBody().get("email");
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("token");
+        String header = request.getHeader("Authorization");
+        if (header == null) {
+            return null;
+        }
+        return header.replace("Bearer ", "");
     }
 
     public boolean validateJwtToken(String authToken) {
-        try {
-            Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(authToken);
-            return true;
-        } catch (Exception err) {
-            return false;
-        }
+        Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(authToken);
+        return true;
     }
 }

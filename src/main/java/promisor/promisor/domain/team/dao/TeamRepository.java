@@ -7,15 +7,21 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.team.domain.Team;
+import promisor.promisor.domain.team.dto.GetMyTeamResponse;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @Transactional(readOnly = true)
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    @Transactional
-    @Modifying
-    @Query("update TeamMember tm "+
-            "set tm.status = 'DELETED' where tm.member = :member "+
-            "and tm.team = :team")
-    int leaveGroup(@Param("member") Member member, @Param("team") Team team);
+//    @Query("select t.id, t.groupName, t.imageUrl " +
+//            "from Member m " +
+//            "left join Team t " +
+//            "where m.id = :id")
+//    @Query("select t.id, t.groupName, t.imageUrl " +
+//            "from Team t " +
+//            "where t.member.id = :id")
+//  List<GetMyTeamResponse> findMemberGroups(@Param("id") Long id);
 }

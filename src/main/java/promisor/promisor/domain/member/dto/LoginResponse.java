@@ -6,10 +6,10 @@ import lombok.Getter;
 public class LoginResponse {
 
     private final String accessToken;
-    private final String refreshToken;
+    private final Long refreshTokenId;
 
-    public LoginResponse(String accessToken, String refreshToken) {
+    public LoginResponse(String accessToken, Long refreshTokenId) {
         this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
+        this.refreshTokenId = refreshTokenId;
     }
 }

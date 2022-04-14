@@ -1,4 +1,4 @@
-export { default as CreateGroup } from "./GroupMaker";
+export { default as GroupMaker } from "./GroupMaker";
 export { default as Friend } from "./Friend";
 export { default as Group } from "./Group";
 export { default as GroupChatRoom } from "./GroupChatRoom";

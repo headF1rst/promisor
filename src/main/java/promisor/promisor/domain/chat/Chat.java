@@ -1,9 +1,9 @@
 package promisor.promisor.domain.chat;
 
 import lombok.Getter;
+import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.model.BaseEntity;
 import promisor.promisor.domain.member.domain.Member;
-import promisor.promisor.domain.team.domain.Team;
 
 import javax.persistence.*;
 

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import promisor.promisor.domain.member.service.CustomUserDetailService;
 import promisor.promisor.domain.member.service.MemberLoginFailHandler;
 import promisor.promisor.global.PasswordEncoder;
+import promisor.promisor.global.auth.JwtExceptionFilter;
 import promisor.promisor.global.config.security.CustomAuthenticationFilter;
 import promisor.promisor.global.config.security.JwtAuthenticationFilter;
 import promisor.promisor.global.config.security.JwtProvider;
@@ -44,7 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .sessionManagement().sessionCreationPolicy(STATELESS)
                         .and()
                                 .authorizeRequests()
-                                        .antMatchers("/members/**", "/login/**", "/friends/**","/groups/**").permitAll()
+                                        .antMatchers("/members/**", "/login/**",
+                                                "/friends/**", "/groups/**").permitAll()
                         .anyRequest().authenticated()
                         .and()
                                 .exceptionHandling()
@@ -52,7 +55,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                                 .accessDeniedHandler(new WebAccessDeniedHandler())
                                                         .and()
                                                                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider),
-                                                                        UsernamePasswordAuthenticationFilter.class);
+                                                                        UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), JwtAuthenticationFilter.class);
     }
 
     protected CustomAuthenticationFilter getAuthenticationFilter() throws Exception {

@@ -6,15 +6,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
+import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
+import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
-import promisor.promisor.domain.team.dto.CreateGroupDto;
-import promisor.promisor.domain.team.dto.EditGroupDto;
-import promisor.promisor.domain.team.dto.LeaveGroupResponse;
-import promisor.promisor.domain.team.exception.GroupIdNotFound;
+import promisor.promisor.domain.team.domain.TeamMember;
+import promisor.promisor.domain.team.dto.*;
+import promisor.promisor.domain.team.exception.NoRightsException;
+import promisor.promisor.domain.team.exception.TeamIdNotFound;
 import promisor.promisor.domain.team.exception.GroupNotFoundException;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -25,32 +28,52 @@ import java.util.Optional;
 public class TeamService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
+    private final TeamMemberRepository teamMemberRepository;
 
     @Transactional
-    public void createGroup(CreateGroupDto request) {
-        teamRepository.save(new Team(request.getGroupName()));
+    public void createGroup(String email, CreateTeamDto request) {
+        Member member =getMemberInfo(email);
+        Team team = teamRepository.save(new Team(member, request.getGroupName()));
+        teamMemberRepository.save(new TeamMember(member, team));
+    }
+
+    public Member getMemberInfo(String email){
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.orElseThrow(MemberEmailNotFound::new);
+        return member;
     }
 
     public Team getGroup(Long id) {
-        Optional<Team> optionalTeam = teamRepository.findById(id);
-        Team group = optionalTeam.orElseThrow(GroupIdNotFound::new);
-        return group;
+        Optional<Team> optionalGroup = teamRepository.findById(id);
+        Team team = optionalGroup.orElseThrow(TeamIdNotFound::new);
+        return team;
+    }
+
+    @Transactional
+    public ChangeTeamNameResponse editGroup(String email, EditTeamDto request) {
+        Member member = getMemberInfo(email);
+        Team team = getGroup(request.getGroupId());
+        Member leader = team.getMember();
+        if (leader.getId() != member.getId()){
+            throw new NoRightsException();
+        }
+        team.changeGroupName(request.getGroupName());
+        return new ChangeTeamNameResponse(team.getGroupName());
     }
     @Transactional
-    public void editGroup(EditGroupDto request) {
-        Team group = getGroup(request.getGroupId());
-        group.changeGroupName(request.getGroupName());
-    }
-    @Transactional
-    public LeaveGroupResponse leaveGroup(String email, Long groupId) {
+    public LeaveTeamResponse leaveGroup(String email, Long groupId) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
-        Optional<Team> optionalTeam = teamRepository.findById(groupId);
-        Team team = optionalTeam.orElseThrow(GroupNotFoundException::new);
-        teamRepository.leaveGroup(member, team);
-        return new LeaveGroupResponse(
-                memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new).getId(),
+        Team team = getGroup(groupId);
+        //Team team = optionalTeam.orElseThrow(GroupNotFoundException::new);
+        teamMemberRepository.leaveGroup(member, team);
+        return new LeaveTeamResponse(
+                member.getId(),
                 groupId
         );
     }
+//    public List<GetMyTeamResponse> getGroupList(String email) {
+//        Member member = getMemberInfo(email);
+//        return teamRepository.findMemberGroups(member.getId());
+//    }
 }
