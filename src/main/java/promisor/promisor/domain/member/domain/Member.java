@@ -135,4 +135,8 @@ public class Member extends Person implements UserDetails {
         }
         throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
     }
+
+    public void changeRole(MemberRole memberRole) {
+        this.memberRole = memberRole;
+    }
 }

@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Getter
-@Table(name="team", schema = "promisorDB-dev")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team extends BaseEntity {
 

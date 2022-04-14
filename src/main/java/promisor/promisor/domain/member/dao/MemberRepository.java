@@ -13,6 +13,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
+
     @Transactional
     @Modifying
     @Query("update Member m " +
@@ -20,6 +21,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     int enableMember(@Param("email") String email);
 
     boolean existsByEmail(String email);
-
 }
 
