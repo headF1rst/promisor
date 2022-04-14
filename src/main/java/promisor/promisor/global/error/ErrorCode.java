@@ -20,6 +20,8 @@ public enum ErrorCode {
     // Group
     GROUP_ID_NOT_FOUND( 400, "G001", "해당 그룹이 존재하지 않습니다."),
     NO_RIGHTS(401, "G002", "해당 그룹에 대한 수정 권한이 없습니다."),
+    GROUP_EMPTY(400,"G003","해당 그룳이 없습니다."),
+
 
     // Member
     EMAIL_ALREADY_TAKEN(400, "M001", "이미 존재하는 이메일입니다."),
