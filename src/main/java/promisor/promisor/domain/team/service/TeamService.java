@@ -8,15 +8,19 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
+import promisor.promisor.domain.team.dao.InviteRepository;
 import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
+import promisor.promisor.domain.team.domain.Invite;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.team.dto.*;
 import promisor.promisor.domain.team.exception.LeaderLeaveException;
+import promisor.promisor.domain.team.exception.NoRightToInviteException;
 import promisor.promisor.domain.team.exception.NoRightsException;
 import promisor.promisor.domain.team.exception.TeamIdNotFoundException;
 
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -28,7 +32,7 @@ public class TeamService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
-
+    private final InviteRepository inviteRepository;
     @Transactional
     public void createGroup(String email, CreateTeamDto request) {
         Member member =getMemberInfo(email);
@@ -59,6 +63,7 @@ public class TeamService {
         team.changeGroupName(request.getGroupName());
         return new ChangeTeamNameResponse(team.getGroupName());
     }
+
     @Transactional
     public LeaveTeamResponse leaveGroup(String email, Long groupId) {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
@@ -72,6 +77,21 @@ public class TeamService {
         return new LeaveTeamResponse(
                 member.getId(),
                 groupId
+        );
+    }
+
+    @Transactional
+    public InviteTeamResponse inviteGroup(String email, InviteTeamDto request){
+        Member inviting = getMemberInfo(email);
+        Member invited = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
+        Team team = getGroup(request.getGroupId());
+        if(!Objects.equals(team.getMember().getId(), inviting.getId())){
+            throw new NoRightToInviteException();
+        }
+
+        inviteRepository.save(new Invite(invited,team, '0'));
+        return new InviteTeamResponse(
+                invited.getId(), team.getId()
         );
     }
 //    public List<GetMyTeamResponse> getGroupList(String email) {

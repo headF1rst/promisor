@@ -41,6 +41,12 @@ public class TeamController {
         return ResponseEntity.ok().body(teamService.leaveGroup(email, groupId));
     }
 
+    @PostMapping("/invite")
+    public ResponseEntity<InviteTeamResponse> inviteGroup(@JwtAuth String email,
+                                                          @RequestBody @Valid final InviteTeamDto request){
+        return ResponseEntity.ok().body(teamService.inviteGroup(email,request));
+    }
+
 //    @GetMapping
 //    public ResponseEntity<List<GetMyTeamResponse>> getMyGroups(@JwtAuth String email) {
 //        List<GetMyTeamResponse> response = teamService.getGroupList(email);
