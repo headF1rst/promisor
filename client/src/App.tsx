@@ -98,12 +98,12 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
-          <Route path="/group/:id/invite" element={<GroupMaker />} />
-          <Route path="/group/:id/promise" element={<Promise />} />
-          <Route path="/group/:id/promise/:id" element={<PromiseDetail />} />
-          <Route path="/group/:id" element={<GroupChatRoom />} />
+          <Route path="/team/:id/invite" element={<GroupMaker />} />
+          <Route path="/team/:id/promise" element={<Promise />} />
+          <Route path="/team/:id/promise/:id" element={<PromiseDetail />} />
+          <Route path="/team/:id" element={<GroupChatRoom />} />
           <Route path="/" element={<Home />}>
-            <Route path="/group" element={<Group />}></Route>
+            <Route path="/team" element={<Group />}></Route>
             <Route path="/friend" element={<Friend />} />
           </Route>
         </Routes>
