@@ -13,11 +13,10 @@ import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.team.dto.*;
+import promisor.promisor.domain.team.exception.LeaderLeaveException;
 import promisor.promisor.domain.team.exception.NoRightsException;
-import promisor.promisor.domain.team.exception.TeamIdNotFound;
-import promisor.promisor.domain.team.exception.GroupNotFoundException;
+import promisor.promisor.domain.team.exception.TeamIdNotFoundException;
 
-import java.util.List;
 import java.util.Optional;
 
 
@@ -45,7 +44,7 @@ public class TeamService {
 
     public Team getGroup(Long id) {
         Optional<Team> optionalGroup = teamRepository.findById(id);
-        Team team = optionalGroup.orElseThrow(TeamIdNotFound::new);
+        Team team = optionalGroup.orElseThrow(TeamIdNotFoundException::new);
         return team;
     }
 
@@ -65,7 +64,10 @@ public class TeamService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
         Team team = getGroup(groupId);
-        //Team team = optionalTeam.orElseThrow(GroupNotFoundException::new);
+        Member leader = team.getMember();
+        if(leader.getId() == member.getId()){
+            throw new LeaderLeaveException();
+        }
         teamMemberRepository.leaveGroup(member, team);
         return new LeaveTeamResponse(
                 member.getId(),
