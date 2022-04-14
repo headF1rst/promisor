@@ -1,6 +1,8 @@
 package promisor.promisor.domain.promise.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.model.BaseEntity;
 import promisor.promisor.domain.place.domain.Place;
@@ -13,10 +15,11 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Promise extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "groups_id")
+    @JoinColumn(name = "team_id")
     private Team team;
 
     @ManyToOne(fetch = LAZY)
@@ -27,4 +30,22 @@ public class Promise extends BaseEntity {
     private String promiseName;
 
     private LocalDateTime date;
+
+    private Promise(String status, Team team, Place place, String promiseName, LocalDateTime date) {
+        super(status);
+        this.team = team;
+        this.place = place;
+        this.promiseName = promiseName;
+        this.date = date;
+    }
+
+    private Promise(String status, Team team, String promiseName) {
+        super(status);
+        this.team = team;
+        this.promiseName = promiseName;
+    }
+
+    public static Promise of(String status, Team team, String promiseName) {
+        return new Promise(status, team, promiseName);
+    }
 }
