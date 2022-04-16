@@ -2,10 +2,11 @@ package promisor.promisor.domain.member.domain;
 
 public enum MemberRole {
     USER("USER"),
-    ADMIN("ADMIN")
+    ADMIN("ADMIN"),
+    LEADER("LEADER")
     ;
 
-    String role;
+    final String role;
 
     MemberRole(String role) {
         this.role = role;

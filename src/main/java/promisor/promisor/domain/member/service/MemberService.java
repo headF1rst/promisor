@@ -32,8 +32,8 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
-@Transactional(readOnly = true) // 조회 시 성능 향상 위해 사용
-@RequiredArgsConstructor // final이 붙거나 @NotNull 이 붙은 필드의 생성자를 자동 생성해주는 롬복 어노테이션
+@Transactional(readOnly = true)
+@RequiredArgsConstructor
 @Slf4j
 public class MemberService {
 

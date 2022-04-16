@@ -19,6 +19,12 @@ public enum ErrorCode {
 
     // Group
     GROUP_ID_NOT_FOUND( 400, "G001", "해당 그룹이 존재하지 않습니다."),
+    NO_RIGHTS(401, "G002", "해당 그룹에 대한 수정 권한이 없습니다."),
+    TEAM_NOT_FOUND_FOR_MEMBER(400, "G003", "해당 멤버가 속한 그룹을 찾을 수 없습니다."),  
+    GROUP_EMPTY(400,"G004","해당 그룹이 없습니다."),
+
+    // Invite
+    NO_RIGHT_TO_INVITE(401,"I001","초대 권한이 없습니다."),
 
     // Member
     EMAIL_ALREADY_TAKEN(400, "M001", "이미 존재하는 이메일입니다."),
@@ -37,7 +43,6 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(401, "M014", "로그인 후 이용가능합니다."),
     MEMBER_EMPTY(400,"M015","해당 멤버가 없습니다."),
     LOGIN_AGAIN(400, "M016", "로그인을 다시 시도해 주세요");
-
 
 
 
