@@ -14,5 +14,8 @@ declare module "styled-components" {
     cyellow: string;
     opacity50: string;
     btnColor: string;
+    flagRed: string;
+    flagGreen: string;
+    flagYellow: string;
   }
 }

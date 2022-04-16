@@ -8,11 +8,20 @@ import { PromiseTitle } from "./Promise";
 import PromiseDate from "./PromiseDate";
 
 function PromiseDetail() {
+  const [manager, setManager] = useState(true);
+  const [title, setTitle] = useState();
   const selectedGroup = useRecoilValue(selectedGroupState);
   const [navDate, setNavDate] = useState(true);
   const onNavClick = (state: boolean) => {
     setNavDate(state);
   };
+
+  const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = event;
+  };
+
   const Header = () => {
     return (
       <>
@@ -28,7 +37,7 @@ function PromiseDetail() {
   const Container = () => {
     return (
       <>
-        <LineInput placeholder="제목" />
+        <LineInput placeholder="제목" onChange={onTitleChange} />
         <NavBar>
           <NavItem
             onClick={() => onNavClick(true)}

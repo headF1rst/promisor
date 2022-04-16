@@ -44,4 +44,5 @@ export const BoxInput = styled.input`
   &:focus {
     outline: none;
   }
+  color: ${(p) => p.theme.textColor};
 `;

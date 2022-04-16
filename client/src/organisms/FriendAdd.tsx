@@ -14,6 +14,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
   const [error, setError] = useState(false);
   const onBtnClick = () => {
     if (!search && !error) {
+      // alert("이미 친구로 등록된 사용자입니다.")
       setModal((prev: boolean) => !prev);
     } else {
       setSearch((prev) => !prev);

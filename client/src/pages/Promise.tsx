@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -11,6 +11,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { selectedGroupState } from "../states/selectedGroup";
 import { RoundList } from "../organisms/RoundList";
 import * as A from "../atoms/_index";
+import AddModal from "../organisms/AddModal";
 
 const TEST_PROMISE = [
   {
@@ -46,12 +47,23 @@ interface IPromise {
 }
 
 function Promise() {
+  const [showModal, setShowModal] = useState(false);
   const selectedGroup = useRecoilValue(selectedGroupState);
   const navigate = useNavigate();
   const dark = useRecoilValue(darkModeState);
+
+  const onListClick = (index: number) => {
+    navigate(`${index}`);
+  };
+
+  const onBtnClick = () => {
+    // API 요청
+    setShowModal(false);
+  };
+
   const Header = () => {
     const onCreateClick = () => {
-      navigate(`${Date.now()}`);
+      setShowModal(true);
     };
     return (
       <>
@@ -79,6 +91,7 @@ function Promise() {
         {TEST_PROMISE &&
           TEST_PROMISE.map((value, index) => (
             <RoundList
+              onClick={() => onListClick(index)}
               key={value.id}
               head={
                 <Head
@@ -101,6 +114,16 @@ function Promise() {
               }
             />
           ))}
+        <AddModal
+          props={{
+            titleText: "약속 생성",
+            placeholderText: "어떤 약속인가요?",
+            btnText: "생성",
+            onBtnClick,
+            showModal,
+            setShowModal,
+          }}
+        />
       </>
     );
   };
