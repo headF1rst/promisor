@@ -3,11 +3,73 @@ import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
+import { AnimatePresence, motion } from "framer-motion";
+import PromiseDateModal from "./PromiseDateModal";
+import { FaStickyNote } from "react-icons/fa";
+
+// 불가능:0 애매함:1 가능:2
+const TEST_DATA = [
+  {
+    id: 0,
+    member_id: 0,
+    member_name: "김채은",
+    promise_id: 0,
+    date: "20220416",
+    reason: "",
+    date_status: "RED",
+  },
+  {
+    id: 1,
+    member_id: 1,
+    member_name: "고산하",
+    promise_id: 0,
+    date: "20220417",
+    reason: "",
+    date_status: "RED",
+  },
+  {
+    id: 2,
+    member_name: "고산하",
+    member_id: 1,
+    promise_id: 0,
+    date: "20220416",
+    reason: "",
+    date_status: "YELLOW",
+  },
+  {
+    id: 3,
+    member_id: 2,
+    member_name: "이준석",
+    promise_id: 0,
+    date: "20220416",
+    reason: "가족 모임",
+    date_status: "GREEN",
+  },
+  {
+    id: 4,
+    member_id: 3,
+    member_name: "황승환",
+    promise_id: 0,
+    date: "20220417",
+    reason: "",
+    date_status: "RED",
+  },
+  {
+    id: 5,
+    member_id: 2,
+    member_name: "이준석",
+    promise_id: 0,
+    date: "20220418",
+    reason: "",
+    date_status: "YELLOW",
+  },
+];
+
 const RED = "RED";
 const YELLOW = "YELLOW";
 const GREEN = "GREEN";
+const COLOR = { RED: "#ff7373", YELLOW: "#ffd37a", GREEN: "#85ba73" };
 const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
-
 interface IColors {
   id: string;
   color: string;
@@ -15,12 +77,15 @@ interface IColors {
 
 function PromiseDateCalendar() {
   const [groupView, setGroupView] = useState(true);
+  const [dateModal, setDateModal] = useState(false);
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
-  const [month, setMonth] = useState(now.getMonth());
+  const [month, setMonth] = useState(now.getMonth() + 1);
   const [weeks, setWeeks] = useState<any[][]>([]);
   const [currentColor, setCurrentColor] = useState(RED);
+  const [currentDate, setCurrentDate] = useState("");
   const [colors, setColors] = useState<IColors[]>([]);
+  const [banData, setBanData] = useState({});
   useEffect(() => {
     makeCalendar(year, month, colors);
   }, [month, colors]);
@@ -28,7 +93,7 @@ function PromiseDateCalendar() {
   const makeCalendar = (year: number, month: number, colors: IColors[]) => {
     const FEB =
       (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
-    const LASTDATE = [31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const LASTDATE = [0, 31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = LASTDATE[month];
     let date = 1;
@@ -62,8 +127,13 @@ function PromiseDateCalendar() {
   };
 
   const onDateClick = (id: string) => {
-    const newColors = [...colors, { id, color: currentColor }];
-    setColors(newColors);
+    if (groupView) {
+      setDateModal((prev) => !prev);
+      setCurrentDate(id);
+    } else {
+      const newColors = [...colors, { id, color: currentColor }];
+      setColors(newColors);
+    }
   };
   const onBtnClick = (isPrev: string) => {
     const prevMonth = month;
@@ -76,6 +146,16 @@ function PromiseDateCalendar() {
     }
     console.log(year, month);
   };
+
+  const isNoted = (id: string) => {
+    for (let i = 0; i < TEST_DATA.length; i++) {
+      if (TEST_DATA[i].date === id && TEST_DATA[i].reason) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   return (
     <Container>
       <Elements>
@@ -84,7 +164,7 @@ function PromiseDateCalendar() {
           onClick={() => onBtnClick("prev")}
         />
         <span>
-          {year}-{String(month + 1).padStart(2, "0")}
+          {year}-{String(month).padStart(2, "0")}
         </span>
         <VscTriangleRight
           style={{ cursor: "pointer" }}
@@ -98,7 +178,7 @@ function PromiseDateCalendar() {
             onClick={() => setCurrentColor(RED)}
             color={RED}
           >
-            <Circle color={"#ff7373"} />
+            <Circle color={COLOR[RED]} />
             불가능
           </Button>
           <Button
@@ -106,7 +186,7 @@ function PromiseDateCalendar() {
             onClick={() => setCurrentColor(YELLOW)}
             color={YELLOW}
           >
-            <Circle color={"#ffd37a"} />
+            <Circle color={COLOR[YELLOW]} />
             애매함
           </Button>
           <Button
@@ -114,7 +194,7 @@ function PromiseDateCalendar() {
             onClick={() => setCurrentColor(GREEN)}
             color={GREEN}
           >
-            <Circle color={"#85ba73"} />
+            <Circle color={COLOR[GREEN]} />
             가능
           </Button>
         </Buttons>
@@ -144,11 +224,18 @@ function PromiseDateCalendar() {
                     style={{ color: "black" }}
                   >
                     {date.value}
+                    {isNoted(date.id) && <FaStickyNote color={"black"} />}
                   </DateBox>
                 ))}
             </Week>
           ))}
       </Month>
+      {dateModal && (
+        <PromiseDateModal
+          state={{ dateModal, setDateModal, currentDate }}
+          data={TEST_DATA}
+        />
+      )}
     </Container>
   );
 }

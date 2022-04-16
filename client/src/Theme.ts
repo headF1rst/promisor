@@ -14,19 +14,24 @@ export const lightTheme: DefaultTheme = {
   cgreen: "#e7f7e1",
   cred: "#ffe7e3",
   cyellow: "#ffedc9",
+  flagRed: "#ff7373",
+  flagGreen: "#85ba73",
+  flagYellow: "#ffd37a",
 };
 export const darkTheme: DefaultTheme = {
   textColor: "#fcfcfc",
   grey: "#C4C4C4",
-  bgColor: "black",
+  bgColor: "#2b2b2b",
   green: "#04C994",
   pink: "#FEEBE8",
   btnColor: "#04C994",
-
   opacity50: "rgba(255, 255, 255, 0.1)",
   smoke: "black",
   highlight: "yellow",
   cgreen: "#e7f7e1",
   cred: "#ffe7e3",
   cyellow: "#ffedc9",
+  flagRed: "#ff7373",
+  flagGreen: "#85ba73",
+  flagYellow: "#ffd37a",
 };

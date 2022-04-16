@@ -64,10 +64,10 @@ function Group() {
   return (
     <>
       <ListContainer
-        initial={{ scaleY: 0 }}
-        animate={{ scaleY: 1 }}
-        exit={{ scaleY: 0 }}
-        transition={{ type: "linear" }}
+      // initial={{ scaleY: 0 }}
+      // animate={{ scaleY: 1 }}
+      // exit={{ scaleY: 0 }}
+      // transition={{ type: "linear" }}
       >
         {TEST_GROUP &&
           TEST_GROUP.map((value, index) => (
