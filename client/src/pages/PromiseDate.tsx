@@ -5,7 +5,7 @@ import Calendar from "../organisms/PromiseDateCalendar";
 function PromiseDate() {
   return (
     <>
-      <BoxInput type="date" />
+      <BoxInput type="date"/>
       <Calendar />
     </>
   );

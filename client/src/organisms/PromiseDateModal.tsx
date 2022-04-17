@@ -1,12 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
 import styled from "styled-components";
+import { Profile, ProfileImg } from "../atoms/Profile";
 import { Input } from "../styles/Input";
 import { Overlay } from "../styles/Modal";
 interface IBanData {
   id: number;
   member_id: number;
   member_name: string;
+  member_img: string;
   promise_id: number;
   date: string;
   reason: string;
@@ -49,7 +51,7 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
   };
   return (
     <AnimatePresence>
-      {state.dateModal && (
+      {dateModal && (
         <>
           <Modal
             initial={{
@@ -70,12 +72,34 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
                 getDayFromCurrentDate() +
                 "요일"}
             </span>
-            <StateList>
+            <List>
               {["RED", "YELLOW", "GREEN"].map((value, idx) => (
-                <State key={idx}>{getPeople(value)}</State>
+                <div key={idx} style={{ backgroundColor: "transparent" }}>
+                  {getPeople(value) && (
+                    <RowElement>{getPeople(value)}</RowElement>
+                  )}
+                </div>
               ))}
-            </StateList>
+            </List>
             <Input placeholder="메모 추가..." />
+            <List>
+              {data.map((d, idx) => (
+                <div style={{ background: "transparent" }} key={idx}>
+                  {d.date === currentDate && d.reason && (
+                    <RowElement>
+                      <ProfileImg
+                        imgProps={{ type: "group", imgSrc: d.member_img }}
+                      />
+                      <ColElement>
+                        <span>{d.member_name}</span>
+                        <span>{d.reason}</span>
+                      </ColElement>
+                    </RowElement>
+                  )}
+                </div>
+              ))}
+            </List>
+            <ChooseButton>이 날짜 선택하기</ChooseButton>
           </Modal>
           <Overlay
             initial={{
@@ -108,26 +132,36 @@ const Modal = styled(motion.div)`
   @media screen and (min-width: 900px) {
     width: 40%;
   }
-  height: 60vh;
+  height: 70vh;
   padding: 2em;
-  /* justify-content: space-between; */
   z-index: 3;
   span {
     background-color: transparent;
   }
 `;
-const StateList = styled.div`
+const List = styled.div`
   display: flex;
   flex-direction: column;
   background-color: transparent;
-  margin-block: 1em;
+  margin-block: 0.5em;
+  overflow-y: scroll;
 `;
-const State = styled.div`
-  flex-direction: row;
+const Element = styled.div`
   display: flex;
   background-color: transparent;
-  margin-top: 0.5em;
+  margin-top: 0.3em;
+  height: 3em;
+`;
+const RowElement = styled(Element)`
+  flex-direction: row;
   align-items: center;
+`;
+const ColElement = styled(Element)`
+  flex-direction: column;
+  padding-bottom: 0.5em;
+  span:first-child {
+    font-weight: 600;
+  }
 `;
 const Flag = styled.div<{ color: string }>`
   width: 0.3em;
@@ -139,4 +173,10 @@ const Flag = styled.div<{ color: string }>`
       ? p.theme.flagYellow
       : p.theme.flagGreen};
   margin-right: 0.5em;
+`;
+const ChooseButton = styled.button`
+  background-color: ${(p) => p.theme.textColor};
+  color: ${(p) => p.theme.bgColor};
+  border: none;
+  border-radius: 1em;
 `;
