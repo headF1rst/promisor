@@ -55,7 +55,7 @@ function SideMenu({ match, side, setSide }: ISideMenu) {
                     ? "#04C994"
                     : "none",
               }}
-              onClick={() => onTabClick("group")}
+              onClick={() => onTabClick("team")}
             >
               그룹
             </SideList>
