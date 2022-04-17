@@ -7,30 +7,40 @@ import { AnimatePresence, motion } from "framer-motion";
 import PromiseDateModal from "./PromiseDateModal";
 import { FaStickyNote } from "react-icons/fa";
 
-// 불가능:0 애매함:1 가능:2
 const TEST_DATA = [
   {
     id: 0,
     member_id: 0,
     member_name: "김채은",
+    member_img:
+      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
+
     promise_id: 0,
     date: "20220416",
     reason: "",
+
     date_status: "RED",
   },
   {
     id: 1,
     member_id: 1,
     member_name: "고산하",
+    member_img:
+      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
+
     promise_id: 0,
     date: "20220417",
-    reason: "",
+    reason: "가족 모임",
+
     date_status: "RED",
   },
   {
     id: 2,
     member_name: "고산하",
     member_id: 1,
+    member_img:
+      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
+
     promise_id: 0,
     date: "20220416",
     reason: "",
@@ -39,28 +49,35 @@ const TEST_DATA = [
   {
     id: 3,
     member_id: 2,
+    member_img:
+      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
     member_name: "이준석",
     promise_id: 0,
     date: "20220416",
-    reason: "가족 모임",
+    reason: "",
     date_status: "GREEN",
   },
   {
     id: 4,
     member_id: 3,
+    member_img:
+      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
     member_name: "황승환",
     promise_id: 0,
     date: "20220417",
-    reason: "",
+    reason: "가족 모임",
     date_status: "RED",
   },
   {
     id: 5,
+    member_img:
+      "https://i.pinimg.com/236x/a4/ba/d8/a4bad8978517b1f10ddaf4d833a4fe78.jpg",
     member_id: 2,
     member_name: "이준석",
     promise_id: 0,
-    date: "20220418",
-    reason: "",
+    date: "20220417",
+    reason: "가족 모임",
+
     date_status: "YELLOW",
   },
 ];
@@ -85,11 +102,32 @@ function PromiseDateCalendar() {
   const [currentColor, setCurrentColor] = useState(RED);
   const [currentDate, setCurrentDate] = useState("");
   const [colors, setColors] = useState<IColors[]>([]);
-  const [banData, setBanData] = useState({});
   useEffect(() => {
     makeCalendar(year, month, colors);
   }, [month, colors]);
-
+  useEffect(() => {
+    let newColors = [];
+    if (groupView) {
+      for (let i = 0; i < TEST_DATA.length; i++) {
+        const colorObj = {
+          id: TEST_DATA[i].date,
+          color: TEST_DATA[i].date_status,
+        };
+        newColors.push(colorObj);
+      }
+    } else {
+      for (let i = 0; i < TEST_DATA.length; i++) {
+        if (TEST_DATA[i].member_id === 0) {
+          const colorObj = {
+            id: TEST_DATA[i].date,
+            color: TEST_DATA[i].date_status,
+          };
+          newColors.push(colorObj);
+        }
+      }
+    }
+    setColors(newColors);
+  }, [groupView]);
   const makeCalendar = (year: number, month: number, colors: IColors[]) => {
     const FEB =
       (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
@@ -109,10 +147,16 @@ function PromiseDateCalendar() {
             String(year) +
             String(month).padStart(2, "0") +
             String(date).padStart(2, "0");
-          colors &&
-            colors.map((elem) => {
-              elem.id === id && (thisColor = elem.color);
-            });
+          for (let i = 0; i < colors.length; i++) {
+            if (colors[i].id === id) {
+              if (colors[i].color === "RED") {
+                thisColor = "RED";
+                break;
+              } else if (colors[i].color === "YELLOW") {
+                thisColor = "YELLOW";
+              }
+            }
+          }
           newWeek.push({
             id: id,
             value: date,
@@ -224,7 +268,9 @@ function PromiseDateCalendar() {
                     style={{ color: "black" }}
                   >
                     {date.value}
-                    {isNoted(date.id) && <FaStickyNote color={"black"} />}
+                    {groupView && isNoted(date.id) && (
+                      <FaStickyNote color={"black"} />
+                    )}
                   </DateBox>
                 ))}
             </Week>

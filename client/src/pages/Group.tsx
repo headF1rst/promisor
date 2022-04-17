@@ -52,10 +52,10 @@ function Group() {
   const navigate = useNavigate();
   const onBtnClick = () => {
     // api 요청 -> id 받고 navigate
-    navigate(`/group/1/invite`);
+    navigate(`/team/1/invite`);
   };
   const onGroupClick = (id: number, name: string) => {
-    navigate(`/group/${id}/promise`);
+    navigate(`/team/${id}/promise`);
     setSelectedGroup({ id, name });
   };
   const onToggleClick = () => {
