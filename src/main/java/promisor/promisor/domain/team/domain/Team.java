@@ -24,7 +24,7 @@ public class Team extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(length = 10)
+    @Column(length = 30)
     private String groupName;
 
     @Lob
