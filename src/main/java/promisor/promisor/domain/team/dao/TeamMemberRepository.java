@@ -11,6 +11,7 @@ import promisor.promisor.domain.team.domain.TeamMember;
 
 @Transactional(readOnly = true)
 public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
+
     @Transactional
     @Modifying
     @Query("update TeamMember tm "+

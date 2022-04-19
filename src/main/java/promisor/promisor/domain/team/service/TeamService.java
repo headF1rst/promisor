@@ -33,6 +33,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
     private final InviteRepository inviteRepository;
+
     @Transactional
     public void createGroup(String email, CreateTeamDto request) {
         Member member =getMemberInfo(email);

@@ -10,6 +10,7 @@ import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.promise.dao.PromiseRepository;
 import promisor.promisor.domain.promise.domain.Promise;
+import promisor.promisor.domain.promise.dto.PromiseCreateRequest;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.exception.TeamNotFoundForMember;
@@ -27,12 +28,13 @@ public class PromiseService {
     private final TeamRepository teamRepository;
 
     @Transactional
-    public void createPromise(String email, String name) {
+    public void createPromise(String email, PromiseCreateRequest request, Long teamId) {
 
         Member leader = getMember(email);
         leader.changeRole(MemberRole.valueOf("LEADER"));
-        Team team = getTeam(leader);
-        Promise.of("ACTIVE", team, name);
+        Team team = getTeamById(teamId);
+        Promise promise = Promise.of("ACTIVE", team, request.getName());
+        promiseRepository.save(promise);
     }
 
     public Member getMember(String email) {
@@ -40,8 +42,8 @@ public class PromiseService {
         return optionalMember.orElseThrow(MemberEmailNotFound::new);
     }
 
-    public Team getTeam(Member member) {
-        Optional<Team> optionalTeam = teamRepository.findByMember(member);
+    public Team getTeamById(Long id) {
+        Optional<Team> optionalTeam = teamRepository.findById(id);
         return optionalTeam.orElseThrow(TeamNotFoundForMember::new);
     }
 }
