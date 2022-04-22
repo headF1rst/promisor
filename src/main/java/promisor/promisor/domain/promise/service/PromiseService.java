@@ -11,8 +11,11 @@ import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.promise.dao.PromiseRepository;
 import promisor.promisor.domain.promise.domain.Promise;
 import promisor.promisor.domain.promise.dto.PromiseCreateRequest;
+import promisor.promisor.domain.promise.dto.PromiseDateEditRequest;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
+import promisor.promisor.domain.team.exception.NoRightsException;
+import promisor.promisor.domain.promise.exception.PromiseIdNotFound;
 import promisor.promisor.domain.team.exception.TeamNotFoundForMember;
 
 import java.util.Optional;
@@ -45,5 +48,20 @@ public class PromiseService {
     public Team getTeamById(Long id) {
         Optional<Team> optionalTeam = teamRepository.findById(id);
         return optionalTeam.orElseThrow(TeamNotFoundForMember::new);
+    }
+
+    public Promise getPromise(Long id) {
+        Optional<Promise> optionalPromise = promiseRepository.findById(id);
+        return optionalPromise.orElseThrow(PromiseIdNotFound::new);
+    }
+
+    @Transactional
+    public void editPromiseDate(String email, PromiseDateEditRequest request) {
+        Member member = getMember(email);
+        if (member.getMemberRole().role()!="LEADER") {
+            throw new NoRightsException();
+        }
+        Promise promise = getPromise(request.getPromiseId());
+        promise.editPromiseDate(request.getDate());
     }
 }

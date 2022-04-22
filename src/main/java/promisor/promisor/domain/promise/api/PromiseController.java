@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import promisor.promisor.domain.promise.dto.PromiseCreateRequest;
+import promisor.promisor.domain.promise.dto.PromiseDateEditRequest;
 import promisor.promisor.domain.promise.service.PromiseService;
 import promisor.promisor.global.auth.JwtAuth;
 
@@ -19,6 +20,13 @@ public class PromiseController {
                                               @RequestBody PromiseCreateRequest request,
                                               @RequestParam("teamId") Long teamId) {
         promiseService.createPromise(email, request, teamId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping
+    public ResponseEntity<Void> editPromiseDate(@JwtAuth String email,
+                                                @RequestBody PromiseDateEditRequest request) {
+        promiseService.editPromiseDate(email, request);
         return ResponseEntity.ok().build();
     }
 }
