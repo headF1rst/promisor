@@ -26,6 +26,9 @@ public enum ErrorCode {
     // Invite
     NO_RIGHT_TO_INVITE(401,"I001","초대 권한이 없습니다."),
 
+    // Promise
+    PROMISE_ID_NOT_FOUND(400, "P001", "해당 약속이 없습니다."),
+
     // Member
     EMAIL_ALREADY_TAKEN(400, "M001", "이미 존재하는 이메일입니다."),
     EMAIL_SENDING_FAIL(400, "M002", "이메일을 전송하는데 실패하였습니다."),
@@ -43,6 +46,7 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(401, "M014", "로그인 후 이용가능합니다."),
     MEMBER_EMPTY(400,"M015","해당 멤버가 없습니다."),
     LOGIN_AGAIN(400, "M016", "로그인을 다시 시도해 주세요");
+
 
 
 
