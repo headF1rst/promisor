@@ -41,10 +41,18 @@ public class TeamController {
         return ResponseEntity.ok().body(teamService.leaveGroup(email, groupId));
     }
 
+    @Operation(summary = "Invite group", description = "그룹 초대")
     @PostMapping("/invite")
     public ResponseEntity<InviteTeamResponse> inviteGroup(@JwtAuth String email,
                                                           @RequestBody @Valid final InviteTeamDto request){
         return ResponseEntity.ok().body(teamService.inviteGroup(email,request));
+    }
+
+    @Operation(summary = "Delegate GroupLeader", description = "그룹장 위임")
+    @PatchMapping("/delegate")
+    public ResponseEntity<DelegateLeaderResponse> delegateLeader(@JwtAuth String email,
+                                                                 @RequestBody @Valid final DelegateLeaderDto request){
+        return ResponseEntity.ok().body(teamService.delegateLeader(email, request));
     }
 
 //    @GetMapping

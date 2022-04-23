@@ -15,10 +15,7 @@ import promisor.promisor.domain.team.domain.Invite;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.team.dto.*;
-import promisor.promisor.domain.team.exception.LeaderLeaveException;
-import promisor.promisor.domain.team.exception.NoRightToInviteException;
-import promisor.promisor.domain.team.exception.NoRightsException;
-import promisor.promisor.domain.team.exception.TeamIdNotFoundException;
+import promisor.promisor.domain.team.exception.*;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -94,6 +91,18 @@ public class TeamService {
         return new InviteTeamResponse(
                 invited.getId(), team.getId()
         );
+    }
+
+    @Transactional
+    public DelegateLeaderResponse delegateLeader(String email, DelegateLeaderDto request) {
+        Member oldLeader = getMemberInfo(email);
+        Member newLeader = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
+        Team team = getGroup(request.getGroupId());
+        if(!Objects.equals(team.getMember().getId(), oldLeader.getId())){
+            throw new NoRightToDelegateException();
+        }
+        team.changeLeader(newLeader);
+        return new DelegateLeaderResponse(request.getMemberId(), request.getGroupId());
     }
 //    public List<GetMyTeamResponse> getGroupList(String email) {
 //        Member member = getMemberInfo(email);
