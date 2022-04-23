@@ -45,4 +45,8 @@ public class Team extends BaseEntity {
     public void changeGroupName(String groupName) {
         this.groupName = groupName;
     }
+
+    public void changeLeader(Member member){
+        this.member = member;
+    }
 }
