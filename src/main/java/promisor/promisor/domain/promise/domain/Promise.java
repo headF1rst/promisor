@@ -10,6 +10,7 @@ import promisor.promisor.domain.place.domain.Place;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static javax.persistence.FetchType.*;
 
@@ -47,5 +48,10 @@ public class Promise extends BaseEntity {
 
     public static Promise of(String status, Team team, String promiseName) {
         return new Promise(status, team, promiseName);
+    }
+
+    public void editPromiseDate(String date){
+        LocalDateTime promiseDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.date=promiseDate;
     }
 }

@@ -24,7 +24,7 @@ public class Team extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @Column(length = 10)
+    @Column(length = 30)
     private String groupName;
 
     @Lob
@@ -44,5 +44,9 @@ public class Team extends BaseEntity {
 
     public void changeGroupName(String groupName) {
         this.groupName = groupName;
+    }
+
+    public void changeLeader(Member member){
+        this.member = member;
     }
 }

@@ -23,8 +23,12 @@ public enum ErrorCode {
     TEAM_NOT_FOUND_FOR_MEMBER(400, "G003", "해당 멤버가 속한 그룹을 찾을 수 없습니다."),  
     GROUP_EMPTY(400,"G004","해당 그룹이 없습니다."),
 
-    // Invite
-    NO_RIGHT_TO_INVITE(401,"I001","초대 권한이 없습니다."),
+    // Unique
+    NO_RIGHT_TO_INVITE(401,"U001","초대 권한이 없습니다."),
+    NO_RIGHT_TO_DELEGATE(401,"U002","위임 권한이 없습니다."),
+
+    // Promise
+    PROMISE_ID_NOT_FOUND(400, "P001", "해당 약속이 없습니다."),
 
     // Member
     EMAIL_ALREADY_TAKEN(400, "M001", "이미 존재하는 이메일입니다."),
@@ -43,6 +47,7 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(401, "M014", "로그인 후 이용가능합니다."),
     MEMBER_EMPTY(400,"M015","해당 멤버가 없습니다."),
     LOGIN_AGAIN(400, "M016", "로그인을 다시 시도해 주세요");
+
 
 
 
