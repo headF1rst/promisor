@@ -11,7 +11,6 @@ interface ISideMenu {
   match: {
     group: object | null;
     friend: object | null;
-    setting: object | null;
   };
   side: boolean;
   setSide: Function;
@@ -47,13 +46,18 @@ function SideMenu({ match, side, setSide }: ISideMenu) {
             exit="exit"
             transition={{ type: "linear" }}
           >
-            <A.Logo value={"Promiser"} />
+            <A.Logo value={"Promisor"} />
             <SideList
               style={{
-                color:
-                  match.group || (!match.friend && !match.setting)
-                    ? "#04C994"
-                    : "none",
+                color: !match.group && !match.friend ? "#04C994" : "none",
+              }}
+              onClick={() => onTabClick("")}
+            >
+              홈
+            </SideList>
+            <SideList
+              style={{
+                color: match.group ? "#04C994" : "none",
               }}
               onClick={() => onTabClick("team")}
             >
@@ -64,12 +68,6 @@ function SideMenu({ match, side, setSide }: ISideMenu) {
               onClick={() => onTabClick("friend")}
             >
               친구
-            </SideList>
-            <SideList
-              style={{ color: match.setting ? "#04C994" : "none" }}
-              onClick={() => onTabClick("setting")}
-            >
-              설정
             </SideList>
             <DarkmodeToggle
               dark={dark ? "dark" : "light"}

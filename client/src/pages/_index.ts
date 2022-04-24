@@ -6,4 +6,4 @@ export { default as Home } from "./Home";
 export { default as Login } from "./Login";
 export { default as Promise } from "./Promise";
 export { default as PromiseDetail } from "./PromiseDetail";
-export { default as Setting } from "./Setting";
+export { default as MyPage } from "./MyPage";
