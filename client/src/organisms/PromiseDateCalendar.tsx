@@ -80,6 +80,30 @@ const TEST_DATA = [
 
     date_status: "YELLOW",
   },
+  {
+    id: 6,
+    member_img:
+      "https://i.pinimg.com/236x/a4/ba/d8/a4bad8978517b1f10ddaf4d833a4fe78.jpg",
+    member_id: 3,
+    member_name: "김채은",
+    promise_id: 0,
+    date: "20220417",
+    reason: "가족 모임",
+
+    date_status: "YELLOW",
+  },
+  {
+    id: 7,
+    member_img:
+      "https://i.pinimg.com/236x/a4/ba/d8/a4bad8978517b1f10ddaf4d833a4fe78.jpg",
+    member_id: 3,
+    member_name: "김채은",
+    promise_id: 0,
+    date: "20220417",
+    reason: "가족 모임",
+
+    date_status: "GREEN",
+  },
 ];
 
 const RED = "RED";
@@ -87,10 +111,6 @@ const YELLOW = "YELLOW";
 const GREEN = "GREEN";
 const COLOR = { RED: "#ff7373", YELLOW: "#ffd37a", GREEN: "#85ba73" };
 const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
-interface IColors {
-  id: string;
-  color: string;
-}
 
 function PromiseDateCalendar() {
   const [groupView, setGroupView] = useState(true);
@@ -99,12 +119,10 @@ function PromiseDateCalendar() {
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [weeks, setWeeks] = useState<any[][]>([]);
-  const [currentColor, setCurrentColor] = useState(RED);
   const [currentDate, setCurrentDate] = useState("");
-  const [colors, setColors] = useState<IColors[]>([]);
   useEffect(() => {
-    makeCalendar(year, month, colors);
-  }, [month, colors]);
+    makeCalendar(year, month);
+  }, [month]);
   useEffect(() => {
     let newColors = [];
     if (groupView) {
@@ -126,9 +144,8 @@ function PromiseDateCalendar() {
         }
       }
     }
-    setColors(newColors);
   }, [groupView]);
-  const makeCalendar = (year: number, month: number, colors: IColors[]) => {
+  const makeCalendar = (year: number, month: number) => {
     const FEB =
       (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
     const LASTDATE = [0, 31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -147,12 +164,12 @@ function PromiseDateCalendar() {
             String(year) +
             String(month).padStart(2, "0") +
             String(date).padStart(2, "0");
-          for (let i = 0; i < colors.length; i++) {
-            if (colors[i].id === id) {
-              if (colors[i].color === "RED") {
+          for (let i = 0; i < TEST_DATA.length; i++) {
+            if (TEST_DATA[i].date === id) {
+              if (TEST_DATA[i].date_status === "RED") {
                 thisColor = "RED";
                 break;
-              } else if (colors[i].color === "YELLOW") {
+              } else if (TEST_DATA[i].date_status === "YELLOW") {
                 thisColor = "YELLOW";
               }
             }
@@ -174,9 +191,6 @@ function PromiseDateCalendar() {
     if (groupView) {
       setDateModal((prev) => !prev);
       setCurrentDate(id);
-    } else {
-      const newColors = [...colors, { id, color: currentColor }];
-      setColors(newColors);
     }
   };
   const onBtnClick = (isPrev: string) => {
@@ -215,39 +229,7 @@ function PromiseDateCalendar() {
           onClick={() => onBtnClick("next")}
         />
       </Elements>
-      <Elements>
-        <Buttons>
-          <Button
-            selected={currentColor === RED ? true : false}
-            onClick={() => setCurrentColor(RED)}
-            color={RED}
-          >
-            <Circle color={COLOR[RED]} />
-            불가능
-          </Button>
-          <Button
-            selected={currentColor === YELLOW ? true : false}
-            onClick={() => setCurrentColor(YELLOW)}
-            color={YELLOW}
-          >
-            <Circle color={COLOR[YELLOW]} />
-            애매함
-          </Button>
-          <Button
-            selected={currentColor === GREEN ? true : false}
-            onClick={() => setCurrentColor(GREEN)}
-            color={GREEN}
-          >
-            <Circle color={COLOR[GREEN]} />
-            가능
-          </Button>
-        </Buttons>
-        <A.RoundBtn
-          fontSize={0.7}
-          value={groupView ? "내 일정 등록" : "완료"}
-          onClick={() => setGroupView((prev) => !prev)}
-        />
-      </Elements>
+
       <Month>
         <Week>
           {DAYS_OF_WEEK.map((day, idx) => (
@@ -268,14 +250,25 @@ function PromiseDateCalendar() {
                     style={{ color: "black" }}
                   >
                     {date.value}
-                    {groupView && isNoted(date.id) && (
-                      <FaStickyNote color={"black"} />
-                    )}
                   </DateBox>
                 ))}
             </Week>
           ))}
       </Month>
+      <Buttons>
+        <Button color={RED}>
+          <Circle color={COLOR[RED]} />
+          불가능
+        </Button>
+        <Button color={YELLOW}>
+          <Circle color={COLOR[YELLOW]} />
+          애매함
+        </Button>
+        <Button color={GREEN}>
+          <Circle color={COLOR[GREEN]} />
+          가능
+        </Button>
+      </Buttons>
       {dateModal && (
         <PromiseDateModal
           state={{ dateModal, setDateModal, currentDate }}
@@ -293,7 +286,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80vh;
+  height: 60vh;
 `;
 
 const Month = styled.div`
@@ -317,7 +310,7 @@ const DateBox = styled.div<{
   @media screen and (min-width: 900px) {
     width: 5vw;
   }
-  height: ${(props) => (props.height ? props.height : "8vh")};
+  height: ${(props) => (props.height ? props.height : "6vh")};
   background-color: ${(p) =>
     p.isDay || !p.color || p.color === "null"
       ? `${p.theme.smoke}`
@@ -345,14 +338,13 @@ const Buttons = styled.div`
   flex-direction: row;
   justify-content: space-between;
   width: 55%;
+  margin: 1em;
 `;
-const Button = styled.div<{ selected: boolean }>`
+const Button = styled.div`
   display: flex;
   flex-direction: row;
   cursor: pointer;
   font-size: 0.7em;
-  font-weight: ${(p) => (p.selected ? 600 : 500)};
-  text-shadow: ${(p) => p.selected && `0px 0px 10px ${p.theme.highlight}`};
 `;
 const Circle = styled.div<{ color: string }>`
   width: 1em;

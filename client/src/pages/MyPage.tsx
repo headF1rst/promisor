@@ -144,6 +144,7 @@ const ProfileContainer = styled.div`
   span {
     font-size: 1.2em;
   }
+  margin-bottom: 3em;
 `;
 const ProfileImg = styled.img`
   width: 5em;
@@ -156,7 +157,6 @@ const CalendarContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 80vh;
 `;
 
 const Month = styled.div`
@@ -180,7 +180,7 @@ const DateBox = styled.div<{
   @media screen and (min-width: 900px) {
     width: 5vw;
   }
-  height: ${(props) => (props.height ? props.height : "8vh")};
+  height: ${(props) => (props.height ? props.height : "5vh")};
   background-color: ${(p) =>
     p.isDay || !p.color || p.color === "null"
       ? `${p.theme.smoke}`

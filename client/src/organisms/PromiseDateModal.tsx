@@ -22,6 +22,7 @@ const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 
 function PromiseDateModal({ state, data }: IPromiseDateModal) {
   const { dateModal, setDateModal, currentDate } = state;
+  const onChooseClick = () => {};
   const getDayFromCurrentDate = () => {
     const strDate =
       currentDate.slice(0, 4) +
@@ -72,17 +73,21 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
                 getDayFromCurrentDate() +
                 "요일"}
             </span>
-            <List>
+            <List style={{ height: "30%" }}>
               {["RED", "YELLOW", "GREEN"].map((value, idx) => (
-                <div key={idx} style={{ backgroundColor: "transparent" }}>
+                <div
+                  key={idx}
+                  style={{
+                    backgroundColor: "transparent",
+                  }}
+                >
                   {getPeople(value) && (
                     <RowElement>{getPeople(value)}</RowElement>
                   )}
                 </div>
               ))}
             </List>
-            <Input placeholder="메모 추가..." />
-            <List>
+            <List style={{ height: "60%" }}>
               {data.map((d, idx) => (
                 <div style={{ background: "transparent" }} key={idx}>
                   {d.date === currentDate && d.reason && (
@@ -99,7 +104,9 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
                 </div>
               ))}
             </List>
-            <ChooseButton>이 날짜 선택하기</ChooseButton>
+            <ChooseButton onClick={onChooseClick}>
+              이 날짜 선택하기
+            </ChooseButton>
           </Modal>
           <Overlay
             initial={{
@@ -143,14 +150,13 @@ const List = styled.div`
   display: flex;
   flex-direction: column;
   background-color: transparent;
-  margin-block: 0.5em;
+  margin-top: 0.5em;
   overflow-y: scroll;
 `;
 const Element = styled.div`
   display: flex;
   background-color: transparent;
   margin-top: 0.3em;
-  height: 3em;
 `;
 const RowElement = styled(Element)`
   flex-direction: row;
@@ -179,4 +185,8 @@ const ChooseButton = styled.button`
   color: ${(p) => p.theme.bgColor};
   border: none;
   border-radius: 1em;
+  position: absolute;
+  bottom: 1em;
+  left: 50%;
+  transform: translateX(-50%);
 `;
