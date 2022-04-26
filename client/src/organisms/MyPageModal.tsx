@@ -4,29 +4,33 @@ import styled from "styled-components";
 import { Profile, ProfileImg } from "../atoms/Profile";
 import { Input } from "../styles/Input";
 import { Overlay } from "../styles/Modal";
-import { BsCalendarCheck } from "react-icons/bs";
-import { selectedState } from "../states/createGroup";
-interface IBanData {
+import { AiTwotoneLock } from "react-icons/ai";
+import { FaChevronCircleRight, FaChevronCircleLeft } from "react-icons/fa";
+interface IReasonData {
   id: number;
   date: string;
   reason: string;
   date_status: string;
+  is_private: boolean;
+}
+interface IDateStatusData {
+  id: number;
+  date: string;
+  date_status: string;
 }
 interface IMyPageModal {
   state: { dateModal: boolean; setDateModal: Function; currentDate: string };
-  data: IBanData[];
+  data: { reasonData: IReasonData[]; statusData: IDateStatusData[] };
 }
 const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
-const RED = "RED";
-const YELLOW = "YELLOW";
-const GREEN = "GREEN";
-const COLOR = { RED: "#ff7373", YELLOW: "#ffd37a", GREEN: "#85ba73" };
 
 function MyPageModal({ state, data }: IMyPageModal) {
   const { dateModal, setDateModal, currentDate } = state;
+  const { reasonData, statusData } = data;
   const [reason, setReason] = useState("");
   const [privateReason, setPrivateReason] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(GREEN);
+  const [selectedStatus, setSelectedStatus] = useState(false);
+  const [changeStatus, setChangeStatus] = useState(false);
   const onReasonSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(selectedStatus, reason, privateReason);
@@ -40,11 +44,14 @@ function MyPageModal({ state, data }: IMyPageModal) {
   const onPrivateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPrivateReason(e.target.checked);
   };
+  const onStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedStatus(e.target.checked);
+  };
   const onOverlayClick = () => {
     setDateModal((p: boolean) => !p);
     setReason("");
     setPrivateReason(false);
-    setSelectedStatus(GREEN);
+    setSelectedStatus(false);
   };
   const getDayFromCurrentDate = () => {
     const strDate =
@@ -56,30 +63,26 @@ function MyPageModal({ state, data }: IMyPageModal) {
     const day = new Date(strDate).getDay();
     return DAYS_OF_WEEK[day];
   };
-
-  const getStatus = () => {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].date === currentDate) {
-        return data[i].date_status;
+  const getColor = (date_status: string) => {
+    if (date_status === "RED") {
+      return "#ff7373";
+    } else if (date_status === "YELLOW") {
+      return "#ffd37a";
+    } else {
+      return "#85ba73";
+    }
+  };
+  const getDateStatus = (date: string) => {
+    for (let i = 0; i < statusData.length; i++) {
+      if (statusData[i].date === date) {
+        return statusData[i].date_status;
       }
     }
-    return selectedStatus;
+    return "GREEN";
   };
-  const onStatusClick = (status: string) => {
-    if (!getReason()) {
-      setSelectedStatus(status);
-    }
+  const onStatusSubmit = (date_status: string) => {
+    // 해당 날짜의 status 변경 api 호출
   };
-
-  const getReason = () => {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].date === currentDate && data[i].reason) {
-        return data[i].reason;
-      }
-    }
-    return;
-  };
-
   return (
     <AnimatePresence>
       {dateModal && (
@@ -95,74 +98,82 @@ function MyPageModal({ state, data }: IMyPageModal) {
               opacity: 0,
             }}
           >
-            <span>
+            <RowElement>
               {currentDate.slice(4, 6) +
                 "월 " +
                 currentDate.slice(6, 8) +
                 "일 " +
                 getDayFromCurrentDate() +
                 "요일"}
-            </span>
-            <Elements>
-              <Buttons>
-                <Button
-                  onClick={() => onStatusClick(RED)}
-                  selected={getStatus() === RED && true}
-                  color={RED}
-                >
-                  <Circle color={COLOR[RED]} />
-                  불가능
-                </Button>
-                <Button
-                  onClick={() => onStatusClick(YELLOW)}
-                  selected={getStatus() === YELLOW && true}
-                  color={YELLOW}
-                >
-                  <Circle color={COLOR[YELLOW]} />
-                  애매함
-                </Button>
-                <Button
-                  onClick={() => onStatusClick(GREEN)}
-                  selected={getStatus() === GREEN && true}
-                  color={GREEN}
-                >
-                  <Circle color={COLOR[GREEN]} />
-                  가능
-                </Button>
-              </Buttons>
-            </Elements>
-            {getReason() ? (
-              <div
-                style={{
-                  background: "transparent",
-                  display: "flex",
-                  flexDirection: "row",
-                  gap: "0.5em",
-                }}
+              <span
+                style={{ cursor: "pointer", marginTop: "0.1em" }}
+                onClick={() => setChangeStatus((p) => !p)}
               >
-                <BsCalendarCheck />
-                {getReason()}
-              </div>
-            ) : (
-              <form
-                style={{
-                  background: "transparent",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "0.5em",
-                }}
-                onSubmit={onReasonSubmit}
-              >
-                <Input
-                  onChange={onReasonChange}
-                  value={reason}
-                  placeholder="메모"
-                />
-                <label style={{ background: "transparent" }}>
+                {changeStatus ? (
+                  <FaChevronCircleLeft
+                    color={getColor(getDateStatus(currentDate))}
+                  />
+                ) : (
+                  <FaChevronCircleRight
+                    color={getColor(getDateStatus(currentDate))}
+                  />
+                )}
+              </span>
+
+              {changeStatus && (
+                <>
+                  <Circle
+                    onClick={() => onStatusSubmit("RED")}
+                    color={getColor("RED")}
+                  />
+                  <Circle
+                    onClick={() => onStatusSubmit("YELLOW")}
+                    color={getColor("YELLOW")}
+                  />
+                  <Circle
+                    onClick={() => onStatusSubmit("GREEN")}
+                    color={getColor("GREEN")}
+                  />
+                </>
+              )}
+            </RowElement>
+            <form
+              style={{
+                background: "transparent",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5em",
+              }}
+              onSubmit={onReasonSubmit}
+            >
+              <Input
+                onChange={onReasonChange}
+                value={reason}
+                placeholder="메모 추가..."
+              />
+              <RowElement>
+                <label style={{ background: "transparent", fontSize: "0.8em" }}>
                   <input onChange={onPrivateChange} type="checkbox" /> 나만 보기
                 </label>
-              </form>
-            )}
+                <label style={{ background: "transparent", fontSize: "0.8em" }}>
+                  <input onChange={onStatusChange} type="checkbox" /> 빨강으로
+                  표시
+                </label>
+              </RowElement>
+            </form>
+            <List>
+              {reasonData.map(
+                (value, idx) =>
+                  value.date === currentDate &&
+                  value.reason && (
+                    <RowElement>
+                      <Circle color={getColor(value.date_status)} />
+                      {value.reason}
+                      {value.is_private && <AiTwotoneLock />}
+                    </RowElement>
+                  )
+              )}
+            </List>
           </Modal>
           <Overlay
             initial={{
@@ -183,10 +194,11 @@ function MyPageModal({ state, data }: IMyPageModal) {
 }
 
 export default MyPageModal;
+
 const Modal = styled(motion.div)`
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  gap: 1em;
   position: fixed;
   top: 8em;
   border-radius: 1em;
@@ -196,35 +208,27 @@ const Modal = styled(motion.div)`
   @media screen and (min-width: 900px) {
     width: 40%;
   }
-  height: 30vh;
+  height: 50vh;
   padding: 2em;
   z-index: 3;
   span {
     background-color: transparent;
   }
 `;
-const Elements = styled.div`
+const List = styled.div`
   display: flex;
-  flex-direction: row;
-  width: 90%;
-  justify-content: space-between;
+  flex-direction: column;
   background-color: transparent;
+  margin-top: 0.5em;
+  overflow-y: scroll;
+  gap: 0.5em;
 `;
-const Buttons = styled.div`
+
+const RowElement = styled.div`
+  background: transparent;
   display: flex;
   flex-direction: row;
   gap: 0.5em;
-  width: 100%;
-  background-color: transparent;
-`;
-const Button = styled.div<{ selected?: boolean }>`
-  display: flex;
-  flex-direction: row;
-  cursor: pointer;
-  background-color: transparent;
-  font-size: 0.7em;
-  font-weight: ${(p) => (p.selected ? 600 : 500)};
-  text-shadow: ${(p) => p.selected && `0px 0px 10px ${p.theme.highlight}`};
 `;
 const Circle = styled.div<{ color: string }>`
   width: 1em;
@@ -233,4 +237,17 @@ const Circle = styled.div<{ color: string }>`
   background-color: ${(p) => p.color};
   margin-right: 0.3em;
   margin-top: 0.1em;
+`;
+const Buttons = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 55%;
+  margin: 1em;
+`;
+const Button = styled.div`
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  font-size: 0.7em;
 `;
