@@ -256,15 +256,15 @@ function PromiseDateCalendar() {
           ))}
       </Month>
       <Buttons>
-        <Button color={RED}>
+        <Button>
           <Circle color={COLOR[RED]} />
           불가능
         </Button>
-        <Button color={YELLOW}>
+        <Button>
           <Circle color={COLOR[YELLOW]} />
           애매함
         </Button>
-        <Button color={GREEN}>
+        <Button>
           <Circle color={COLOR[GREEN]} />
           가능
         </Button>

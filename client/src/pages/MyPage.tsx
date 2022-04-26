@@ -2,8 +2,22 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import MyPageModal from "../organisms/MyPageModal";
+const PERSONAL_DATA = [{ id: 1, date: "20220425", date_status: "RED" }];
 const TEST_DATA = [
-  { id: 1, date: "20220425", reason: "산하 생일", date_status: "RED" },
+  {
+    id: 1,
+    date: "20220425",
+    reason: "산하 생일",
+    is_private: false,
+    date_status: "RED",
+  },
+  {
+    id: 2,
+    date: "20220425",
+    reason: "가족 사정",
+    is_private: true,
+    date_status: "YELLOW",
+  },
 ];
 
 const RED = "RED";
@@ -42,9 +56,13 @@ function MyPage() {
             String(year) +
             String(month + 1).padStart(2, "0") +
             String(date).padStart(2, "0");
-          for (let i = 0; i < TEST_DATA.length; i++) {
-            if (TEST_DATA[i].date === id && TEST_DATA[i].date_status) {
-              thisColor = TEST_DATA[i].date_status;
+          for (let i = 0; i < PERSONAL_DATA.length; i++) {
+            if (PERSONAL_DATA[i].date === id) {
+              if (PERSONAL_DATA[i].date_status === "RED") {
+                thisColor = "RED";
+              } else if (PERSONAL_DATA[i].date_status === "YELLOW") {
+                thisColor = "YELLOW";
+              }
             }
           }
           newWeek.push({
@@ -128,7 +146,7 @@ function MyPage() {
       </CalendarContainer>
       <MyPageModal
         state={{ dateModal, setDateModal, currentDate }}
-        data={TEST_DATA}
+        data={{ reasonData: TEST_DATA, statusData: PERSONAL_DATA }}
       />
     </div>
   );
