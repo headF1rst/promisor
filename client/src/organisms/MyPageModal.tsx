@@ -52,6 +52,7 @@ function MyPageModal({ state, data }: IMyPageModal) {
     setReason("");
     setPrivateReason(false);
     setSelectedStatus(false);
+    setChangeStatus(false);
   };
   const getDayFromCurrentDate = () => {
     const strDate =
