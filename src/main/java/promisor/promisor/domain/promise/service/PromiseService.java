@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
-import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.promise.dao.PromiseRepository;
 import promisor.promisor.domain.promise.domain.Promise;
@@ -50,11 +49,45 @@ public class PromiseService {
     @Transactional
     public void createPromise(String email, PromiseCreateRequest request, Long teamId) {
 
-        Member leader = getMember(email);
-        leader.changeRole(MemberRole.valueOf("LEADER"));
+        if (checkMemberInTeam(email, teamId)) {
+            throw new MemberNotBelongsToTeam();
+        }
+
         Team team = getTeamById(teamId);
         Promise promise = Promise.of("ACTIVE", team, request.getName());
         promiseRepository.save(promise);
+    }
+
+    @Transactional
+    public void editPromiseDate(String email, PromiseDateEditRequest request) {
+
+        Member member = getMember(email);
+        if (!Objects.equals(member.getMemberRole().role(), "LEADER")) {
+            throw new NoRightsException();
+        }
+        Promise promise = getPromiseById(request.getPromiseId());
+        promise.editPromiseDate(request.getDate());
+    }
+
+    /*
+     *   그룹내 약속 전체 조회 API
+     *   @Param: 이메일, 팀 아이디
+     *   @author: Sanha Ko
+     */
+    public List<PromiseResponse> searchPromise(String email, Long teamId) {
+
+        if (checkMemberInTeam(email, teamId)) {
+            throw new MemberNotBelongsToTeam();
+        }
+
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "promiseName"));
+        Slice<Promise> promiseList = promiseRepository.findAllByTeamId(teamId, pageRequest);
+
+        List<PromiseResponse> result = promiseList.stream()
+                .map(p -> new PromiseResponse(p.getId(), p.getPromiseName(),
+                        p.getDate(), p.getPromiseLocation()))
+                .collect(toList());
+        return result;
     }
 
     public Member getMember(String email) {
@@ -72,17 +105,6 @@ public class PromiseService {
         return optionalPromise.orElseThrow(PromiseIdNotFound::new);
     }
 
-    @Transactional
-    public void editPromiseDate(String email, PromiseDateEditRequest request) {
-
-        Member member = getMember(email);
-        if (!Objects.equals(member.getMemberRole().role(), "LEADER")) {
-            throw new NoRightsException();
-        }
-        Promise promise = getPromiseById(request.getPromiseId());
-        promise.editPromiseDate(request.getDate());
-    }
-
     public boolean checkMemberInTeam(String email, Long teamId) {
 
         List<TeamMember> foundMembers = teamMemberRepository.findMembersByTeamId(teamId);
@@ -90,30 +112,9 @@ public class PromiseService {
 
         for (TeamMember foundMember : foundMembers) {
             if (foundMember.getMember() == member) {
-                return true;
+                return false;
             }
         }
-        return false;
-    }
-
-    /*
-     *   그룹내 약속 전체 조회 API
-     *   @Param: 이메일, 팀 아이디
-     *   @author: Sanha Ko
-     */
-    public List<PromiseResponse> searchPromise(String email, Long teamId) {
-
-        if (!checkMemberInTeam(email, teamId)) {
-            throw new MemberNotBelongsToTeam();
-        }
-
-        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "promiseName"));
-        Slice<Promise> promiseList = promiseRepository.findAllByTeamId(teamId, pageRequest);
-
-        List<PromiseResponse> result = promiseList.stream()
-                .map(p -> new PromiseResponse(p.getId(), p.getPromiseName(),
-                        p.getDate(), p.getPromiseLocation()))
-                .collect(toList());
-        return result;
+        return true;
     }
 }
