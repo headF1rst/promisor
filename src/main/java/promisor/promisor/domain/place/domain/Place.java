@@ -20,4 +20,7 @@ public class Place extends BaseEntity {
 
     @Column(length = 100)
     private String location;
+
+    private Double latitude;
+    private Double longitude;
 }
