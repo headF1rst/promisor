@@ -5,8 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import promisor.promisor.domain.promise.dto.PromiseCreateRequest;
 import promisor.promisor.domain.promise.dto.PromiseDateEditRequest;
+import promisor.promisor.domain.promise.dto.PromiseResponse;
 import promisor.promisor.domain.promise.service.PromiseService;
 import promisor.promisor.global.auth.JwtAuth;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/promises")
@@ -15,10 +18,10 @@ public class PromiseController {
 
     private final PromiseService promiseService;
 
-    @PostMapping
+    @PostMapping("/{id}")
     public ResponseEntity<Void> createPromise(@JwtAuth String email,
                                               @RequestBody PromiseCreateRequest request,
-                                              @RequestParam("teamId") Long teamId) {
+                                              @PathVariable("id") Long teamId) {
         promiseService.createPromise(email, request, teamId);
         return ResponseEntity.ok().build();
     }
@@ -28,5 +31,12 @@ public class PromiseController {
                                                 @RequestBody PromiseDateEditRequest request) {
         promiseService.editPromiseDate(email, request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<PromiseResponse>> searchPromiseList(@JwtAuth String email,
+                                                                   @PathVariable("id") Long teamId) {
+        List<PromiseResponse> response = promiseService.searchPromise(email, teamId);
+        return ResponseEntity.ok().body(response);
     }
 }

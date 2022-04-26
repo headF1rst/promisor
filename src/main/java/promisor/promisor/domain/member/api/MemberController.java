@@ -48,9 +48,8 @@ public class MemberController {
 
     @Operation(summary = "Refresh token", description = "리프레시 토큰 발급")
     @GetMapping("/token/refresh")
-    public ResponseEntity<LoginResponse> refreshToken(@RequestBody @Valid LoginDto.GetRefreshTokenDto getRefreshTokenDto,
-                                                      HttpServletRequest request) {
-        LoginResponse response = memberService.refreshToken(getRefreshTokenDto, request);
+    public ResponseEntity<LoginResponse> refreshToken(@RequestBody @Valid LoginDto.GetRefreshTokenDto getRefreshTokenDto) {
+        LoginResponse response = memberService.refreshToken(getRefreshTokenDto);
         return ResponseEntity.ok().body(response);
     }
 

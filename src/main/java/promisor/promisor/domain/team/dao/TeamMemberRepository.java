@@ -9,6 +9,8 @@ import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
 
+import java.util.List;
+
 @Transactional(readOnly = true)
 public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
 
@@ -18,4 +20,6 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
             "set tm.status = 'DELETED' where tm.member = :member "+
             "and tm.team = :team")
     void leaveGroup(@Param("member") Member member, @Param("team") Team team);
+
+    List<TeamMember> findMembersByTeamId(Long teamId);
 }

@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static javax.persistence.FetchType.*;
 
@@ -52,6 +53,10 @@ public class Promise extends BaseEntity {
 
     public void editPromiseDate(String date){
         LocalDateTime promiseDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.date=promiseDate;
+        this.date = promiseDate;
+    }
+
+    public String getPromiseLocation() {
+        return place.getLocation();
     }
 }

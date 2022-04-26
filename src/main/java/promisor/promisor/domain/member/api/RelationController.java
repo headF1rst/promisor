@@ -19,9 +19,9 @@ public class RelationController {
     private final RelationService relationService;
 
     @Operation(summary = "Follow friend", description = "친구 추가")
-    @PostMapping("/{friendId}")
+    @PostMapping("/{id}")
     public ResponseEntity<Void> followFriend(@JwtAuth String email,
-                                             @PathVariable("friendId") Long friendId) {
+                                             @PathVariable("id") Long friendId) {
         relationService.followFriend(email, friendId);
         return ResponseEntity.ok().build();
     }

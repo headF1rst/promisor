@@ -204,7 +204,7 @@ public class MemberService {
         );
     }
 
-    public LoginResponse refreshToken(LoginDto.GetRefreshTokenDto getRefreshTokenDto, HttpServletRequest request) {
+    public LoginResponse refreshToken(LoginDto.GetRefreshTokenDto getRefreshTokenDto) {
         String refreshToken = refreshTokenRepository.findRefreshTokenById(getRefreshTokenDto.getRefreshId());
 
         if (jwtProvider.validateJwtToken(refreshToken)) {
