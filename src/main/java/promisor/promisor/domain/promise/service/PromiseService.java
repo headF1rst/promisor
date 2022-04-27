@@ -60,11 +60,6 @@ public class PromiseService {
 
     @Transactional
     public void editPromiseDate(String email, PromiseDateEditRequest request) {
-
-        Member member = getMember(email);
-        if (!Objects.equals(member.getMemberRole().role(), "LEADER")) {
-            throw new NoRightsException();
-        }
         Promise promise = getPromiseById(request.getPromiseId());
         promise.editPromiseDate(request.getDate());
     }
