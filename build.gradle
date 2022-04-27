@@ -44,6 +44,8 @@ dependencies {
 	// JSONParser, JSONObject 설정
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 	// Swagger
-	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+//	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+//	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	// Springdoc-openapi-ui
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.2'
 }
