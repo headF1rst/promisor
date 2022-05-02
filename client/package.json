@@ -21,6 +21,7 @@
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
+    "react-select": "^5.3.1",
     "recoil": "^0.5.2",
     "recoil-persist": "^4.0.0",
     "styled-components": "^5.3.3",

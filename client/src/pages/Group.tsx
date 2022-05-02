@@ -91,12 +91,12 @@ function Group() {
           ))}
       </ListContainer>
       {!showModal && (
-        <A.FixedRoundBtn value={"그룹 생성"} onClick={onToggleClick} />
+        <A.FixedRoundBtn value={"팀 생성"} onClick={onToggleClick} />
       )}
       <AddModal
         props={{
-          titleText: "그룹 생성",
-          placeholderText: "그룹 이름",
+          titleText: "팀 생성",
+          placeholderText: "팀 이름",
           btnText: "생성",
           onBtnClick,
           showModal,

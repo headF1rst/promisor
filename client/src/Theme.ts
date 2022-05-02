@@ -4,7 +4,7 @@ export const lightTheme: DefaultTheme = {
   textColor: "#000000",
   grey: "grey",
   // bgColor: "#dce8e5",
-  bgColor: "whitesmoke",
+  bgColor: "white",
   green: "#04C994",
   btnColor: "#00946d",
   pink: "#FEEBE8",
@@ -21,7 +21,7 @@ export const lightTheme: DefaultTheme = {
 export const darkTheme: DefaultTheme = {
   textColor: "#fcfcfc",
   grey: "#C4C4C4",
-  bgColor: "#2b2b2b",
+  bgColor: "black",
   green: "#04C994",
   pink: "#FEEBE8",
   btnColor: "#04C994",

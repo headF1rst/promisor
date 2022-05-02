@@ -53,7 +53,7 @@ function SideMenu({ match, side, setSide }: ISideMenu) {
               }}
               onClick={() => onTabClick("")}
             >
-              홈
+              메인
             </SideList>
             <SideList
               style={{
@@ -61,7 +61,7 @@ function SideMenu({ match, side, setSide }: ISideMenu) {
               }}
               onClick={() => onTabClick("team")}
             >
-              그룹
+              팀
             </SideList>
             <SideList
               style={{ color: match.friend ? "#04C994" : "none" }}

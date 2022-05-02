@@ -30,7 +30,7 @@ function Home() {
     return (
       <>
         <A.Logo value={"P"} />
-        {friendMatch ? "친구" : groupMatch && "그룹"}
+        {friendMatch ? "친구" : groupMatch && "팀"}
         <AiOutlineMenu style={{ cursor: "pointer" }} onClick={onSideClick} />
       </>
     );

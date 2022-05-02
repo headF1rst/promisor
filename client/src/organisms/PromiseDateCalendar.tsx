@@ -16,7 +16,7 @@ const TEST_DATA = [
       "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
 
     promise_id: 0,
-    date: "20220416",
+    date: "20220516",
     reason: "",
 
     date_status: "RED",
@@ -29,7 +29,7 @@ const TEST_DATA = [
       "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
 
     promise_id: 0,
-    date: "20220417",
+    date: "20220517",
     reason: "가족 모임",
 
     date_status: "RED",
@@ -42,7 +42,7 @@ const TEST_DATA = [
       "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
 
     promise_id: 0,
-    date: "20220416",
+    date: "20220516",
     reason: "",
     date_status: "YELLOW",
   },
@@ -53,7 +53,7 @@ const TEST_DATA = [
       "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
     member_name: "이준석",
     promise_id: 0,
-    date: "20220416",
+    date: "20220516",
     reason: "",
     date_status: "GREEN",
   },
@@ -64,7 +64,7 @@ const TEST_DATA = [
       "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
     member_name: "황승환",
     promise_id: 0,
-    date: "20220417",
+    date: "20220517",
     reason: "가족 모임",
     date_status: "RED",
   },
@@ -75,7 +75,7 @@ const TEST_DATA = [
     member_id: 2,
     member_name: "이준석",
     promise_id: 0,
-    date: "20220417",
+    date: "20220517",
     reason: "가족 모임",
 
     date_status: "YELLOW",
@@ -87,7 +87,7 @@ const TEST_DATA = [
     member_id: 3,
     member_name: "김채은",
     promise_id: 0,
-    date: "20220417",
+    date: "20220517",
     reason: "가족 모임",
 
     date_status: "YELLOW",
@@ -99,7 +99,7 @@ const TEST_DATA = [
     member_id: 3,
     member_name: "김채은",
     promise_id: 0,
-    date: "20220417",
+    date: "20220517",
     reason: "가족 모임",
 
     date_status: "GREEN",
