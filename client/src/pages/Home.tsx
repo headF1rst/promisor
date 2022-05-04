@@ -16,44 +16,21 @@ import MyPage from "./MyPage";
 function Home() {
   const groupMatch = useMatch("team");
   const friendMatch = useMatch("friend");
-  const [side, setSide] = useState(false);
-  const onSideClick = () => {
-    setSide((prev) => !prev);
-  };
 
   const routeMatch = {
     group: groupMatch,
     friend: friendMatch,
   };
 
-  const Header = () => {
-    return (
-      <>
-        <A.Logo value={"P"} />
-        {friendMatch ? "친구" : groupMatch && "팀"}
-        <AiOutlineMenu style={{ cursor: "pointer" }} onClick={onSideClick} />
-      </>
-    );
-  };
   const HomeHeader = () => {
-    return (
-      <>
-        <span></span>
-        <A.Logo value={"Promisor"} />
-        <AiOutlineMenu style={{ cursor: "pointer" }} onClick={onSideClick} />
-      </>
-    );
+    return <A.Logo value={"Promisor"} />;
   };
   const Container = () => {
     return friendMatch ? <Friend /> : groupMatch ? <Group /> : <MyPage />;
   };
   return (
     <>
-      <SideMenu match={routeMatch} side={side} setSide={setSide} />
-      <BasedTemplate
-        header={groupMatch || friendMatch ? <Header /> : <HomeHeader />}
-        container={<Container />}
-      />
+      <BasedTemplate header={<HomeHeader />} container={<Container />} />
     </>
   );
 }

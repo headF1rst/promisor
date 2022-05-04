@@ -20,6 +20,12 @@ const GlobalStyle = createGlobalStyle`
   font-family: 'Winkle';
   src: url("/asset/WinkleRegular.ttf");
 }
+@font-face {
+    font-family: 'InfinitySans-RegularA1';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@2.1/InfinitySans-RegularA1.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -37,7 +43,7 @@ time, mark, audio, video {
   padding: 0;
   border: 0;
   font-size: 100%;
-  font-family: 'Nanum Gothic', sans-serif !important;
+  font-family: 'InfinitySans-RegularA1', sans-serif !important;
   font: inherit;
   vertical-align: baseline;
   background-color: ${(p) => p.theme.bgColor};
