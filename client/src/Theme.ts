@@ -11,7 +11,7 @@ export const lightTheme: DefaultTheme = {
   opacity50: "rgba(255, 255, 255, 0.5)",
   smoke: "#ffffff",
   highlight: "grey",
-  cgreen: "#e7f7e1",
+  cgreen: "whitesmoke",
   cred: "#ffe7e3",
   cyellow: "#ffedc9",
   flagRed: "#ff7373",

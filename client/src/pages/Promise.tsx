@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import * as S from "../styles/_index";
 import ArrowBack from "../atoms/ArrowBack";
@@ -12,6 +12,8 @@ import { selectedGroupState } from "../states/selectedGroup";
 import { RoundList } from "../organisms/RoundList";
 import * as A from "../atoms/_index";
 import AddModal from "../organisms/AddModal";
+import { AiOutlineMenu } from "react-icons/ai";
+import { ListContainer } from "../styles/Base";
 
 const TEST_PROMISE = [
   {
@@ -48,6 +50,7 @@ interface IPromise {
 
 function Promise() {
   const [showModal, setShowModal] = useState(false);
+
   const selectedGroup = useRecoilValue(selectedGroupState);
   const navigate = useNavigate();
   const dark = useRecoilValue(darkModeState);
@@ -60,22 +63,15 @@ function Promise() {
     // API 요청
     setShowModal(false);
   };
-
   const Header = () => {
     const onCreateClick = () => {
       setShowModal(true);
     };
     return (
       <>
-        <ArrowBack />
         <PromiseTitle>
           약속<span>{selectedGroup.name}</span>
         </PromiseTitle>
-        <AiOutlinePlus
-          style={{ cursor: "pointer" }}
-          color={dark ? "white" : "black"}
-          onClick={onCreateClick}
-        />
       </>
     );
   };
@@ -87,33 +83,34 @@ function Promise() {
   const Container = () => {
     return (
       <>
-        {" "}
-        {TEST_PROMISE &&
-          TEST_PROMISE.map((value, index) => (
-            <RoundList
-              onClick={() => onListClick(index)}
-              key={value.id}
-              head={
-                <Head
-                  month={value.date.split("-")[1]}
-                  date={value.date.split("-")[2]}
-                />
-              }
-              main={value.title}
-              sub={
-                value.location && (
-                  <A.IconText
-                    icon={
-                      <HiOutlineLocationMarker
-                        color={dark ? "#c4c4c4" : "#595959"}
-                      />
-                    }
-                    text={value.location}
+        <ListContainer>
+          {TEST_PROMISE &&
+            TEST_PROMISE.map((value, index) => (
+              <RoundList
+                onClick={() => onListClick(index)}
+                key={value.id}
+                head={
+                  <Head
+                    month={value.date.split("-")[1]}
+                    date={value.date.split("-")[2]}
                   />
-                )
-              }
-            />
-          ))}
+                }
+                main={value.title}
+                sub={
+                  value.location && (
+                    <A.IconText
+                      icon={
+                        <HiOutlineLocationMarker
+                          color={dark ? "#c4c4c4" : "#595959"}
+                        />
+                      }
+                      text={value.location}
+                    />
+                  )
+                }
+              />
+            ))}
+        </ListContainer>
         <AddModal
           props={{
             titleText: "약속 생성",

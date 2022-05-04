@@ -51,6 +51,9 @@ export default FriendList;
 
 const AnimationContainer = styled(motion.div)`
   transform-origin: top;
+  div:last-child {
+    border: none;
+  }
   /* initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
         exit={{ scaleY: 0 }}

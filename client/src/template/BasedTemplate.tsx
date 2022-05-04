@@ -8,6 +8,7 @@ import {
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "../states/darkmode";
+import BottomMenu from "../organisms/BottomMenu";
 interface IBasedTemplate {
   header: object;
   container: object;
@@ -41,18 +42,23 @@ function BasedTemplate({ header, container }: IBasedTemplate) {
     },
   };
   return (
-    <AnimatePresence>
-      <STemplate
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-        <SHeader variants={headerVariants} animate={headerAnimation}>
-          {header}
-        </SHeader>
-        <SContainer>{container}</SContainer>
-      </STemplate>
-    </AnimatePresence>
+    <>
+      <AnimatePresence>
+        <STemplate
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <SHeader variants={headerVariants} animate={headerAnimation}>
+            {header}
+          </SHeader>
+          <SContainer>{container}</SContainer>
+        </STemplate>
+      </AnimatePresence>
+      <SBottomMenu>
+        <BottomMenu />
+      </SBottomMenu>
+    </>
   );
 }
 
@@ -79,7 +85,6 @@ export const SHeader = styled(motion.div)`
   flex-direction: row;
   align-items: center;
   position: fixed;
-  padding-inline: 3rem;
   background-color: transparent;
   left: 0;
   top: 0;
@@ -87,9 +92,17 @@ export const SHeader = styled(motion.div)`
   width: 100vw;
   z-index: 1;
 
-  justify-content: space-between;
+  justify-content: center;
   span,
   div {
     background-color: transparent;
   }
+`;
+export const SBottomMenu = styled(motion.div)`
+  display: flex;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  height: 10vh;
+  width: 100vw;
 `;

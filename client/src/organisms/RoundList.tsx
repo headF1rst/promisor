@@ -36,8 +36,7 @@ export const SFlatList = styled(motion.div)`
   margin-bottom: 0.1em;
   background-color: ${(p) => p.theme.opacity50};
   align-items: center;
-  border-radius: 0.1em;
-  box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+  border-bottom: solid 1px grey;
   div,
   span {
     background-color: transparent;

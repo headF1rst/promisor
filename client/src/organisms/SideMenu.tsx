@@ -12,11 +12,11 @@ interface ISideMenu {
     group: object | null;
     friend: object | null;
   };
-  side: boolean;
-  setSide: Function;
 }
-function SideMenu({ match, side, setSide }: ISideMenu) {
+function SideMenu({ match }: ISideMenu) {
   const [dark, setDark] = useRecoilState(darkModeState);
+  const [side, setSide] = useState(false);
+
   const sideVariants = {
     init: { scaleX: 0 },
     animate: { scaleX: 1 },
