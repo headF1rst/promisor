@@ -73,7 +73,7 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
                 getDayFromCurrentDate() +
                 "요일"}
             </span>
-            <List style={{ height: "30%" }}>
+            <List>
               {["RED", "YELLOW", "GREEN"].map((value, idx) => (
                 <div
                   key={idx}
@@ -87,23 +87,7 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
                 </div>
               ))}
             </List>
-            <List style={{ height: "60%" }}>
-              {data.map((d, idx) => (
-                <div style={{ background: "transparent" }} key={idx}>
-                  {d.date === currentDate && d.reason && (
-                    <RowElement>
-                      <ProfileImg
-                        imgProps={{ type: "group", imgSrc: d.member_img }}
-                      />
-                      <ColElement>
-                        <span>{d.member_name}</span>
-                        <span>{d.reason}</span>
-                      </ColElement>
-                    </RowElement>
-                  )}
-                </div>
-              ))}
-            </List>
+
             <ChooseButton onClick={onChooseClick}>
               이 날짜 선택하기
             </ChooseButton>
@@ -139,7 +123,7 @@ const Modal = styled(motion.div)`
   @media screen and (min-width: 900px) {
     width: 40%;
   }
-  height: 70vh;
+  height: 15em;
   padding: 2em;
   z-index: 3;
   span {

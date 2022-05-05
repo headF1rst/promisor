@@ -7,6 +7,7 @@ import * as O from "../organisms/_index";
 import { GoPerson } from "react-icons/go";
 import { ListContainer } from "../styles/Base";
 import AddModal from "../organisms/AddModal";
+import styled from "styled-components";
 
 const TEST_GROUP = [
   {
@@ -63,6 +64,7 @@ function Group() {
   };
   return (
     <>
+      {!showModal && <A.CreateBtn value={"팀 생성"} onClick={onToggleClick} />}
       <ListContainer
       // initial={{ scaleY: 0 }}
       // animate={{ scaleY: 1 }}
@@ -90,9 +92,6 @@ function Group() {
             />
           ))}
       </ListContainer>
-      {!showModal && (
-        <A.FixedRoundBtn value={"팀 생성"} onClick={onToggleClick} />
-      )}
       <AddModal
         props={{
           titleText: "팀 생성",
@@ -108,3 +107,5 @@ function Group() {
 }
 
 export default Group;
+
+const CreateButton = styled.button``;
