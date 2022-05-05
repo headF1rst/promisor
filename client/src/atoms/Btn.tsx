@@ -15,8 +15,8 @@ export function RoundBtn({ value, center, onClick, fontSize }: IBtn) {
   );
 }
 
-export function FixedRoundBtn({ value, onClick }: IBtn) {
-  return <SFixedRoundBtn onClick={onClick}>{value}</SFixedRoundBtn>;
+export function CreateBtn({ value, onClick }: IBtn) {
+  return <SCreateBtn onClick={onClick}>{value}</SCreateBtn>;
 }
 
 const SRoundBtn = styled.div<{ center?: boolean; fontSize?: number }>`
@@ -29,15 +29,16 @@ const SRoundBtn = styled.div<{ center?: boolean; fontSize?: number }>`
   text-align: center;
   cursor: pointer;
   font-size: ${(p) => (p.fontSize ? `${p.fontSize}em` : "0.9em")};
-  height: 1.5em;
-  width: 6em;
+  width: 8em;
+  height: 2em;
   margin: ${(p) => p.center && "0 auto"};
 `;
 
-const SFixedRoundBtn = styled(SRoundBtn)`
-  position: fixed;
-  bottom: 3em;
+const SCreateBtn = styled(SRoundBtn)`
   font-size: 0.9em;
-  width: 6em;
-  height: 1.5em;
+
+  margin-bottom: 0.5em;
+  /* right: 10vw; */
+  bottom: 11vh;
+  position: fixed;
 `;

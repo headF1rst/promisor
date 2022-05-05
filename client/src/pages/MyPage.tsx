@@ -8,15 +8,41 @@ const TEST_DATA = [
     id: 1,
     date: "20220425",
     reason: "산하 생일",
-    is_private: false,
-    date_status: "RED",
   },
   {
     id: 2,
     date: "20220425",
     reason: "가족 사정",
-    is_private: true,
-    date_status: "YELLOW",
+  },
+  {
+    id: 3,
+    date: "20220425",
+    reason: "가족 사정",
+  },
+  {
+    id: 4,
+    date: "20220425",
+    reason: "가족 사정",
+  },
+  {
+    id: 5,
+    date: "20220425",
+    reason: "가족 사정",
+  },
+  {
+    id: 6,
+    date: "20220425",
+    reason: "가족 사정",
+  },
+  {
+    id: 7,
+    date: "20220425",
+    reason: "가족 사정",
+  },
+  {
+    id: 8,
+    date: "20220425",
+    reason: "가족 사정",
   },
 ];
 

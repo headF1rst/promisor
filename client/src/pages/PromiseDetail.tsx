@@ -24,14 +24,22 @@ function PromiseDetail() {
 
   const Header = () => {
     return (
-      <>
+      <div
+        style={{
+          width: "100vw",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
         {" "}
         <ArrowBack />
         <PromiseTitle>
           약속<span>{selectedGroup.name}</span>
         </PromiseTitle>
         <span>저장</span>
-      </>
+      </div>
     );
   };
   const Container = () => {

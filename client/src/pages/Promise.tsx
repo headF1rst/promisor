@@ -63,10 +63,10 @@ function Promise() {
     // API 요청
     setShowModal(false);
   };
+  const onCreateClick = () => {
+    setShowModal(true);
+  };
   const Header = () => {
-    const onCreateClick = () => {
-      setShowModal(true);
-    };
     return (
       <>
         <PromiseTitle>
@@ -111,6 +111,10 @@ function Promise() {
               />
             ))}
         </ListContainer>
+        {!showModal && (
+          <A.CreateBtn value={"약속 생성"} onClick={onCreateClick} />
+        )}
+
         <AddModal
           props={{
             titleText: "약속 생성",
