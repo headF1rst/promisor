@@ -80,7 +80,7 @@ const Modal = styled(motion.div)`
   @media screen and (min-width: 900px) {
     width: 40%;
   }
-  height: 30vh;
+  height: 14em;
   padding: 2em;
   justify-content: space-between;
   z-index: 3;

@@ -126,9 +126,7 @@ function Friend() {
         />
         {showFriends && <FriendList props={{ state: TEST_PROFILE2 }} />}
       </ListContainer>
-      {!modal && (
-        <A.FixedRoundBtn value={"친구 추가"} onClick={onToggleClick} />
-      )}
+      {!modal && <A.CreateBtn value={"친구 추가"} onClick={onToggleClick} />}
       <AnimatePresence>
         {modal && <FriendAdd setModal={setModal} onClick={onToggleClick} />}
       </AnimatePresence>

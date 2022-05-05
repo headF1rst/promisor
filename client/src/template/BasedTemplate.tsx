@@ -78,7 +78,7 @@ export const SContainer = styled(motion.div)`
   @media screen and (min-width: 1100px) {
     padding: 2rem 20rem;
   }
-  margin-top: 15vh;
+  margin-top: 12vh;
 `;
 export const SHeader = styled(motion.div)`
   display: flex;
