@@ -5,13 +5,12 @@ import { Profile, ProfileImg } from "../atoms/Profile";
 import { Input } from "../styles/Input";
 import { Overlay } from "../styles/Modal";
 import { AiTwotoneLock } from "react-icons/ai";
+import { BsCheckCircle } from "react-icons/bs";
 import { FaChevronCircleRight, FaChevronCircleLeft } from "react-icons/fa";
 interface IReasonData {
   id: number;
   date: string;
   reason: string;
-  date_status: string;
-  is_private: boolean;
 }
 interface IDateStatusData {
   id: number;
@@ -152,25 +151,17 @@ function MyPageModal({ state, data }: IMyPageModal) {
                 value={reason}
                 placeholder="메모 추가..."
               />
-              <RowElement>
-                <label style={{ background: "transparent", fontSize: "0.8em" }}>
-                  <input onChange={onPrivateChange} type="checkbox" /> 나만 보기
-                </label>
-                <label style={{ background: "transparent", fontSize: "0.8em" }}>
-                  <input onChange={onStatusChange} type="checkbox" /> 빨강으로
-                  표시
-                </label>
-              </RowElement>
             </form>
             <List>
               {reasonData.map(
                 (value, idx) =>
                   value.date === currentDate &&
                   value.reason && (
-                    <RowElement>
-                      <Circle color={getColor(value.date_status)} />
+                    <RowElement key={value.id}>
+                      <span style={{ marginTop: "2px" }}>
+                        <BsCheckCircle />
+                      </span>
                       {value.reason}
-                      {value.is_private && <AiTwotoneLock />}
                     </RowElement>
                   )
               )}
