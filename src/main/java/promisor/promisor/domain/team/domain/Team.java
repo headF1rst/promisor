@@ -9,6 +9,8 @@ import promisor.promisor.domain.member.domain.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Group 도메인 객체를 나타내는 자바 빈
@@ -34,8 +36,10 @@ public class Team extends BaseEntity {
     @JoinColumn(name = "place_id")
     private Place place;
 
-    private LocalDateTime date;
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private final List<TeamMember> teamMembers = new ArrayList<>();
 
+    private LocalDateTime date;
 
     public Team(Member member, String groupName) {
         this.member = member;

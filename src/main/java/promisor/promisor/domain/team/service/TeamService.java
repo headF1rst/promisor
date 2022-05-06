@@ -17,6 +17,7 @@ import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.team.dto.*;
 import promisor.promisor.domain.team.exception.*;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -52,6 +53,7 @@ public class TeamService {
 
     @Transactional
     public ChangeTeamNameResponse editGroup(String email, EditTeamDto request) {
+
         Member member = getMemberInfo(email);
         Team team = getGroup(request.getGroupId());
         Member leader = team.getMember();
@@ -64,6 +66,7 @@ public class TeamService {
 
     @Transactional
     public LeaveTeamResponse leaveGroup(String email, Long groupId) {
+
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
         Team team = getGroup(groupId);
@@ -80,6 +83,7 @@ public class TeamService {
 
     @Transactional
     public InviteTeamResponse inviteGroup(String email, InviteTeamDto request){
+
         Member inviting = getMemberInfo(email);
         Member invited = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
         Team team = getGroup(request.getGroupId());
@@ -95,6 +99,7 @@ public class TeamService {
 
     @Transactional
     public DelegateLeaderResponse delegateLeader(String email, DelegateLeaderDto request) {
+
         Member oldLeader = getMemberInfo(email);
         Member newLeader = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
         Team team = getGroup(request.getGroupId());
@@ -104,8 +109,15 @@ public class TeamService {
         team.changeLeader(newLeader);
         return new DelegateLeaderResponse(request.getMemberId(), request.getGroupId());
     }
-//    public List<GetMyTeamResponse> getGroupList(String email) {
-//        Member member = getMemberInfo(email);
-//        return teamRepository.findMemberGroups(member.getId());
-//    }
+
+    /*
+     *   그룹 조회 API
+     *   @Param: 조회 요청자 이메일
+     *   @Return: 조회 그룹 정보
+     *   @author: Sanha Ko
+     */
+    public List<SearchGroupResponse> searchGroup(String email) {
+        Member member = getMemberInfo(email);
+        return teamRepository.findAllWithMember(member.getId());
+    }
 }

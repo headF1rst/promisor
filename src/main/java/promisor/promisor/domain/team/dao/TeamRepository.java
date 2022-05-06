@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.dto.GetMyTeamResponse;
+import promisor.promisor.domain.team.dto.SearchGroupResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,14 +17,14 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-//    @Query("select t.id, t.groupName, t.imageUrl " +
-//            "from Member m " +
-//            "left join Team t " +
-//            "where m.id = :id")
-//    @Query("select t.id, t.groupName, t.imageUrl " +
-//            "from Team t " +
-//            "where t.member.id = :id")
-//    List<GetMyTeamResponse> findMemberGroups(@Param("id") Long id);
-
     Optional<Team> findByMember(Member member);
+
+    @Query("select distinct t from Team t" +
+            " join fetch t.id id" +
+            " join fetch t.groupName gn" +
+            " join fetch t.imageUrl iu" +
+            " join fetch t.teamMembers tm" +
+            " join fetch tm.member m" +
+            " where tm.id = :id")
+    List<SearchGroupResponse> findAllWithMember(@Param("id") Long id);
 }

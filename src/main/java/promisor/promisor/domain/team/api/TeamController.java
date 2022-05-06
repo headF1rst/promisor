@@ -55,10 +55,12 @@ public class TeamController {
         return ResponseEntity.ok().body(teamService.delegateLeader(email, request));
     }
 
-//    @GetMapping
-//    public ResponseEntity<List<GetMyTeamResponse>> getMyGroups(@JwtAuth String email) {
-//        List<GetMyTeamResponse> response = teamService.getGroupList(email);
-//        return ResponseEntity.ok().body(response);
-//    }
-
+    /*
+    *   그룹 조회 API
+    *   author: Sanha Ko
+     */
+    @GetMapping
+    public ResponseEntity<List<SearchGroupResponse>> searchGroup(@JwtAuth String email) {
+        return ResponseEntity.ok().body(teamService.searchGroup(email));
+    }
 }
