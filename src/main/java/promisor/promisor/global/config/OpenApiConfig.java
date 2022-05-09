@@ -21,13 +21,13 @@ import org.springframework.context.annotation.Configuration;
 public class OpenApiConfig {
     @Bean
     public GroupedOpenApi memberApi(){
-        String[] paths = {"/members"};
+        String[] paths = {"/members/**"};
         return GroupedOpenApi.builder().group("멤버 관련 API").pathsToMatch(paths).build();
     }
 
     @Bean
     public GroupedOpenApi teamApi(){
-        String[] paths = {"/teams"};
+        String[] paths = {"/groups/**"};
         return GroupedOpenApi.builder().group("팀 관련 API").pathsToMatch(paths).build();
     }
 }
