@@ -32,6 +32,9 @@ spring:
           timeout: 3000
           writetimeout: 5000
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
 security:
   kakao:
     apikey: 2a4dfce9ea2dadb607b872ae4a973922
@@ -45,3 +48,13 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+springdoc:
+  api-docs:
+    groups:
+      enabled: true
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    display-request-duration: true
+    groups-order: desc
