@@ -17,13 +17,6 @@ public class SearchGroupResponse {
     private String imageURL;
     private List<GroupMemberDto> groupMembers;
 
-    public SearchGroupResponse(Long groupId, String groupName, String imageURL, List<GroupMemberDto> groupMembers) {
-        this.groupId = groupId;
-        this.groupName = groupName;
-        this.imageURL = imageURL;
-        this.groupMembers = groupMembers;
-    }
-
     public SearchGroupResponse(Team team) {
         this.groupId = team.getId();
         this.groupName = team.getGroupName();

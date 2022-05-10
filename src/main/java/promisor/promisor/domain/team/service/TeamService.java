@@ -32,8 +32,14 @@ public class TeamService {
     private final TeamMemberRepository teamMemberRepository;
     private final InviteRepository inviteRepository;
 
+    /*
+     *   그룹 생성 API
+     *   @Param: 생성자 이메일, 그룹 이름
+     *   @author: Sanha Ko
+     */
     @Transactional
     public void createGroup(String email, CreateTeamDto request) {
+
         Member member =getMemberInfo(email);
         Team team = teamRepository.save(new Team(member, request.getGroupName()));
         teamMemberRepository.save(new TeamMember(member, team));
@@ -118,6 +124,6 @@ public class TeamService {
      */
     public List<SearchGroupResponse> searchGroup(String email) {
         Member member = getMemberInfo(email);
-        return teamRepository.findAllWithMember(member.getId());
+        return teamRepository.findGroupInfoWithMembers(member.getId());
     }
 }
