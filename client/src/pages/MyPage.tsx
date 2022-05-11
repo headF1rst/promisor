@@ -14,36 +14,6 @@ const TEST_DATA = [
     date: "20220425",
     reason: "가족 사정",
   },
-  {
-    id: 3,
-    date: "20220425",
-    reason: "가족 사정",
-  },
-  {
-    id: 4,
-    date: "20220425",
-    reason: "가족 사정",
-  },
-  {
-    id: 5,
-    date: "20220425",
-    reason: "가족 사정",
-  },
-  {
-    id: 6,
-    date: "20220425",
-    reason: "가족 사정",
-  },
-  {
-    id: 7,
-    date: "20220425",
-    reason: "가족 사정",
-  },
-  {
-    id: 8,
-    date: "20220425",
-    reason: "가족 사정",
-  },
 ];
 
 const RED = "RED";
