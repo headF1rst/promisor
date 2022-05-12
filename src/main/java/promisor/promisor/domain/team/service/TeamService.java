@@ -20,6 +20,9 @@ import promisor.promisor.domain.team.exception.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -32,8 +35,14 @@ public class TeamService {
     private final TeamMemberRepository teamMemberRepository;
     private final InviteRepository inviteRepository;
 
+    /*
+     *   그룹 생성 API
+     *   @Param: 생성자 이메일, 그룹 이름
+     *   @author: Sanha Ko
+     */
     @Transactional
     public void createGroup(String email, CreateTeamDto request) {
+
         Member member =getMemberInfo(email);
         Team team = teamRepository.save(new Team(member, request.getGroupName()));
         teamMemberRepository.save(new TeamMember(member, team));
@@ -118,6 +127,10 @@ public class TeamService {
      */
     public List<SearchGroupResponse> searchGroup(String email) {
         Member member = getMemberInfo(email);
-        return teamRepository.findAllWithMember(member.getId());
+        List<Team> teams = teamRepository.findGroupInfoWithMembers(member.getId());
+        List<SearchGroupResponse> result = teams.stream()
+                .map(m -> new SearchGroupResponse(m.getId(), m.getGroupName(), m.getImageUrl(), m.getTeamMembers()))
+                .collect(toList());
+        return result;
     }
 }

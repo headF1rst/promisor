@@ -19,12 +19,10 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     Optional<Team> findByMember(Member member);
 
-    @Query("select distinct t from Team t" +
-            " join fetch t.id id" +
-            " join fetch t.groupName gn" +
-            " join fetch t.imageUrl iu" +
+    @Query("select distinct t" +
+            " from Team t" +
             " join fetch t.teamMembers tm" +
             " join fetch tm.member m" +
             " where tm.id = :id")
-    List<SearchGroupResponse> findAllWithMember(@Param("id") Long id);
+    List<Team> findGroupInfoWithMembers(@Param("id") Long id);
 }

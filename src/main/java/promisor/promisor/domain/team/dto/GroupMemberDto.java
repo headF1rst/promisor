@@ -16,4 +16,5 @@ public class GroupMemberDto {
     public GroupMemberDto(TeamMember teamMember) {
         this.memberName = teamMember.getMember().getName();
     }
+
 }
