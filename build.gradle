@@ -54,9 +54,7 @@ dependencies {
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.6.6'
 	// JSONParser, JSONObject 설정
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
-	// Swagger
-	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'org.springdoc', name: 'springdoc-openapi-ui', version: '1.5.2'
 	// Bucket4J
 	implementation group: 'com.github.vladimir-bukhtoyarov', name: 'bucket4j-core', version: '7.0.0'
 }

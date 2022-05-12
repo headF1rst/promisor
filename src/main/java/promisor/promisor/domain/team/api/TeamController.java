@@ -76,6 +76,7 @@ public class TeamController {
         return ResponseEntity.ok().body(teamService.delegateLeader(email, request));
     }
 
+    @Operation(summary = "Search Groups", description = "그룹 조회")
     @GetMapping
     public ResponseEntity<List<SearchGroupResponse>> searchGroup(@JwtAuth String email) {
         return ResponseEntity.ok().body(teamService.searchGroup(email));

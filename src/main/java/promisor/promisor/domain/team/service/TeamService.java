@@ -20,6 +20,9 @@ import promisor.promisor.domain.team.exception.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Service
@@ -124,6 +127,10 @@ public class TeamService {
      */
     public List<SearchGroupResponse> searchGroup(String email) {
         Member member = getMemberInfo(email);
-        return teamRepository.findGroupInfoWithMembers(member.getId());
+        List<Team> teams = teamRepository.findGroupInfoWithMembers(member.getId());
+        List<SearchGroupResponse> result = teams.stream()
+                .map(m -> new SearchGroupResponse(m.getId(), m.getGroupName(), m.getImageUrl(), m.getTeamMembers()))
+                .collect(toList());
+        return result;
     }
 }

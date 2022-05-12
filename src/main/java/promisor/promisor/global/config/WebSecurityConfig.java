@@ -47,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .and()
                                 .authorizeRequests()
                                         .antMatchers("/members/**", "/login/**",
-                                                "/friends/**", "/groups/**").permitAll()
+                                                "/friends/**", "/groups/**", "/**" ).permitAll()
                         .anyRequest().authenticated()
                         .and()
                                 .exceptionHandling()
