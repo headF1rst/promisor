@@ -8,6 +8,7 @@ import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import { useQuery } from "react-query";
 import axios from "axios";
+import {getCookie, setCookie} from "../Cookie";
 interface ILoginForm {
   name: string;
   email: string;
@@ -19,12 +20,18 @@ function Login() {
   const { register, setValue, handleSubmit } = useForm<ILoginForm>();
   const navigate = useNavigate();
   const loginMatch = useMatch("/login");
+  useEffect(()=>{
+    
+  }, [])
   const onLoginValid = ({ email, password }: ILoginForm) => {
     const requestBody = {email, password}
     axios.post('/members/login', requestBody).then(res=>{
-      console.log(res)
+      const {data:{accessToken, refreshTokenId}} = res
+      setCookie('accessToken', accessToken)
+      localStorage.setItem('refreshTokenId', refreshTokenId)
+      navigate('/')
     }).catch(err=>{
-      console.log(err)
+      alert(err.response.data.message)
     })
   };
   const onRegisterValid = ({
@@ -40,8 +47,8 @@ function Login() {
     }
     const requestBody = {name, email, password, telephone, memberRole:"USER"}
     axios.post('/members', requestBody).then(res=>{
-      console.log(res)
       alert(`${email} 로 인증 메일을 전송하였습니다.`);
+      navigate('/login')
     }).catch(e=>alert(e.response.data.message))
     
   };
