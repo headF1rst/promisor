@@ -9,12 +9,15 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { darkModeState } from "../states/darkmode";
 import BottomMenu from "../organisms/BottomMenu";
+import { useMatch } from "react-router";
 interface IBasedTemplate {
   header: object;
   container: object;
 }
 
 function BasedTemplate({ header, container }: IBasedTemplate) {
+  const loginMatch = useMatch('login')
+  const registerMatch = useMatch('register')
   const headerAnimation = useAnimation();
   const { scrollY } = useViewportScroll();
   const isDark = useRecoilValue(darkModeState);
@@ -55,9 +58,9 @@ function BasedTemplate({ header, container }: IBasedTemplate) {
           <SContainer>{container}</SContainer>
         </STemplate>
       </AnimatePresence>
-      <SBottomMenu>
+      {!loginMatch && !registerMatch &&<SBottomMenu>
         <BottomMenu />
-      </SBottomMenu>
+      </SBottomMenu>}
     </>
   );
 }

@@ -6,30 +6,55 @@ import styled from "styled-components";
 import BasedTemplate from "../template/BasedTemplate";
 import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
+import { useQuery } from "react-query";
+import axios from "axios";
+import {getCookie, setCookie} from "../Cookie";
 interface ILoginForm {
   name: string;
   email: string;
   password: string;
   passwordConfirm: string;
-  phoneNumber: string;
+  telephone: string;
 }
 function Login() {
   const { register, setValue, handleSubmit } = useForm<ILoginForm>();
   const navigate = useNavigate();
   const loginMatch = useMatch("/login");
+  useEffect(()=>{
+    
+  }, [])
   const onLoginValid = ({ email, password }: ILoginForm) => {
-    console.log(email, password);
+    const requestBody = {email, password}
+    axios.post('/members/login', requestBody).then(res=>{
+      const {data:{accessToken, refreshTokenId}} = res
+      setCookie('accessToken', accessToken)
+      localStorage.setItem('refreshTokenId', refreshTokenId)
+      navigate('/')
+    }).catch(err=>{
+      alert(err.response.data.message)
+    })
   };
   const onRegisterValid = ({
     name,
     email,
     password,
     passwordConfirm,
-    phoneNumber,
+    telephone,
   }: ILoginForm) => {
-    console.log(name, email, password, passwordConfirm, phoneNumber);
-    alert(`${email} 로 인증 메일을 전송하였습니다.`);
+    if(password!==passwordConfirm){
+      alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.')
+      return
+    }
+    const requestBody = {name, email, password, telephone, memberRole:"USER"}
+    axios.post('/members', requestBody).then(res=>{
+      alert(`${email} 로 인증 메일을 전송하였습니다.`);
+      navigate('/login')
+    }).catch(e=>alert(e.response.data.message))
+    
   };
+  const onRegisterInvalid = (v:any)=>{
+    console.log(v)
+  }
   const onPushClick = () => {
     if (loginMatch) {
       navigate("/register");
@@ -55,7 +80,7 @@ function Login() {
           onSubmit={
             loginMatch
               ? handleSubmit(onLoginValid)
-              : handleSubmit(onRegisterValid)
+              : handleSubmit(onRegisterValid, onRegisterInvalid)
           }
         >
           {!loginMatch && (
@@ -100,7 +125,7 @@ function Login() {
               <S.LabelInput>
                 <div>PHONE NUMBER</div>
                 <S.Input
-                  {...register("phoneNumber", {
+                  {...register("telephone", {
                     required: "Phone number is required.",
                   })}
                 />
@@ -143,10 +168,10 @@ const LoginButton = styled.button`
 const Tab = styled.div`
   color: ${(p) => p.theme.grey};
   font-size: 0.9rem;
-  margin-top: 30px;
   span {
     padding-inline: 8px;
     font-weight: 600;
     cursor: pointer;
   }
+  z-index:1;
 `;
