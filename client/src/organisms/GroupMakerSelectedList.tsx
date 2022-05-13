@@ -1,11 +1,7 @@
-import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import styled from "styled-components";
-import { IFriendsData, IGroupMaker } from "../pages/GroupMaker";
-import { selectedState } from "../states/createGroup";
-import * as S from "../styles/_index";
+import { motion } from "framer-motion";
+import { IGroupMaker } from "../pages/GroupMaker";
 import * as A from "../atoms/_index";
+import styled from "styled-components";
 
 function GroupMakerSelectedList({ props }: IGroupMaker) {
   const animationProps = {
@@ -64,6 +60,7 @@ export const RowList = styled.div`
   display: flex;
   flex-direction: row;
   overflow-x: scroll;
+  z-index: 10;
   ::-webkit-scrollbar {
     height: 0.5em;
   }
