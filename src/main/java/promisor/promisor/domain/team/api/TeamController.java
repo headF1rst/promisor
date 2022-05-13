@@ -1,16 +1,22 @@
 package promisor.promisor.domain.team.api;
 
 
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import promisor.promisor.domain.team.dto.*;
+import promisor.promisor.domain.team.exception.TooManyRequestException;
 import promisor.promisor.domain.team.service.TeamService;
 import promisor.promisor.global.auth.JwtAuth;
+import promisor.promisor.global.token.exception.InvalidTokenException;
 
 
 import javax.validation.Valid;
+import java.time.Duration;
 import java.util.List;
 
 @RestController
@@ -20,11 +26,26 @@ public class TeamController {
 
     private final TeamService teamService;
 
+    private Bucket bucket;
+
+    public void BucketController() {
+
+        Bandwidth limit = Bandwidth.classic(5, Refill.intervally(5, Duration.ofMillis(30000)));
+        this.bucket = Bucket.builder()
+                .addLimit(limit)
+                .build();
+    }
+
     @Operation(summary = "Create group", description = "그룹 생성")
     @PostMapping
     public ResponseEntity<Void> createGroup(@JwtAuth String email,
                                             @RequestBody @Valid final CreateTeamDto request) {
-        teamService.createGroup(email, request);
+
+        if (bucket.tryConsume(1)) {
+            teamService.createGroup(email, request);
+        } else {
+            throw new TooManyRequestException();
+        }
         return ResponseEntity.ok().build();
     }
 
@@ -55,10 +76,7 @@ public class TeamController {
         return ResponseEntity.ok().body(teamService.delegateLeader(email, request));
     }
 
-    /*
-    *   그룹 조회 API
-    *   author: Sanha Ko
-     */
+    @Operation(summary = "Search Groups", description = "그룹 조회")
     @GetMapping
     public ResponseEntity<List<SearchGroupResponse>> searchGroup(@JwtAuth String email) {
         return ResponseEntity.ok().body(teamService.searchGroup(email));
