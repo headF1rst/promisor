@@ -8,6 +8,8 @@ import { GoPerson } from "react-icons/go";
 import { ListContainer } from "../styles/Base";
 import AddModal from "../organisms/AddModal";
 import styled from "styled-components";
+import axios from "axios";
+import { getCookie } from "../Cookie";
 
 const TEST_GROUP = [
   {
@@ -50,10 +52,28 @@ const TEST_GROUP = [
 function Group() {
   const setSelectedGroup = useSetRecoilState(selectedGroupState);
   const [showModal, setShowModal] = useState(false);
+  const [groupName, setGroupName] = useState("");
+
+  console.log(groupName);
+
   const navigate = useNavigate();
   const onBtnClick = () => {
-    // api 요청 -> id 받고 navigate
-    navigate(`/team/1/invite`);
+    const requestBody = {
+      groupName,
+    };
+    const config = {
+      headers: {
+        Authorization: "Bearer " + getCookie("accessToken"),
+      },
+    };
+    axios
+      .post("/groups", requestBody, config)
+      .then((res) => {
+        // navigate(`/team/1/invite`);
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   };
   const onGroupClick = (id: number, name: string) => {
     navigate(`/team/${id}/promise`);
@@ -100,6 +120,8 @@ function Group() {
           onBtnClick,
           showModal,
           setShowModal,
+          inputValue: groupName,
+          setInputValue: setGroupName,
         }}
       />
     </>

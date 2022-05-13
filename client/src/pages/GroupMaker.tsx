@@ -1,8 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import styled from "styled-components";
-import * as S from "../styles/_index";
 import FriendList from "../organisms/FriendList";
 import ArrowBack from "../atoms/ArrowBack";
 import GroupMakerSelectedList from "../organisms/GroupMakerSelectedList";
@@ -76,24 +72,32 @@ function GroupMaker() {
   }, []);
   const Header = () => {
     return (
-      <>
+      <div
+        style={{
+          width: "100vw",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
         {" "}
         <ArrowBack />
         <span>그룹 초대</span>
         <span>완료</span>
-      </>
+      </div>
     );
   };
   const Container = () => {
     return (
       <>
+        <GroupMakerSelectedList props={{ state: data, setState: setData }} />
         <ListContainer>
           <FriendList
             props={{ state: data, setState: setData }}
             select={true}
           />
         </ListContainer>
-        <GroupMakerSelectedList props={{ state: data, setState: setData }} />
       </>
     );
   };
