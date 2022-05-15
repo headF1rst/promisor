@@ -16,7 +16,7 @@ public enum ErrorCode {
     NAME_EMPTY(400, "C005", "이름이 존재하지 않습니다."),
     INTERNAL_SERVER_ERROR(500, "C006", "서버에 문제가 발생했습니다."),
     FORBIDDEN_USER(403, "C007", "해당 요청에 대한 권한이 없습니다."),
-    TooManyRequestException(400, "C008", "너무 많은 요청입니다. 30초 후에 다시 시도해주세요."),
+    TooManyRequestException(429, "C008", "너무 많은 요청입니다. 30초 후에 다시 시도해주세요."),
 
     // Group
     GROUP_ID_NOT_FOUND( 400, "G001", "해당 그룹이 존재하지 않습니다."),

@@ -41,11 +41,12 @@ public class TeamService {
      *   @author: Sanha Ko
      */
     @Transactional
-    public void createGroup(String email, CreateTeamDto request) {
+    public Long createGroup(String email, CreateTeamDto request) {
 
         Member member =getMemberInfo(email);
         Team team = teamRepository.save(new Team(member, request.getGroupName()));
         teamMemberRepository.save(new TeamMember(member, team));
+        return team.getId();
     }
 
     public Member getMemberInfo(String email){
