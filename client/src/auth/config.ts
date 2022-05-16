@@ -1,7 +1,9 @@
 import { getCookie } from "../Cookie";
 
-export const config = {
+const config = {
   headers: {
     Authorization: "Bearer " + getCookie("accessToken"),
   },
 };
+
+export default config;

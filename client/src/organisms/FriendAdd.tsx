@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { RoundList } from "./RoundList";
-import { useQuery } from "react-query";
 import axios from "axios";
-import { config } from "../auth/config";
+import config from "../auth/config";
 import { phoneNumberFormatter } from "../utils/phoneNumberFormatter";
+import { useMutation } from "react-query";
+import { queryClient } from "..";
 
 interface IFriendAdd {
   onClick: React.MouseEventHandler;
@@ -20,9 +21,28 @@ interface IProfileData {
   status: string;
   telephone: string;
 }
+
 function FriendAdd({ setModal, onClick }: IFriendAdd) {
   const [inputValue, setInputValue] = useState("");
   const [searchData, setSearchData] = useState<IProfileData>();
+
+  const { mutate } = useMutation(
+    async () => {
+      if (!searchData) {
+        return;
+      }
+      return await axios
+        .post(`/friends/${searchData.id}`, null, config)
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("friendList");
+      },
+    }
+  );
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
@@ -42,14 +62,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
           alert(err.response.data.message);
         });
     } else {
-      await axios
-        .post(`/friends/${searchData.id}`, null, config)
-        .then((res) => {
-          window.location.reload();
-        })
-        .catch((err) => {
-          alert(err.response.data.message);
-        });
+      mutate();
       setModal(false);
     }
   };

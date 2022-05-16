@@ -7,7 +7,7 @@ import { ListContainer } from "../styles/Base";
 import ThinBar from "../atoms/ThinBar";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { config } from "../auth/config";
+import config from "../auth/config";
 
 function Friend() {
   const [modal, setModal] = useState(false);

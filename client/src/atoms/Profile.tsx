@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import user from "../image/user.png";
 interface IProfileAnimate {
   initial: {
     scale: number;
@@ -28,11 +29,7 @@ export interface IProfile {
 export function ProfileImg({ imgProps }: IProfile) {
   return (
     <SProfileImg
-      src={
-        imgProps.imgSrc
-          ? imgProps.imgSrc
-          : "https://pixsector.com/cache/94bed8d5/av3cbfdc7ee86dab9a41d.png"
-      }
+      src={imgProps.imgSrc ? imgProps.imgSrc : user}
       type={imgProps.type}
     />
   );
