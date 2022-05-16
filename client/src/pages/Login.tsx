@@ -8,7 +8,7 @@ import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import { useQuery } from "react-query";
 import axios from "axios";
-import {getCookie, setCookie} from "../Cookie";
+import { getCookie, setCookie } from "../Cookie";
 interface ILoginForm {
   name: string;
   email: string;
@@ -20,19 +20,23 @@ function Login() {
   const { register, setValue, handleSubmit } = useForm<ILoginForm>();
   const navigate = useNavigate();
   const loginMatch = useMatch("/login");
-  useEffect(()=>{
-    
-  }, [])
+
   const onLoginValid = ({ email, password }: ILoginForm) => {
-    const requestBody = {email, password}
-    axios.post('/members/login', requestBody).then(res=>{
-      const {data:{accessToken, refreshTokenId}} = res
-      setCookie('accessToken', accessToken)
-      localStorage.setItem('refreshTokenId', refreshTokenId)
-      navigate('/')
-    }).catch(err=>{
-      alert(err.response.data.message)
-    })
+    const requestBody = { email, password };
+    axios
+      .post("/members/login", requestBody)
+      .then((res) => {
+        console.log(res);
+        const {
+          data: { accessToken, refreshTokenId },
+        } = res;
+        setCookie("accessToken", accessToken);
+        localStorage.setItem("refreshTokenId", refreshTokenId);
+        navigate("/");
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   };
   const onRegisterValid = ({
     name,
@@ -41,20 +45,28 @@ function Login() {
     passwordConfirm,
     telephone,
   }: ILoginForm) => {
-    if(password!==passwordConfirm){
-      alert('비밀번호와 비밀번호 확인이 일치하지 않습니다.')
-      return
+    if (password !== passwordConfirm) {
+      alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+      return;
     }
-    const requestBody = {name, email, password, telephone, memberRole:"USER"}
-    axios.post('/members', requestBody).then(res=>{
-      alert(`${email} 로 인증 메일을 전송하였습니다.`);
-      navigate('/login')
-    }).catch(e=>alert(e.response.data.message))
-    
+    const requestBody = {
+      name,
+      email,
+      password,
+      telephone,
+      memberRole: "USER",
+    };
+    axios
+      .post("/members", requestBody)
+      .then((res) => {
+        alert(`${email} 로 인증 메일을 전송하였습니다.`);
+        navigate("/login");
+      })
+      .catch((e) => alert(e.response.data.message));
   };
-  const onRegisterInvalid = (v:any)=>{
-    console.log(v)
-  }
+  const onRegisterInvalid = (v: any) => {
+    console.log(v);
+  };
   const onPushClick = () => {
     if (loginMatch) {
       navigate("/register");
@@ -173,5 +185,5 @@ const Tab = styled.div`
     font-weight: 600;
     cursor: pointer;
   }
-  z-index:1;
+  z-index: 1;
 `;

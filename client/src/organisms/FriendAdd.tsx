@@ -1,25 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
-import { RoundList } from "./RoundList";
 import { BsFillTelephoneFill } from "react-icons/bs";
-import FriendProfileSearch from "../atoms/FriendProfileSearch";
+import { RoundList } from "./RoundList";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { config } from "../auth/config";
+import { phoneNumberFormatter } from "../utils/phoneNumberFormatter";
+
 interface IFriendAdd {
   onClick: React.MouseEventHandler;
   setModal: Function;
 }
+interface IProfileData {
+  id: number;
+  name: string;
+  profileImage: string;
+  status: string;
+  telephone: string;
+}
 function FriendAdd({ setModal, onClick }: IFriendAdd) {
-  const [search, setSearch] = useState(true);
-  const [error, setError] = useState(false);
-  const onBtnClick = () => {
-    if (!search && !error) {
-      // alert("이미 친구로 등록된 사용자입니다.")
-      setModal((prev: boolean) => !prev);
+  const [inputValue, setInputValue] = useState("");
+  const [searchData, setSearchData] = useState<IProfileData>();
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const onBtnClick = async () => {
+    if (!searchData) {
+      await axios
+        .get("/friends", {
+          params: { findEmail: inputValue },
+          ...config,
+        })
+        .then((res) => {
+          setSearchData(res.data);
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
     } else {
-      setSearch((prev) => !prev);
+      await axios
+        .post(`/friends/${searchData.id}`, null, config)
+        .then((res) => {
+          window.location.reload();
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+      setModal(false);
     }
   };
+
   return (
     <>
       <FriendModal
@@ -28,18 +62,42 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
         exit={{ opacity: 0 }}
       >
         <span>친구 추가</span>
-        {search && (
+        {!searchData && (
           <S.LabelInput>
-            <S.Input placeholder="그룹 이름" />
+            <S.Input
+              placeholder="이메일을 입력하세요..."
+              value={inputValue}
+              onChange={onInputChange}
+            />
           </S.LabelInput>
         )}
-        {!search && !error && (
-          <FriendProfileSearch email={"kce3615@naver.com"} />
+        {searchData && (
+          <Container>
+            {searchData && (
+              <RoundList
+                head={
+                  <A.ProfileImg
+                    imgProps={{
+                      type: "group",
+                      imgSrc: searchData.profileImage,
+                    }}
+                  />
+                }
+                main={searchData.name}
+                sub={
+                  <A.IconText
+                    icon={<BsFillTelephoneFill />}
+                    text={phoneNumberFormatter(searchData.telephone)}
+                  />
+                }
+              />
+            )}
+          </Container>
         )}
         <A.RoundBtn
           onClick={onBtnClick}
           center={true}
-          value={search ? "검색" : error ? "재검색" : "추가"}
+          value={!searchData ? "검색" : "추가"}
         />
       </FriendModal>
       <S.Overlay
@@ -65,5 +123,10 @@ export const FriendModal = styled(S.BoxModal)`
   z-index: 3;
   span {
     background-color: transparent;
+  }
+`;
+const Container = styled.div`
+  div {
+    border: none;
   }
 `;

@@ -3,15 +3,15 @@ import styled from "styled-components";
 import { IoChevronDown, IoChevronUpSharp } from "react-icons/io5";
 interface IThinBar {
   text: string;
-  show?: boolean;
+  visible?: string;
   onShowClick?: React.MouseEventHandler;
 }
-function ThinBar({ text, show, onShowClick }: IThinBar) {
+function ThinBar({ text, visible, onShowClick }: IThinBar) {
   return (
     <Bar>
       <span>{text}</span>
       <Toggle>
-        {show ? (
+        {visible === "true" ? (
           <IoChevronUpSharp onClick={onShowClick} />
         ) : (
           <IoChevronDown onClick={onShowClick} />

@@ -1,8 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import { useNavigate } from "react-router";
 import styled from "styled-components";
-import FriendProfileSearch from "../atoms/FriendProfileSearch";
 import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 
@@ -14,8 +12,8 @@ interface IAddModal {
     onBtnClick: React.MouseEventHandler;
     showModal: boolean;
     setShowModal: Function;
-    inputValue?:string;
-    setInputValue?:Function;
+    inputValue?: string;
+    setInputValue?: Function;
   };
 }
 
@@ -34,10 +32,12 @@ function AddModal({ props }: IAddModal) {
       opacity: 0,
     },
   };
-  const onValueChange = (e:React.ChangeEvent<HTMLInputElement>) =>{
-    const {target: {value}} = e
-    props.setInputValue && props.setInputValue(value)
-  }
+  const onValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const {
+      target: { value },
+    } = e;
+    props.setInputValue && props.setInputValue(value);
+  };
   return (
     <AnimatePresence>
       {props.showModal && (
@@ -51,7 +51,11 @@ function AddModal({ props }: IAddModal) {
             <span>{props.titleText}</span>
             {props.placeholderText && (
               <S.LabelInput>
-                <S.Input placeholder={props.placeholderText} value={props.inputValue} onChange={onValueChange}/>
+                <S.Input
+                  placeholder={props.placeholderText}
+                  value={props.inputValue}
+                  onChange={onValueChange}
+                />
               </S.LabelInput>
             )}
             <A.RoundBtn

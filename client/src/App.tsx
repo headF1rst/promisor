@@ -14,7 +14,6 @@ import {
   Group,
   Home,
 } from "./pages/_index";
-import MyPage from "./pages/MyPage";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
