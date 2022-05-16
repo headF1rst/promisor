@@ -59,4 +59,9 @@ public class MemberController {
                                                            @RequestBody @Valid final ModifyMemberDto modifyMemberDto) {
         return ResponseEntity.ok().body(memberService.modifyInfo(email, modifyMemberDto));
     }
+
+    @GetMapping("/profile")
+    public ResponseEntity<ProfileMemberResponse> getInfo(@JwtAuth String email){
+        return ResponseEntity.ok().body(memberService.getInfo(email));
+    }
 }

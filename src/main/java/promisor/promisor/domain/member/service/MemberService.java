@@ -251,4 +251,9 @@ public class MemberService {
                 member.getLocation()
         );
     }
+
+    public ProfileMemberResponse getInfo(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        return new ProfileMemberResponse(member);
+    }
 }
