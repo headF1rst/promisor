@@ -9,7 +9,7 @@ import { ListContainer } from "../styles/Base";
 import AddModal from "../organisms/AddModal";
 import styled from "styled-components";
 import axios from "axios";
-import { getCookie } from "../Cookie";
+import { config } from "../auth/config";
 
 const TEST_GROUP = [
   {
@@ -61,15 +61,12 @@ function Group() {
     const requestBody = {
       groupName,
     };
-    const config = {
-      headers: {
-        Authorization: "Bearer " + getCookie("accessToken"),
-      },
-    };
+
     axios
       .post("/groups", requestBody, config)
       .then((res) => {
         // navigate(`/team/1/invite`);
+        console.log(res);
       })
       .catch((err) => {
         alert(err.response.data.message);
