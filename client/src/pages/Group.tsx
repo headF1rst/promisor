@@ -9,7 +9,7 @@ import { ListContainer } from "../styles/Base";
 import AddModal from "../organisms/AddModal";
 import styled from "styled-components";
 import axios from "axios";
-import { config } from "../auth/config";
+import config from "../auth/config";
 
 const TEST_GROUP = [
   {
