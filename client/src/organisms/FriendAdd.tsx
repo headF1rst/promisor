@@ -7,6 +7,7 @@ import { RoundList } from "./RoundList";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { config } from "../auth/config";
+import { phoneNumberFormatter } from "../utils/phoneNumberFormatter";
 
 interface IFriendAdd {
   onClick: React.MouseEventHandler;
@@ -43,7 +44,9 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
     } else {
       await axios
         .post(`/friends/${searchData.id}`, null, config)
-        .then((res) => {})
+        .then((res) => {
+          window.location.reload();
+        })
         .catch((err) => {
           alert(err.response.data.message);
         });
@@ -76,8 +79,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
                   <A.ProfileImg
                     imgProps={{
                       type: "group",
-                      imgSrc:
-                        "https://i.pinimg.com/474x/e9/5e/ca/e95ecaa2f1035bb5acf0d381cd0b3c79.jpg",
+                      imgSrc: searchData.profileImage,
                     }}
                   />
                 }
@@ -85,13 +87,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
                 sub={
                   <A.IconText
                     icon={<BsFillTelephoneFill />}
-                    text={
-                      searchData.telephone.slice(0, 3) +
-                      "-" +
-                      searchData.telephone.slice(3, 7) +
-                      "-" +
-                      searchData.telephone.slice(7, 11)
-                    }
+                    text={phoneNumberFormatter(searchData.telephone)}
                   />
                 }
               />

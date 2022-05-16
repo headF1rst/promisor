@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
 import styled from "styled-components";
-import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import * as O from "../organisms/_index";
-import { selectedState } from "../states/createGroup";
 import { BsFillTelephoneFill } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import { IGroupMaker } from "../pages/GroupMaker";
+import { phoneNumberFormatter } from "../utils/phoneNumberFormatter";
 function FriendList({ select, props }: IGroupMaker) {
   const onListClick = (id: number) => {
     if (!select) return;
@@ -27,14 +24,14 @@ function FriendList({ select, props }: IGroupMaker) {
           <O.RoundList
             head={
               <A.ProfileImg
-                imgProps={{ type: "group", imgSrc: `${value.img}` }}
+                imgProps={{ type: "group", imgSrc: value.profileImage }}
               />
             }
-            main={value.title}
+            main={value.name}
             sub={
               <A.IconText
                 icon={<BsFillTelephoneFill />}
-                text={"010-0000-0000"}
+                text={phoneNumberFormatter(value.telephone)}
               />
             }
             tail={select ? false : true}

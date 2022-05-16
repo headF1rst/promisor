@@ -26,7 +26,16 @@ export interface IProfile {
 }
 
 export function ProfileImg({ imgProps }: IProfile) {
-  return <SProfileImg src={imgProps.imgSrc} type={imgProps.type} />;
+  return (
+    <SProfileImg
+      src={
+        imgProps.imgSrc
+          ? imgProps.imgSrc
+          : "https://pixsector.com/cache/94bed8d5/av3cbfdc7ee86dab9a41d.png"
+      }
+      type={imgProps.type}
+    />
+  );
 }
 
 export function Profile({ profileProps, imgProps, animateProps }: IProfile) {

@@ -18,11 +18,11 @@ function GroupMakerSelectedList({ props }: IGroupMaker) {
             <A.Profile
               profileProps={{
                 direction: "column",
-                value: `${value.title}`,
+                value: `${value.name}`,
               }}
               imgProps={{
                 type: "profile",
-                imgSrc: `${value.img}`,
+                imgSrc: `${value.profileImage}`,
               }}
             />
           )}
