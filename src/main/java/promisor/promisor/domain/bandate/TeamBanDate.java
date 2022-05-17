@@ -1,4 +1,4 @@
-package promisor.promisor.domain.BanDate;
+package promisor.promisor.domain.bandate;
 
 import lombok.AccessLevel;
 import lombok.Getter;
