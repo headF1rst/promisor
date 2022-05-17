@@ -1,8 +1,8 @@
-import { motion } from "framer-motion";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { darkModeState } from "./states/darkmode";
+
 import { darkTheme, lightTheme } from "./Theme";
 import {
   Friend,

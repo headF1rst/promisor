@@ -2,7 +2,17 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import MyPageModal from "../organisms/MyPageModal";
+import { useQuery } from "react-query";
+import axios from "axios";
+import config from "../auth/config";
+import user from "../image/user.png";
+interface IProfileData {
+  id: number;
+  name: string;
+  imageUrl: string;
+}
 const PERSONAL_DATA = [{ id: 1, date: "20220425", date_status: "RED" }];
+
 const TEST_DATA = [
   {
     id: 1,
@@ -29,6 +39,14 @@ function MyPage() {
   const [weeks, setWeeks] = useState<any[][]>([]);
   const [dateModal, setDateModal] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
+
+  const { data: profileData } = useQuery<IProfileData>(
+    "membersProfile",
+    async () => {
+      const { data } = await axios.get("/members/profile", config);
+      return data;
+    }
+  );
 
   useEffect(() => {
     makeCalendar(year, month);
@@ -93,11 +111,9 @@ function MyPage() {
     <div>
       <ProfileContainer>
         <ProfileImg
-          src={
-            "https://i.pinimg.com/originals/52/79/56/527956555b06e74f0bcf9a55601c1c76.jpg"
-          }
+          src={profileData?.imageUrl ? profileData?.imageUrl : user}
         />
-        <span>김채은</span>
+        <span>{profileData?.name}</span>
       </ProfileContainer>
       <CalendarContainer>
         <Elements>
