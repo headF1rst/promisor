@@ -10,6 +10,7 @@ import AddModal from "../organisms/AddModal";
 import styled from "styled-components";
 import axios from "axios";
 import config from "../auth/config";
+import { useMutation, useQuery } from "react-query";
 
 const TEST_GROUP = [
   {
@@ -54,23 +55,35 @@ function Group() {
   const [showModal, setShowModal] = useState(false);
   const [groupName, setGroupName] = useState("");
 
-  console.log(groupName);
-
   const navigate = useNavigate();
-  const onBtnClick = () => {
-    const requestBody = {
-      groupName,
-    };
 
-    axios
-      .post("/groups", requestBody, config)
-      .then((res) => {
-        // navigate(`/team/1/invite`);
-        console.log(res);
-      })
-      .catch((err) => {
-        alert(err.response.data.message);
-      });
+  const { data } = useQuery("groupList", async () => {
+    const { data } = await axios.get("/groups", config);
+    console.log(data);
+    return data;
+  });
+  const { mutate } = useMutation(
+    async () => {
+      const requestBody = {
+        groupName,
+      };
+      return axios
+        .post("/groups", requestBody, config)
+        .then((res) => {
+          navigate(`/team/${res.data}/invite`);
+          console.log(res);
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+    {
+      onSuccess: () => {},
+    }
+  );
+
+  const onBtnClick = () => {
+    mutate();
   };
   const onGroupClick = (id: number, name: string) => {
     navigate(`/team/${id}/promise`);
