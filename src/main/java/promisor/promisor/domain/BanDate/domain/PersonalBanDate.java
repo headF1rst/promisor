@@ -1,4 +1,4 @@
-package promisor.promisor.domain.BanDate;
+package promisor.promisor.domain.BanDate.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,12 +9,14 @@ import promisor.promisor.domain.model.BaseEntity;
 
 import javax.persistence.*;
 
-import java.time.LocalDateTime;
+
+import java.util.Date;
 
 import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
+@Table(name = "personal_ban_date")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PersonalBanDate extends BaseEntity {
 
@@ -22,12 +24,23 @@ public class PersonalBanDate extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private LocalDateTime date;
+    private Date date;
 
     @Column(length = 50)
     private String reason;
 
-    @Column(length = 10)
+    @Column(name="date_status", length = 10)
     @Value(value = "IMPOSSIBLE")
     private String dateStatus;
+
+    public PersonalBanDate(Member member, Date date, String reason){
+        this.member = member;
+        this.date = date;
+        this.reason = reason;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.dateStatus = this.dateStatus == null ? "IMPOSSIBLE" : this.dateStatus;
+    }
 }
