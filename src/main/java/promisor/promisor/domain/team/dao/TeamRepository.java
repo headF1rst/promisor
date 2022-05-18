@@ -23,6 +23,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             " from Team t" +
             " join fetch t.teamMembers tm" +
             " join fetch tm.member m" +
-            " where tm.id = :id")
+            " where m.id = :id")
     List<Team> findGroupInfoWithMembers(@Param("id") Long id);
 }
