@@ -37,8 +37,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && jwtProvider.validateJwtToken(token)) {
                 Authentication authentication = jwtProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            } else if (token == null) {
-                throw new JwtException("토큰이 비어있습니다.");
             }
         } catch (ExpiredJwtException err) {
             logger.error("token is expired and not valid anymore", err);
