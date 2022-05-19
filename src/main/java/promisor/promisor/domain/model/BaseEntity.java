@@ -39,4 +39,8 @@ public abstract class BaseEntity implements Serializable {
     protected BaseEntity(String status) {
         this.status = status;
     }
+    @PrePersist
+    public void prePersist() {
+        this.status = this.status == null ? "ACTIVE" : this.status;
+    }
 }
