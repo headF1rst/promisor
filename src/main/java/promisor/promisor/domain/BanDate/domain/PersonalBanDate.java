@@ -1,4 +1,4 @@
-package promisor.promisor.domain.BanDate.domain;
+package promisor.promisor.domain.bandate.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -39,7 +39,6 @@ public class PersonalBanDate extends BaseEntity {
         this.reason = reason;
     }
 
-    @PrePersist
     public void prePersist() {
         this.dateStatus = this.dateStatus == null ? "IMPOSSIBLE" : this.dateStatus;
     }

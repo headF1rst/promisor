@@ -1,6 +1,7 @@
 package promisor.promisor.global.config.security;
 
 import io.jsonwebtoken.*;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,6 +22,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+@Getter
 public class JwtProvider {
 
     private final SecretKey secret;
@@ -95,5 +97,9 @@ public class JwtProvider {
     public boolean validateJwtToken(String authToken) {
         Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(authToken);
         return true;
+    }
+
+    public Long getJwtValidityTimeFromSecretKey() {
+        return secret.getJwtValidityTime();
     }
 }
