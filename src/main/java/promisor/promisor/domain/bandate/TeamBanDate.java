@@ -1,4 +1,4 @@
-package promisor.promisor.domain.BanDate.domain;
+package promisor.promisor.domain.bandate;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,7 +16,6 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Table(name = "team_ban_date")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamBanDate extends BaseEntity {
 
