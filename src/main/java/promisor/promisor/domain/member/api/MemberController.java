@@ -5,16 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.service.MemberService;
 import promisor.promisor.global.auth.JwtAuth;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.net.URI;
 
-import java.util.*;
 import java.util.logging.Logger;
 
 @RestController

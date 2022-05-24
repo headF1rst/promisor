@@ -3,7 +3,6 @@ package promisor.promisor.domain.bandate.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.model.BaseEntity;
 
@@ -30,17 +29,13 @@ public class PersonalBanDate extends BaseEntity {
     private String reason;
 
     @Column(name="date_status", length = 10)
-    @Value(value = "IMPOSSIBLE")
     private String dateStatus;
 
     public PersonalBanDate(Member member, Date date, String reason){
+        super("ACTIVE");
         this.member = member;
         this.date = date;
         this.reason = reason;
-    }
-
-    @PrePersist
-    public void prePersist() {
-        this.dateStatus = this.dateStatus == null ? "IMPOSSIBLE" : this.dateStatus;
+        this.dateStatus = "IMPOSSIBLE";
     }
 }

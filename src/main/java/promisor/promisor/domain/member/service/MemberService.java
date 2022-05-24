@@ -15,8 +15,6 @@ import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.*;
 import promisor.promisor.domain.member.exception.*;
 import promisor.promisor.global.config.security.JwtProvider;
-import promisor.promisor.global.error.ErrorCode;
-import promisor.promisor.global.error.exception.ApplicationException;
 import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
@@ -27,7 +25,6 @@ import promisor.promisor.infra.email.EmailValidator;
 import promisor.promisor.infra.email.exception.EmailConfirmedException;
 import promisor.promisor.infra.email.exception.EmailNotValid;
 
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -197,15 +194,18 @@ public class MemberService {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         TokenResponse createToken = createTokenReturn(loginDto);
+        Long tokenExpireTime = jwtProvider.getJwtValidityTimeFromSecret();
 
         return new LoginResponse(
                 createToken.getAccessToken(),
-                createToken.getRefreshId()
-        );
+                createToken.getRefreshId(),
+                tokenExpireTime);
     }
 
     public LoginResponse refreshToken(LoginDto.GetRefreshTokenDto getRefreshTokenDto) {
+
         String refreshToken = refreshTokenRepository.findRefreshTokenById(getRefreshTokenDto.getRefreshId());
+        Long tokenExpireTime = jwtProvider.getJwtValidityTimeFromSecret();
 
         if (jwtProvider.validateJwtToken(refreshToken)) {
             String email = jwtProvider.extractEmail(refreshToken);
@@ -216,8 +216,8 @@ public class MemberService {
 
             return new LoginResponse(
                     createToken.getAccessToken(),
-                    createToken.getRefreshId()
-            );
+                    createToken.getRefreshId(),
+                    tokenExpireTime);
         } else {
             throw new LoginAgainException();
         }
