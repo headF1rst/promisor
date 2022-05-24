@@ -1,12 +1,13 @@
-package promisor.promisor.domain.BanDate.api;
+package promisor.promisor.domain.bandate.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import promisor.promisor.domain.BanDate.dto.RegisterDateDto;
-import promisor.promisor.domain.BanDate.dto.RegisterPersonalBanDateResponse;
-import promisor.promisor.domain.BanDate.service.BanDateService;
+
+import promisor.promisor.domain.bandate.dto.RegisterDateDto;
+import promisor.promisor.domain.bandate.dto.RegisterPersonalBanDateResponse;
+import promisor.promisor.domain.bandate.service.BanDateService;
 import promisor.promisor.global.auth.JwtAuth;
 
 @RestController
@@ -19,7 +20,8 @@ public class BanDateController {
     @PostMapping("/personal")
     public ResponseEntity<RegisterPersonalBanDateResponse> registerPersonal(@JwtAuth String email,
                                                                             @RequestBody RegisterDateDto registerDateDto){
-        RegisterPersonalBanDateResponse response = banDateService.registerPersonal(email, registerDateDto.getDate(),registerDateDto.getReason());
+        RegisterPersonalBanDateResponse response = banDateService.registerPersonal(email, registerDateDto.getDate(),
+                                                                                    registerDateDto.getReason());
         return ResponseEntity.ok().body(response);
     }
 }
