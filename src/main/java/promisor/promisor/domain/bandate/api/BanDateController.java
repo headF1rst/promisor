@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import promisor.promisor.domain.bandate.dto.PersonalBanDateStatusEditRequest;
 import promisor.promisor.domain.bandate.dto.RegisterDateDto;
 import promisor.promisor.domain.bandate.dto.RegisterPersonalBanDateResponse;
 import promisor.promisor.domain.bandate.service.BanDateService;
@@ -23,5 +24,13 @@ public class BanDateController {
         RegisterPersonalBanDateResponse response = banDateService.registerPersonal(email, registerDateDto.getDate(),
                                                                                     registerDateDto.getReason());
         return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(summary = "edit personal ban date", description = "개인 캘린더 상태 변경")
+    @PatchMapping
+    public ResponseEntity<Void> editPersonalBanDateStatus(@JwtAuth String email,
+                                                          @RequestBody PersonalBanDateStatusEditRequest request) {
+        banDateService.editPersonalBanDateStatus(email, request);
+        return ResponseEntity.ok().build();
     }
 }

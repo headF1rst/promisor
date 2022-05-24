@@ -38,4 +38,8 @@ public class PersonalBanDate extends BaseEntity {
         this.reason = reason;
         this.dateStatus = "IMPOSSIBLE";
     }
+
+    public void editPBDStatus(String status) {
+        this.dateStatus = status;
+    }
 }
