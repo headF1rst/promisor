@@ -11,6 +11,7 @@ import promisor.promisor.domain.team.domain.Team;
 import javax.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -28,9 +29,17 @@ public class TeamBanDate extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private LocalDateTime date;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "personal_id")
+    private PersonalBanDate personalBanDate;
+
+    private Date date;
 
     @Column(length = 10)
     @Value(value = "IMPOSSIBLE")
     private String dateStatus;
+
+    public void editTBDStatus(String status) {
+        this.dateStatus=status;
+    }
 }

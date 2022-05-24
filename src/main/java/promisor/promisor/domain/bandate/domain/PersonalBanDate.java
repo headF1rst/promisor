@@ -39,8 +39,13 @@ public class PersonalBanDate extends BaseEntity {
         this.reason = reason;
     }
 
-    @PrePersist
-    public void prePersist() {
-        this.dateStatus = this.dateStatus == null ? "IMPOSSIBLE" : this.dateStatus;
+    public void editPBDStatus(String status) {
+        this.dateStatus = status;
     }
+
+
+//    @PrePersist
+//    public void prePersist() {
+//        this.dateStatus = this.dateStatus == null ? "IMPOSSIBLE" : this.dateStatus;
+//    }
 }
