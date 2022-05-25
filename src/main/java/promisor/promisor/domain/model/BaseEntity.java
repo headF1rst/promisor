@@ -1,7 +1,6 @@
 package promisor.promisor.domain.model;
 
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -31,16 +30,11 @@ public abstract class BaseEntity implements Serializable {
     private LocalDateTime updatedAt;
 
     @Column(length = 10)
-    @Value(value = "ACTIVE")
     private String status;
 
     protected BaseEntity() {}
 
     protected BaseEntity(String status) {
         this.status = status;
-    }
-    @PrePersist
-    public void prePersist() {
-        this.status = this.status == null ? "ACTIVE" : this.status;
     }
 }
