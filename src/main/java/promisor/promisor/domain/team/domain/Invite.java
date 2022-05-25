@@ -30,6 +30,7 @@ public class Invite extends BaseEntity {
     private char accept;
 
     public Invite(Member member, Team team, char c) {
+        super("ACTIVE");
         this.member = member;
         this.team = team;
         this.accept = c;

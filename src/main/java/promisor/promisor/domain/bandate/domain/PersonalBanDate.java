@@ -34,6 +34,7 @@ public class PersonalBanDate extends BaseEntity {
     private String dateStatus;
 
     public PersonalBanDate(Member member, Date date, String reason){
+        super("ACTIVE");
         this.member = member;
         this.date = date;
         this.reason = reason;

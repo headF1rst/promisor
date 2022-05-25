@@ -96,4 +96,8 @@ public class JwtProvider {
         Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(authToken);
         return true;
     }
+
+    public Long getJwtValidityTimeFromSecret() {
+        return secret.getJwtValidityTime();
+    }
 }
