@@ -6,6 +6,6 @@ import javax.validation.constraints.NotBlank;
 
 @Data
 public class InviteTeamDto {
-    private Long memberId;
+    private Long[] memberId;
     private Long groupId;
 }
