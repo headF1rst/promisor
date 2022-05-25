@@ -37,6 +37,13 @@ public class TeamBanDate extends BaseEntity {
     @Column(length = 10)
     private String dateStatus;
 
+    public TeamBanDate(Team team, Member member, PersonalBanDate pbd, Date date, String dateStatus){
+        this.team = team;
+        this.member = member;
+        this.personalBanDate = pbd;
+        this.date = date;
+        this.dateStatus = dateStatus;
+    }
     public void editTBDStatus(String status) {
         this.dateStatus=status;
     }
