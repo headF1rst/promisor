@@ -5,11 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import promisor.promisor.domain.bandate.dto.GetTeamCalendarResponse;
 import promisor.promisor.domain.bandate.dto.PersonalBanDateStatusEditRequest;
 import promisor.promisor.domain.bandate.dto.RegisterDateDto;
 import promisor.promisor.domain.bandate.dto.RegisterPersonalBanDateResponse;
 import promisor.promisor.domain.bandate.service.BanDateService;
 import promisor.promisor.global.auth.JwtAuth;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/bandate")
@@ -32,5 +35,13 @@ public class BanDateController {
                                                           @RequestBody PersonalBanDateStatusEditRequest request) {
         banDateService.editPersonalBanDateStatus(email, request);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "get team calendar", description = "팀 캘린더 조회")
+    @GetMapping("/team/{id}")
+    public ResponseEntity<List<GetTeamCalendarResponse>> getTeamCalendar(@JwtAuth String email,
+                                                                         @PathVariable("id") Long teamId) {
+        List<GetTeamCalendarResponse> response = banDateService.getTeamCalendar(email, teamId);
+        return ResponseEntity.ok().body(response);
     }
 }
