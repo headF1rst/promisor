@@ -42,6 +42,7 @@ public class Team extends BaseEntity {
     private LocalDateTime date;
 
     public Team(Member member, String groupName) {
+        super("ACTIVE");
         this.member = member;
         this.groupName = groupName;
     }

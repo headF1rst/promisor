@@ -3,7 +3,6 @@ package promisor.promisor.domain.bandate.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.model.BaseEntity;
 import promisor.promisor.domain.team.domain.Team;
@@ -36,7 +35,6 @@ public class TeamBanDate extends BaseEntity {
     private Date date;
 
     @Column(length = 10)
-    @Value(value = "IMPOSSIBLE")
     private String dateStatus;
 
     public void editTBDStatus(String status) {

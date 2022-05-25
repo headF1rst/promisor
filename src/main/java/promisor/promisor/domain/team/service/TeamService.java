@@ -94,15 +94,17 @@ public class TeamService {
     public InviteTeamResponse inviteGroup(String email, InviteTeamDto request){
 
         Member inviting = getMemberInfo(email);
-        Member invited = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
         Team team = getGroup(request.getGroupId());
         if(!Objects.equals(team.getMember().getId(), inviting.getId())){
             throw new NoRightToInviteException();
         }
-
-        inviteRepository.save(new Invite(invited,team, '0'));
+        Member[] invited = new Member[request.getMemberId().length];
+        for(int i=0;i<request.getMemberId().length;i++) {
+            invited[i] = memberRepository.findById(request.getMemberId()[i]).orElseThrow(MemberNotFoundException::new);
+            inviteRepository.save(new Invite(invited[i],team, '0'));
+        }
         return new InviteTeamResponse(
-                invited.getId(), team.getId()
+                team.getId()
         );
     }
 

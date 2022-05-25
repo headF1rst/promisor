@@ -3,7 +3,7 @@ package promisor.promisor.domain.bandate.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
+import org.hibernate.annotations.DynamicInsert;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.model.BaseEntity;
 
@@ -18,6 +18,7 @@ import static javax.persistence.FetchType.*;
 @Getter
 @Table(name = "personal_ban_date")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@DynamicInsert
 public class PersonalBanDate extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
@@ -29,23 +30,18 @@ public class PersonalBanDate extends BaseEntity {
     @Column(length = 50)
     private String reason;
 
-    @Column(name="date_status", length = 10)
-    @Value(value = "IMPOSSIBLE")
+    @Column(name="date_status", length = 10, columnDefinition = "varchar(10) default 'IMPOSSIBLE'")
     private String dateStatus;
 
     public PersonalBanDate(Member member, Date date, String reason){
+        super("ACTIVE");
         this.member = member;
         this.date = date;
         this.reason = reason;
+        this.dateStatus = "IMPOSSIBLE";
     }
 
     public void editPBDStatus(String status) {
         this.dateStatus = status;
     }
-
-
-//    @PrePersist
-//    public void prePersist() {
-//        this.dateStatus = this.dateStatus == null ? "IMPOSSIBLE" : this.dateStatus;
-//    }
 }
