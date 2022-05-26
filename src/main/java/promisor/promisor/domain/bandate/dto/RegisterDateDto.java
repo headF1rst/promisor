@@ -11,5 +11,4 @@ import java.util.Date;
 public class RegisterDateDto {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
-    private String reason;
 }

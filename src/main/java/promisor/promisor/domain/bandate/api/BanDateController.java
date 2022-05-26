@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import promisor.promisor.domain.bandate.dto.GetTeamCalendarResponse;
-import promisor.promisor.domain.bandate.dto.PersonalBanDateStatusEditRequest;
-import promisor.promisor.domain.bandate.dto.RegisterDateDto;
-import promisor.promisor.domain.bandate.dto.RegisterPersonalBanDateResponse;
+import promisor.promisor.domain.bandate.dto.*;
 import promisor.promisor.domain.bandate.service.BanDateService;
 import promisor.promisor.global.auth.JwtAuth;
 
@@ -24,8 +21,7 @@ public class BanDateController {
     @PostMapping("/personal")
     public ResponseEntity<RegisterPersonalBanDateResponse> registerPersonal(@JwtAuth String email,
                                                                             @RequestBody RegisterDateDto registerDateDto){
-        RegisterPersonalBanDateResponse response = banDateService.registerPersonal(email, registerDateDto.getDate(),
-                                                                                    registerDateDto.getReason());
+        RegisterPersonalBanDateResponse response = banDateService.registerPersonal(email, registerDateDto.getDate());
         return ResponseEntity.ok().body(response);
     }
 
@@ -42,6 +38,15 @@ public class BanDateController {
     public ResponseEntity<List<GetTeamCalendarResponse>> getTeamCalendar(@JwtAuth String email,
                                                                          @PathVariable("id") Long teamId) {
         List<GetTeamCalendarResponse> response = banDateService.getTeamCalendar(email, teamId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(summary = "register personal reason", description = "사적인 이유 등록")
+    @PostMapping("/personal/reason")
+    public ResponseEntity<RegisterPersonalReasonResponse> registerPersonalReason(@JwtAuth String email,
+                                                       @RequestBody RegisterReasonDto registerReasonDto){
+        RegisterPersonalReasonResponse response = banDateService.registerPersonalReason(email, registerReasonDto.getDate(),
+                registerReasonDto.getReason());
         return ResponseEntity.ok().body(response);
     }
 }

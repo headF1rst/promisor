@@ -27,17 +27,13 @@ public class PersonalBanDate extends BaseEntity {
 
     private Date date;
 
-    @Column(length = 50)
-    private String reason;
-
     @Column(name="date_status", length = 10, columnDefinition = "varchar(10) default 'IMPOSSIBLE'")
     private String dateStatus;
 
-    public PersonalBanDate(Member member, Date date, String reason){
+    public PersonalBanDate(Member member, Date date){
         super("ACTIVE");
         this.member = member;
         this.date = date;
-        this.reason = reason;
         this.dateStatus = "IMPOSSIBLE";
     }
 

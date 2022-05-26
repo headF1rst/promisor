@@ -11,11 +11,9 @@ import java.util.Date;
 public class RegisterPersonalBanDateResponse {
     private Long id;
     private Date date;
-    private String reason;
 
-    public RegisterPersonalBanDateResponse(Long id, Date date, String reason){
+    public RegisterPersonalBanDateResponse(Long id, Date date){
         this.id = id;
         this.date = date;
-        this.reason = reason;
     }
 }
