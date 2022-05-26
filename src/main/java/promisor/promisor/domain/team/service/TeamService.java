@@ -137,4 +137,14 @@ public class TeamService {
                 .collect(toList());
         return result;
     }
+
+    @Transactional
+    public EditMyLocationResponse editMyLocation(String email, EditMyLocationDto request) {
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
+        TeamMember teamMember = teamMemberRepository.findMemberByMemberIdAndTeamId(member.getId(), request.getTeamId());
+        teamMember.editMyLocation(request.getLatitude(), request.getLongitude());
+        return new EditMyLocationResponse(request.getLatitude(), request.getLongitude());
+    }
 }

@@ -27,10 +27,19 @@ public class TeamMember extends BaseEntity {
     @Column(length = 100)
     private String curLocate;
 
+    private float latitude;
+
+    private float longitude;
+
     private char arrived;
 
     public TeamMember(Member member, Team team) {
         this.member = member;
         this.team = team;
+    }
+
+    public void editMyLocation(float latitude, float longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

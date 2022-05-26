@@ -78,4 +78,11 @@ public class TeamController {
     public ResponseEntity<List<SearchGroupResponse>> searchGroup(@JwtAuth String email) {
         return ResponseEntity.ok().body(teamService.searchGroup(email));
     }
+
+    @Operation(summary = "Edit My Location", description = "그룹 내 자신의 위치 수정")
+    @PatchMapping("/location")
+    public ResponseEntity<EditMyLocationResponse> editMyLocation(@JwtAuth String email,
+                                               @RequestBody EditMyLocationDto request) {
+        return ResponseEntity.ok().body(teamService.editMyLocation(email, request));
+    }
 }
