@@ -82,7 +82,15 @@ public class TeamController {
     @Operation(summary = "Edit My Location", description = "그룹 내 자신의 위치 수정")
     @PatchMapping("/location")
     public ResponseEntity<EditMyLocationResponse> editMyLocation(@JwtAuth String email,
-                                               @RequestBody EditMyLocationDto request) {
+                                                                @RequestBody EditMyLocationDto request) {
         return ResponseEntity.ok().body(teamService.editMyLocation(email, request));
+    }
+
+    @Operation(summary = "Get MidPoint", description = "그룹원들의 중간 지점 조회")
+    @GetMapping("/mid-point/{teamId}")
+    public ResponseEntity<GetMidPointResponse> getMidPoint(@JwtAuth String email,
+                                                           @PathVariable Long teamId) {
+        GetMidPointResponse result = teamService.getMidPoint(email, teamId);
+        return ResponseEntity.ok().body(result);
     }
 }

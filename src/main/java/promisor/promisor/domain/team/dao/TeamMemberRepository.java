@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
+import promisor.promisor.domain.team.dto.GetMidPointResponse;
 
 import java.util.List;
 
@@ -25,4 +26,5 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
 
     @Query("select tm from TeamMember tm where tm.member.id=:id and tm.team.id=:teamId")
     TeamMember findMemberByMemberIdAndTeamId(@Param("id") Long id, @Param("teamId") Long teamId);
+
 }
