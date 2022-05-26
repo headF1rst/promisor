@@ -8,6 +8,7 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
+import promisor.promisor.domain.promise.exception.MemberNotBelongsToTeam;
 import promisor.promisor.domain.team.dao.InviteRepository;
 import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
@@ -136,5 +137,50 @@ public class TeamService {
                 .map(m -> new SearchGroupResponse(m.getId(), m.getGroupName(), m.getImageUrl(), m.getTeamMembers()))
                 .collect(toList());
         return result;
+    }
+
+    @Transactional
+    public EditMyLocationResponse editMyLocation(String email, EditMyLocationDto request) {
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
+        TeamMember teamMember = teamMemberRepository.findMemberByMemberIdAndTeamId(member.getId(), request.getTeamId());
+        teamMember.editMyLocation(request.getLatitude(), request.getLongitude());
+        return new EditMyLocationResponse(request.getLatitude(), request.getLongitude());
+    }
+
+    public GetMidPointResponse getMidPoint(String email, Long teamId) {
+
+        if (checkMemberInTeam(email, teamId)) {
+            throw new MemberNotBelongsToTeam();
+        }
+        List<TeamMember> teamMemberList = teamMemberRepository.findMembersByTeamId(teamId);
+        float avgLatitude=0;
+        float avgLongitude=0;
+        for (int i=0; i<teamMemberList.size(); i++) {
+            avgLatitude=avgLatitude+teamMemberList.get(i).getLatitude();
+            avgLongitude=avgLongitude+teamMemberList.get(i).getLongitude();
+        }
+        avgLatitude=avgLatitude/teamMemberList.size();
+        avgLongitude=avgLongitude/teamMemberList.size();
+        return new GetMidPointResponse(teamId, avgLatitude, avgLongitude);
+    }
+
+    public boolean checkMemberInTeam(String email, Long teamId) {
+
+        List<TeamMember> foundMembers = teamMemberRepository.findMembersByTeamId(teamId);
+        Member member = getMember(email);
+
+        for (TeamMember foundMember : foundMembers) {
+            if (foundMember.getMember() == member) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Member getMember(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        return optionalMember.orElseThrow(MemberEmailNotFound::new);
     }
 }
