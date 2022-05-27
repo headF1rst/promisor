@@ -8,6 +8,7 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
+import promisor.promisor.domain.promise.exception.MemberNotBelongsToTeam;
 import promisor.promisor.domain.team.dao.InviteRepository;
 import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
@@ -20,7 +21,6 @@ import promisor.promisor.domain.team.exception.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -95,15 +95,17 @@ public class TeamService {
     public InviteTeamResponse inviteGroup(String email, InviteTeamDto request){
 
         Member inviting = getMemberInfo(email);
-        Member invited = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
         Team team = getGroup(request.getGroupId());
         if(!Objects.equals(team.getMember().getId(), inviting.getId())){
             throw new NoRightToInviteException();
         }
-
-        inviteRepository.save(new Invite(invited,team, '0'));
+        Member[] invited = new Member[request.getMemberId().length];
+        for(int i=0;i<request.getMemberId().length;i++) {
+            invited[i] = memberRepository.findById(request.getMemberId()[i]).orElseThrow(MemberNotFoundException::new);
+            inviteRepository.save(new Invite(invited[i],team, '0'));
+        }
         return new InviteTeamResponse(
-                invited.getId(), team.getId()
+                team.getId()
         );
     }
 
@@ -127,11 +129,58 @@ public class TeamService {
      *   @author: Sanha Ko
      */
     public List<SearchGroupResponse> searchGroup(String email) {
+
+        System.out.println(email);
         Member member = getMemberInfo(email);
         List<Team> teams = teamRepository.findGroupInfoWithMembers(member.getId());
         List<SearchGroupResponse> result = teams.stream()
                 .map(m -> new SearchGroupResponse(m.getId(), m.getGroupName(), m.getImageUrl(), m.getTeamMembers()))
                 .collect(toList());
         return result;
+    }
+
+    @Transactional
+    public EditMyLocationResponse editMyLocation(String email, EditMyLocationDto request) {
+
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
+        TeamMember teamMember = teamMemberRepository.findMemberByMemberIdAndTeamId(member.getId(), request.getTeamId());
+        teamMember.editMyLocation(request.getLatitude(), request.getLongitude());
+        return new EditMyLocationResponse(request.getLatitude(), request.getLongitude());
+    }
+
+    public GetMidPointResponse getMidPoint(String email, Long teamId) {
+
+        if (checkMemberInTeam(email, teamId)) {
+            throw new MemberNotBelongsToTeam();
+        }
+        List<TeamMember> teamMemberList = teamMemberRepository.findMembersByTeamId(teamId);
+        float avgLatitude=0;
+        float avgLongitude=0;
+        for (int i=0; i<teamMemberList.size(); i++) {
+            avgLatitude=avgLatitude+teamMemberList.get(i).getLatitude();
+            avgLongitude=avgLongitude+teamMemberList.get(i).getLongitude();
+        }
+        avgLatitude=avgLatitude/teamMemberList.size();
+        avgLongitude=avgLongitude/teamMemberList.size();
+        return new GetMidPointResponse(teamId, avgLatitude, avgLongitude);
+    }
+
+    public boolean checkMemberInTeam(String email, Long teamId) {
+
+        List<TeamMember> foundMembers = teamMemberRepository.findMembersByTeamId(teamId);
+        Member member = getMember(email);
+
+        for (TeamMember foundMember : foundMembers) {
+            if (foundMember.getMember() == member) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Member getMember(String email) {
+        Optional<Member> optionalMember = memberRepository.findByEmail(email);
+        return optionalMember.orElseThrow(MemberEmailNotFound::new);
     }
 }

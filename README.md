@@ -108,7 +108,11 @@ Client-Driven : 많이 사용되는 기술일 수록 우선순위를 높게 설�
 | Notification      | Slack  |
 | Documents         | Notion |
 
-![image](https://user-images.githubusercontent.com/85024598/159660843-c0b17263-d4e7-44ef-8462-fe8afe8053b2.png)
+## Prod 서버 아키텍처
+![image](https://i.imgur.com/p9IVtiH.png)
+
+## CI/CD 파이프라인
+![image](https://i.imgur.com/b95mn8c.png)
 
 ## 프로젝트 진행 일정 🗓️
 
@@ -159,6 +163,6 @@ Client-Driven : 많이 사용되는 기술일 수록 우선순위를 높게 설�
 7. 말 아끼다가 똥 된다. 💩
    - 좋은 아이디어가 있으면 말하자.
 8. 밥은 먹고 하자. 🍚
-9. 기능을 추가하기 위해서는 모든 사람의 동의가 필요하다. ✅
+9. 기능을 추가하기 위해서는 모든 사람의 Approve가 필요하다. ✅
 10. 완성도는 꾸준함에서 온다. 🏃
     - 1일 1커밋 하기

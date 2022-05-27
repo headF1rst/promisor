@@ -12,7 +12,6 @@ import promisor.promisor.domain.team.exception.TooManyRequestException;
 import promisor.promisor.domain.team.service.TeamService;
 import promisor.promisor.global.auth.JwtAuth;
 
-
 import javax.validation.Valid;
 import java.time.Duration;
 import java.util.List;
@@ -55,7 +54,8 @@ public class TeamController {
 
     @Operation(summary = "Leave group", description = "그룹 탈퇴")
     @PatchMapping("/leave/{groupId}")
-    public ResponseEntity<LeaveTeamResponse> leaveGroup(@JwtAuth String email, @PathVariable("groupId")Long groupId){
+    public ResponseEntity<LeaveTeamResponse> leaveGroup(@JwtAuth String email,
+                                                        @PathVariable("groupId")Long groupId){
         return ResponseEntity.ok().body(teamService.leaveGroup(email, groupId));
     }
 
@@ -69,7 +69,7 @@ public class TeamController {
     @Operation(summary = "Delegate GroupLeader", description = "그룹장 위임")
     @PatchMapping("/delegate")
     public ResponseEntity<DelegateLeaderResponse> delegateLeader(@JwtAuth String email,
-                                                                 @RequestBody @Valid final DelegateLeaderDto request){
+                                                                 @RequestBody @Valid final DelegateLeaderDto request) {
         return ResponseEntity.ok().body(teamService.delegateLeader(email, request));
     }
 
@@ -77,5 +77,20 @@ public class TeamController {
     @GetMapping
     public ResponseEntity<List<SearchGroupResponse>> searchGroup(@JwtAuth String email) {
         return ResponseEntity.ok().body(teamService.searchGroup(email));
+    }
+
+    @Operation(summary = "Edit My Location", description = "그룹 내 자신의 위치 수정")
+    @PatchMapping("/location")
+    public ResponseEntity<EditMyLocationResponse> editMyLocation(@JwtAuth String email,
+                                                                @RequestBody EditMyLocationDto request) {
+        return ResponseEntity.ok().body(teamService.editMyLocation(email, request));
+    }
+
+    @Operation(summary = "Get MidPoint", description = "그룹원들의 중간 지점 조회")
+    @GetMapping("/mid-point/{teamId}")
+    public ResponseEntity<GetMidPointResponse> getMidPoint(@JwtAuth String email,
+                                                           @PathVariable Long teamId) {
+        GetMidPointResponse result = teamService.getMidPoint(email, teamId);
+        return ResponseEntity.ok().body(result);
     }
 }

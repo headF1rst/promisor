@@ -8,6 +8,9 @@ import lombok.Getter;
 public enum ErrorCode {
     // -----예외(Http 상태, 에러코드, 메시지)------ //
 
+    // Bandate
+    BANDATE_NOT_FOUND(400, "B001", "일정이 등록되지 않았습니다."),
+
     // Common 공통 예외
     INVALID_INPUT_VALUE(400, "C001", "잘못된 입력입니다."),
     ACCESS_DENIED(400, "C002", "접근이 제한되었습니다."),
