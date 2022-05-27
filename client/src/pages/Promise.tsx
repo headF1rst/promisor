@@ -9,11 +9,13 @@ import BasedTemplate from "../template/BasedTemplate";
 import { AiOutlinePlus } from "react-icons/ai";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { selectedGroupState } from "../states/selectedGroup";
-import { RoundList } from "../organisms/RoundList";
+import { RoundElement } from "../organisms/RoundElement";
 import * as A from "../atoms/_index";
 import AddModal from "../organisms/AddModal";
 import { AiOutlineMenu } from "react-icons/ai";
 import { ListContainer } from "../styles/Base";
+import { useMutation, useQuery } from "react-query";
+import api from "../auth/api";
 
 const TEST_PROMISE = [
   {
@@ -52,15 +54,28 @@ function Promise() {
   const [showModal, setShowModal] = useState(false);
 
   const selectedGroup = useRecoilValue(selectedGroupState);
+  console.log(selectedGroup);
   const navigate = useNavigate();
   const dark = useRecoilValue(darkModeState);
 
+  const { data: promiseListData } = useQuery("promiseList", async () => {
+    const { data } = await api.get(`/promises/${selectedGroup.id}`);
+    return data;
+  });
+
+  const { mutate: createPromise } = useMutation("createPromise", async () => {
+    return await api
+      .post(`/promises/${selectedGroup.id}`)
+      .catch((err) => console.log(err));
+  });
+
+  console.log(promiseListData);
   const onListClick = (index: number) => {
     navigate(`${index}`);
   };
 
   const onBtnClick = () => {
-    // API 요청
+    createPromise();
     setShowModal(false);
   };
   const onCreateClick = () => {
@@ -68,11 +83,21 @@ function Promise() {
   };
   const Header = () => {
     return (
-      <>
+      <div
+        style={{
+          width: "100vw",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-around",
+          alignItems: "center",
+        }}
+      >
+        <ArrowBack />
         <PromiseTitle>
           약속<span>{selectedGroup.name}</span>
         </PromiseTitle>
-      </>
+        <span></span>
+      </div>
     );
   };
 
@@ -86,7 +111,7 @@ function Promise() {
         <ListContainer>
           {TEST_PROMISE &&
             TEST_PROMISE.map((value, index) => (
-              <RoundList
+              <RoundElement
                 onClick={() => onListClick(index)}
                 key={value.id}
                 head={

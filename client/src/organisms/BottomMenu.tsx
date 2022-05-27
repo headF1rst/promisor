@@ -7,7 +7,6 @@ import styled from "styled-components";
 function BottomMenu() {
   const groupMatch = useMatch("team/*");
   const friendMatch = useMatch("friend");
-  console.log(groupMatch, friendMatch);
   const navigate = useNavigate();
   const onMenuClick = (route: string) => {
     navigate(`/${route}`);

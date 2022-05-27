@@ -6,8 +6,7 @@ import FriendAdd from "../organisms/FriendAdd";
 import { ListContainer } from "../styles/Base";
 import ThinBar from "../atoms/ThinBar";
 import { useQuery } from "react-query";
-import axios from "axios";
-import config from "../auth/config";
+import api from "../auth/api";
 
 function Friend() {
   const [modal, setModal] = useState(false);
@@ -17,7 +16,7 @@ function Friend() {
   };
 
   const { data } = useQuery("friendList", async () => {
-    const { data } = await axios.get("/friends/list", config);
+    const { data } = await api.get("/friends/list");
     return data;
   });
   return (

@@ -10,14 +10,15 @@ import { useRecoilValue } from "recoil";
 import { darkModeState } from "../states/darkmode";
 import BottomMenu from "../organisms/BottomMenu";
 import { useMatch } from "react-router";
+import { getCookie } from "../Cookie";
 interface IBasedTemplate {
   header: object;
   container: object;
 }
 
 function BasedTemplate({ header, container }: IBasedTemplate) {
-  const loginMatch = useMatch('login')
-  const registerMatch = useMatch('register')
+  const loginMatch = useMatch("login");
+  const registerMatch = useMatch("register");
   const headerAnimation = useAnimation();
   const { scrollY } = useViewportScroll();
   const isDark = useRecoilValue(darkModeState);
@@ -45,8 +46,8 @@ function BasedTemplate({ header, container }: IBasedTemplate) {
     },
   };
   return (
-    <>
-      <AnimatePresence>
+    <AnimatePresence>
+      <>
         <STemplate
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -57,11 +58,13 @@ function BasedTemplate({ header, container }: IBasedTemplate) {
           </SHeader>
           <SContainer>{container}</SContainer>
         </STemplate>
-      </AnimatePresence>
-      {!loginMatch && !registerMatch &&<SBottomMenu>
-        <BottomMenu />
-      </SBottomMenu>}
-    </>
+      </>
+      {!loginMatch && !registerMatch && (
+        <SBottomMenu>
+          <BottomMenu />
+        </SBottomMenu>
+      )}
+    </AnimatePresence>
   );
 }
 

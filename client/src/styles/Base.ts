@@ -41,4 +41,5 @@ export const ListContainer = styled(motion.div)`
   div:last-child {
     border: none;
   }
+  margin-bottom: 15vh;
 `;

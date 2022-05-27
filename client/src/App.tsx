@@ -1,8 +1,7 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { darkModeState } from "./states/darkmode";
-
 import { darkTheme, lightTheme } from "./Theme";
 import {
   Friend,
@@ -100,7 +99,7 @@ function App() {
   return (
     <ThemeProvider theme={dark ? darkTheme : lightTheme}>
       <GlobalStyle />
-      <BrowserRouter>
+      <HashRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Login />} />
@@ -113,7 +112,7 @@ function App() {
             <Route path="/friend" element={<Friend />} />
           </Route>
         </Routes>
-      </BrowserRouter>
+      </HashRouter>
     </ThemeProvider>
   );
 }

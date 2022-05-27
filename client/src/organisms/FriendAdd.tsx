@@ -3,12 +3,10 @@ import styled from "styled-components";
 import * as A from "../atoms/_index";
 import * as S from "../styles/_index";
 import { BsFillTelephoneFill } from "react-icons/bs";
-import { RoundList } from "./RoundList";
-import axios from "axios";
-import config from "../auth/config";
 import { phoneNumberFormatter } from "../utils/phoneNumberFormatter";
-import { useMutation } from "react-query";
-import { queryClient } from "..";
+import { useMutation, useQueryClient } from "react-query";
+import api from "../auth/api";
+import { RoundElement } from "./RoundElement";
 
 interface IFriendAdd {
   onClick: React.MouseEventHandler;
@@ -23,19 +21,27 @@ interface IProfileData {
 }
 
 function FriendAdd({ setModal, onClick }: IFriendAdd) {
+  const queryClient = useQueryClient();
   const [inputValue, setInputValue] = useState("");
   const [searchData, setSearchData] = useState<IProfileData>();
 
-  const { mutate } = useMutation(
+  const { mutate: getFriend } = useMutation(async () => {
+    await api
+      .get("/friends", {
+        params: { findEmail: inputValue },
+      })
+      .then((res) => {
+        setSearchData(res.data);
+      })
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
+  });
+  const { mutate: addFriend } = useMutation(
     async () => {
-      if (!searchData) {
-        return;
-      }
-      return await axios
-        .post(`/friends/${searchData.id}`, null, config)
-        .catch((err) => {
-          alert(err.response.data.message);
-        });
+      return await api.post(`/friends/${searchData.id}`).catch((err) => {
+        alert(err.response.data.message);
+      });
     },
     {
       onSuccess: () => {
@@ -50,19 +56,9 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
 
   const onBtnClick = async () => {
     if (!searchData) {
-      await axios
-        .get("/friends", {
-          params: { findEmail: inputValue },
-          ...config,
-        })
-        .then((res) => {
-          setSearchData(res.data);
-        })
-        .catch((err) => {
-          alert(err.response.data.message);
-        });
+      getFriend();
     } else {
-      mutate();
+      addFriend();
       setModal(false);
     }
   };
@@ -87,7 +83,7 @@ function FriendAdd({ setModal, onClick }: IFriendAdd) {
         {searchData && (
           <Container>
             {searchData && (
-              <RoundList
+              <RoundElement
                 head={
                   <A.ProfileImg
                     imgProps={{

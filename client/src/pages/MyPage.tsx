@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import MyPageModal from "../organisms/MyPageModal";
 import { useQuery } from "react-query";
-import axios from "axios";
-import config from "../auth/config";
 import user from "../image/user.png";
+import api from "../auth/api";
+import { motion } from "framer-motion";
 interface IProfileData {
   id: number;
   name: string;
@@ -40,10 +40,10 @@ function MyPage() {
   const [dateModal, setDateModal] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
 
-  const { data: profileData } = useQuery<IProfileData>(
+  const { data: profileData, isLoading } = useQuery<IProfileData>(
     "membersProfile",
     async () => {
-      const { data } = await axios.get("/members/profile", config);
+      const { data } = await api.get("/members/profile");
       return data;
     }
   );
@@ -108,14 +108,22 @@ function MyPage() {
     setDateModal(true);
   };
   return (
-    <div>
+    <>
       <ProfileContainer>
         <ProfileImg
           src={profileData?.imageUrl ? profileData?.imageUrl : user}
         />
-        <span>{profileData?.name}</span>
+        {profileData && (
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            {profileData?.name}
+          </motion.span>
+        )}
       </ProfileContainer>
-      <CalendarContainer>
+      <CalendarContainer
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
         <Elements>
           <VscTriangleLeft
             style={{ cursor: "pointer" }}
@@ -160,7 +168,7 @@ function MyPage() {
         state={{ dateModal, setDateModal, currentDate }}
         data={{ reasonData: TEST_DATA, statusData: PERSONAL_DATA }}
       />
-    </div>
+    </>
   );
 }
 
@@ -182,7 +190,7 @@ const ProfileImg = styled.img`
   border-radius: 7em;
 `;
 
-const CalendarContainer = styled.div`
+const CalendarContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;

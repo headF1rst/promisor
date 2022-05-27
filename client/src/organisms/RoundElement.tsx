@@ -1,15 +1,22 @@
 import { motion } from "framer-motion";
 import styled from "styled-components";
+import Checkbox from "../atoms/Checkbox";
 import { DotsVertical } from "../atoms/DotsVertical";
-interface IRoundList {
+interface IRoundElement {
   onClick?: React.MouseEventHandler;
   head: Object;
   main: string;
   sub?: Object;
-  tail?: boolean;
+  tail?: string;
 }
 
-export const RoundList = ({ onClick, head, main, sub, tail }: IRoundList) => {
+export const RoundElement = ({
+  onClick,
+  head,
+  main,
+  sub,
+  tail,
+}: IRoundElement) => {
   return (
     <SFlatList>
       <Row onClick={onClick}>
@@ -19,7 +26,11 @@ export const RoundList = ({ onClick, head, main, sub, tail }: IRoundList) => {
           {sub}
         </SFlatElement>
       </Row>
-      {tail && <DotsVertical />}
+      {tail && tail.includes("checkbox") ? (
+        <Checkbox id={tail.slice(8)} />
+      ) : !tail ? (
+        <DotsVertical />
+      ) : null}
     </SFlatList>
   );
 };
