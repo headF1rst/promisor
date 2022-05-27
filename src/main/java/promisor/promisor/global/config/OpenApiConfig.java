@@ -35,4 +35,9 @@ public class OpenApiConfig {
         String[] paths = {"/bandate/**"};
         return GroupedOpenApi.builder().group("일정 관련 API").pathsToMatch(paths).build();
     }
+    @Bean
+    public GroupedOpenApi PromiseApi(){
+        String[] paths = {"/promises/**"};
+        return GroupedOpenApi.builder().group("약속 관련 API").pathsToMatch(paths).build();
+    }
 }

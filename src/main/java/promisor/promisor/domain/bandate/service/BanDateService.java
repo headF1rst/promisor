@@ -6,13 +6,17 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import promisor.promisor.domain.bandate.dao.PersonalBanDateReasonRepository;
 import promisor.promisor.domain.bandate.dao.PersonalBanDateRepository;
 import promisor.promisor.domain.bandate.dao.TeamBanDateRepository;
 import promisor.promisor.domain.bandate.domain.PersonalBanDate;
+import promisor.promisor.domain.bandate.domain.PersonalBanDateReason;
 import promisor.promisor.domain.bandate.domain.TeamBanDate;
 import promisor.promisor.domain.bandate.dto.GetTeamCalendarResponse;
 import promisor.promisor.domain.bandate.dto.PersonalBanDateStatusEditRequest;
 import promisor.promisor.domain.bandate.dto.RegisterPersonalBanDateResponse;
+import promisor.promisor.domain.bandate.dto.RegisterPersonalReasonResponse;
+import promisor.promisor.domain.bandate.exception.PersonalBanDateNotFoundException;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
@@ -28,16 +32,16 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class BanDateService {
     private final PersonalBanDateRepository personalBanDateRepository;
+    private final PersonalBanDateReasonRepository personalBanDateReasonRepository;
     private final MemberRepository memberRepository;
-    private final TeamBanDateRepository teamBadDateRepository;
+    private final TeamBanDateRepository teamBanDateRepository;
 
     @Transactional
-    public RegisterPersonalBanDateResponse registerPersonal(String email, Date date, String reason) {
-
+    public RegisterPersonalBanDateResponse registerPersonal(String email, Date date) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-        PersonalBanDate pbd = new PersonalBanDate(member,date,reason);
+        PersonalBanDate pbd = new PersonalBanDate(member,date);
         personalBanDateRepository.save(pbd);
-        return new RegisterPersonalBanDateResponse(pbd.getMember().getId(), pbd.getDate(), pbd.getReason());
+        return new RegisterPersonalBanDateResponse(pbd.getMember().getId(), pbd.getDate());
     }
 
     public PersonalBanDate findById(Long id) {
@@ -47,7 +51,7 @@ public class BanDateService {
 
 
     public List<TeamBanDate> findByBanDateId(Long id) {
-        Optional<List<TeamBanDate>> optionalList = teamBadDateRepository.getByBanDateId(id);
+        Optional<List<TeamBanDate>> optionalList = teamBanDateRepository.getByBanDateId(id);
         return optionalList.orElseThrow();
     }
 
@@ -63,12 +67,21 @@ public class BanDateService {
 
     public List<GetTeamCalendarResponse> getTeamCalendar(String email, Long teamId) {
         PageRequest pageRequest = PageRequest.of(0, 31, Sort.by(Sort.Direction.ASC, "date"));
-        Slice<TeamBanDate> teamCalendarList = teamBadDateRepository.findAllByTeamId(teamId, pageRequest);
+        Slice<TeamBanDate> teamCalendarList = teamBanDateRepository.findAllByTeamId(teamId, pageRequest);
 
         List<GetTeamCalendarResponse> result = teamCalendarList.stream()
                 .map(p -> new GetTeamCalendarResponse(p.getId(), p.getMember().getId(), p.getMember().getName(),
                         p.getPersonalBanDate().getId(), p.getDate(), p.getDateStatus()))
                 .collect(toList());
         return result;
+    }
+
+    @Transactional
+    public RegisterPersonalReasonResponse registerPersonalReason(String email, String date, String reason) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        PersonalBanDateReason pbd_reason = new PersonalBanDateReason(pbd, reason);
+        personalBanDateReasonRepository.save(pbd_reason);
+        return new RegisterPersonalReasonResponse(pbd_reason.getId(), pbd_reason.getPersonalBanDate().getId(), pbd_reason.getReason());
     }
 }
