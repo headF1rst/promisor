@@ -5,42 +5,38 @@ import { BsFillTelephoneFill } from "react-icons/bs";
 import { AnimatePresence, motion } from "framer-motion";
 import { IGroupMaker } from "../pages/GroupMaker";
 import { phoneNumberFormatter } from "../utils/phoneNumberFormatter";
+import { RoundElement } from "./RoundElement";
 function FriendList({ select, props }: IGroupMaker) {
-  const onListClick = (id: number) => {
-    if (!select) return;
-    if (props.state && props.setState) {
-      const friendsCopy = [...props.state];
-      friendsCopy[id] = {
-        ...friendsCopy[id],
-        selected: !friendsCopy[id].selected,
-      };
-      props.setState(friendsCopy);
-    }
-  };
   return (
-    <AnimatePresence>
-      <AnimationContainer>
-        {props.state.map((value, idx) => (
-          <O.RoundList
-            head={
-              <A.ProfileImg
-                imgProps={{ type: "group", imgSrc: value.profileImage }}
-              />
-            }
-            main={value.name}
-            sub={
-              <A.IconText
-                icon={<BsFillTelephoneFill />}
-                text={phoneNumberFormatter(value.telephone)}
-              />
-            }
-            tail={select ? false : true}
-            onClick={() => onListClick(value.id)}
-            key={idx}
-          />
-        ))}
-      </AnimationContainer>
-    </AnimatePresence>
+    <>
+      {props.state && (
+        <AnimationContainer
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ type: "linear" }}
+        >
+          {props.state.map((value, idx) => (
+            <RoundElement
+              key={idx}
+              head={
+                <A.ProfileImg
+                  imgProps={{ type: "group", imgSrc: value.profileImage }}
+                />
+              }
+              main={value.name}
+              sub={
+                <A.IconText
+                  icon={<BsFillTelephoneFill />}
+                  text={phoneNumberFormatter(value.telephone)}
+                />
+              }
+              tail={select === "checkbox" && "checkbox" + value.id}
+            />
+          ))}
+        </AnimationContainer>
+      )}
+    </>
   );
 }
 

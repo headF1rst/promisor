@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useMatch } from "react-router-dom";
@@ -6,9 +5,9 @@ import styled from "styled-components";
 import BasedTemplate from "../template/BasedTemplate";
 import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
-import { useQuery } from "react-query";
+import { setCookie } from "../Cookie";
+import api from "../auth/api";
 import axios from "axios";
-import { getCookie, setCookie } from "../Cookie";
 interface ILoginForm {
   name: string;
   email: string;
@@ -23,18 +22,19 @@ function Login() {
 
   const onLoginValid = ({ email, password }: ILoginForm) => {
     const requestBody = { email, password };
-    axios
+    api
       .post("/members/login", requestBody)
       .then((res) => {
-        console.log(res);
         const {
           data: { accessToken, refreshTokenId },
         } = res;
         setCookie("accessToken", accessToken);
         localStorage.setItem("refreshTokenId", refreshTokenId);
+        console.log(res);
         navigate("/");
       })
       .catch((err) => {
+        console.log(err);
         alert(err.response.data.message);
       });
   };
@@ -56,13 +56,15 @@ function Login() {
       telephone,
       memberRole: "USER",
     };
-    axios
+    api
       .post("/members", requestBody)
       .then((res) => {
         alert(`${email} 로 인증 메일을 전송하였습니다.`);
         navigate("/login");
       })
-      .catch((e) => alert(e.response.data.message));
+      .catch((err) => {
+        alert(err.response.data.message);
+      });
   };
   const onRegisterInvalid = (v: any) => {
     console.log(v);

@@ -6,6 +6,7 @@ import { selectedGroupState } from "../states/selectedGroup";
 import BasedTemplate from "../template/BasedTemplate";
 import { PromiseTitle } from "./Promise";
 import PromiseDate from "./PromiseDate";
+import PromiseLocation from "./PromiseLocation";
 
 function PromiseDetail() {
   const [manager, setManager] = useState(true);
@@ -60,7 +61,7 @@ function PromiseDetail() {
             장소
           </NavItem>
         </NavBar>
-        {navDate && <PromiseDate />}
+        {navDate ? <PromiseDate /> : <PromiseLocation />}
       </>
     );
   };

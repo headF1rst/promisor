@@ -1,9 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import FriendList from "../organisms/FriendList";
 import ArrowBack from "../atoms/ArrowBack";
-import GroupMakerSelectedList from "../organisms/GroupMakerSelectedList";
 import BasedTemplate from "../template/BasedTemplate";
 import { ListContainer } from "../styles/Base";
+import { useMutation } from "react-query";
+import api from "../auth/api";
+import styled from "styled-components";
+import { useRecoilValue } from "recoil";
+import { useParams } from "react-router";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { selectedFriendsAtom } from "../states/selectedFriends";
 
 export interface IFriendsData {
   id: number;
@@ -18,21 +24,38 @@ export interface IGroupMaker {
     state: IFriendsData[];
     setState?: Function;
   };
-  select?: boolean;
+  select?: string;
 }
 
 function GroupMaker() {
-  const [data, setData] = useState<IFriendsData[]>([]);
+  const params = useParams();
+  const selectedFriends = useRecoilValue(selectedFriendsAtom);
   useEffect(() => {
-    const friendsCopy = [...data];
-    for (let i = 0; i < friendsCopy.length; i++) {
-      friendsCopy[i] = {
-        ...friendsCopy[i],
-        selected: false,
-      };
-    }
-    setData(friendsCopy);
+    mutate();
   }, []);
+  const { mutate, data } = useMutation<IFriendsData[]>(
+    "friendList2",
+    async () => {
+      const { data } = await api.get("/friends/list");
+      return data;
+    }
+  );
+  const { mutate: inviteFriends } = useMutation("inviteFriends", async () => {
+    let arr: number[] = [];
+    selectedFriends.forEach((element: number) => {
+      arr.push(element);
+    });
+    const requestBody = { groupId: params.id, memberId: arr };
+    console.log(requestBody);
+
+    return await api
+      .post(`/groups/invite`, requestBody)
+      .catch((err) => console.log(err));
+  });
+  const onClick = () => {
+    inviteFriends();
+  };
+
   const Header = () => {
     return (
       <div
@@ -47,19 +70,15 @@ function GroupMaker() {
         {" "}
         <ArrowBack />
         <span>그룹 초대</span>
-        <span>완료</span>
+        <span onClick={onClick}>완료</span>
       </div>
     );
   };
   const Container = () => {
     return (
       <>
-        <GroupMakerSelectedList props={{ state: data, setState: setData }} />
         <ListContainer>
-          <FriendList
-            props={{ state: data, setState: setData }}
-            select={true}
-          />
+          <FriendList props={{ state: data }} select={"checkbox"} />
         </ListContainer>
       </>
     );
@@ -68,3 +87,5 @@ function GroupMaker() {
 }
 
 export default GroupMaker;
+
+const Bubbling = styled.div``;
