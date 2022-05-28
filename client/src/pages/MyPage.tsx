@@ -4,8 +4,8 @@ import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import MyPageModal from "../organisms/MyPageModal";
 import { useQuery } from "react-query";
 import user from "../image/user.png";
-import api from "../auth/api";
 import { motion } from "framer-motion";
+import api from "../auth/api";
 interface IProfileData {
   id: number;
   name: string;

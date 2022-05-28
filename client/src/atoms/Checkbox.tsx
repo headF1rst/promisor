@@ -13,15 +13,16 @@ const Checkbox = ({ id }: ICheckbox) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let copy = new Set(selectedFriends);
     const targetId = Number(e.target.id);
-    if (!checked) {
-      copy.add(targetId);
-      setChecked(true);
-    } else {
-      copy.delete(targetId);
-      setChecked(false);
+    try {
+      if (!checked) {
+        copy.add(targetId);
+      } else {
+        copy.delete(targetId);
+      }
+    } finally {
+      setSelectedFriends(copy);
+      setChecked((p) => !p);
     }
-    setSelectedFriends(copy);
-    console.log(selectedFriends);
   };
   return (
     <SCheckbox checked={checked} onChange={onChange} type="checkbox" id={id} />

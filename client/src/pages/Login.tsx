@@ -7,7 +7,6 @@ import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import { setCookie } from "../Cookie";
 import api from "../auth/api";
-import axios from "axios";
 interface ILoginForm {
   name: string;
   email: string;
