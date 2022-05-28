@@ -72,8 +72,8 @@ public class MemberService {
         Optional<Member> userExists = memberRepository.findByEmail(member.getEmail());
 
         if (userExists.isPresent()) {
-            // TODO check of attributes are the same and
-            // TODO if email not confirmed send confirmation email.
+            // TODO 속성값이 같은지 확인해야 합니다.
+            // TODO 이메일이 아직 컨펌되기 전이라면 다시 컨펌 요청을 했을때 요청에 성공해야 합니다.
             throw new EmailDuplicatedException(member.getEmail());
         }
 
@@ -194,7 +194,8 @@ public class MemberService {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         TokenResponse createToken = createTokenReturn(loginDto);
-        Long tokenExpireTime = jwtProvider.getJwtValidityTimeFromSecret();
+
+        Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
 
         return new LoginResponse(
                 createToken.getAccessToken(),
@@ -205,7 +206,6 @@ public class MemberService {
     public LoginResponse refreshToken(LoginDto.GetRefreshTokenDto getRefreshTokenDto) {
 
         String refreshToken = refreshTokenRepository.findRefreshTokenById(getRefreshTokenDto.getRefreshId());
-        Long tokenExpireTime = jwtProvider.getJwtValidityTimeFromSecret();
 
         if (jwtProvider.validateJwtToken(refreshToken)) {
             String email = jwtProvider.extractEmail(refreshToken);
@@ -213,6 +213,7 @@ public class MemberService {
             loginDto.setEmail(email);
 
             TokenResponse createToken = createTokenReturn(loginDto);
+            Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
 
             return new LoginResponse(
                     createToken.getAccessToken(),
@@ -235,6 +236,7 @@ public class MemberService {
                 refreshToken,
                 refreshTokenExpirationAt
         );
+
         refreshTokenRepository.save(insertRefreshToken);
         return new TokenResponse(accessToken, insertRefreshToken.getId());
     }
