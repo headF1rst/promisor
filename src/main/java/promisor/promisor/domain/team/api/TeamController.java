@@ -5,6 +5,7 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import io.swagger.v3.oas.annotations.Operation;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import promisor.promisor.domain.team.dto.*;
@@ -91,6 +92,14 @@ public class TeamController {
     public ResponseEntity<GetMidPointResponse> getMidPoint(@JwtAuth String email,
                                                            @PathVariable Long teamId) {
         GetMidPointResponse result = teamService.getMidPoint(email, teamId);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @Operation(summary = "Get Team Members Location", description = "그룹원들의 위치 조회")
+    @GetMapping("/location/{teamId}")
+    public ResponseEntity<List<GetTeamMembersLocationResponse>> getTeamMembersLocation(@JwtAuth String email,
+                                                                                 @PathVariable Long teamId) {
+        List<GetTeamMembersLocationResponse> result = teamService.getTeamMembersLocation(email, teamId);
         return ResponseEntity.ok().body(result);
     }
 }
