@@ -13,6 +13,8 @@ import {
   Group,
   Home,
 } from "./pages/_index";
+import PromiseDate from "./pages/PromiseDate";
+import PromiseLocation from "./pages/PromiseLocation";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
@@ -105,7 +107,12 @@ function App() {
           <Route path="/register" element={<Login />} />
           <Route path="/team/:id/invite" element={<GroupMaker />} />
           <Route path="/team/:id/promise" element={<Promise />} />
-          <Route path="/team/:id/promise/:id" element={<PromiseDetail />} />
+          <Route path="/team/:id/promise/:pid/*" element={<PromiseDetail />} />
+          {/* <Route path="/team/:id/promise/:pid/date" element={<PromiseDate />} />
+          <Route
+            path="/team/:id/promise/:pid/place"
+            element={<PromiseLocation />}
+          /> */}
           <Route path="/team/:id" element={<GroupChatRoom />} />
           <Route path="/" element={<Home />}>
             <Route path="/team" element={<Group />}></Route>

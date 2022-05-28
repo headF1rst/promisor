@@ -1,20 +1,24 @@
 import React, { useState } from "react";
+import { useMatch } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import ArrowBack from "../atoms/ArrowBack";
 import { selectedGroupState } from "../states/selectedGroup";
 import BasedTemplate from "../template/BasedTemplate";
 import { PromiseTitle } from "./Promise";
+import { useParams } from "react-router";
 import PromiseDate from "./PromiseDate";
 import PromiseLocation from "./PromiseLocation";
 
 function PromiseDetail() {
-  const [manager, setManager] = useState(true);
   const [title, setTitle] = useState();
   const selectedGroup = useRecoilValue(selectedGroupState);
-  const [navDate, setNavDate] = useState(true);
-  const onNavClick = (state: boolean) => {
-    setNavDate(state);
+  const navigate = useNavigate();
+  const params = useParams();
+  const dateMatch = useMatch("/team/:id/promise/:pid/date");
+  const onNavClick = (state: string) => {
+    navigate(`/team/${params.id}/promise/${params.pid}/${state}`);
   };
 
   const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,19 +53,19 @@ function PromiseDetail() {
         <LineInput placeholder="제목" onChange={onTitleChange} />
         <NavBar>
           <NavItem
-            onClick={() => onNavClick(true)}
-            style={{ fontWeight: navDate ? "600" : "500" }}
+            onClick={() => onNavClick("date")}
+            style={{ fontWeight: dateMatch ? "600" : "500" }}
           >
             일시
           </NavItem>
           <NavItem
-            onClick={() => onNavClick(false)}
-            style={{ fontWeight: navDate ? "500" : "600" }}
+            onClick={() => onNavClick("place")}
+            style={{ fontWeight: dateMatch ? "500" : "600" }}
           >
             장소
           </NavItem>
         </NavBar>
-        {navDate ? <PromiseDate /> : <PromiseLocation />}
+        {dateMatch ? <PromiseDate /> : <PromiseLocation />}
       </>
     );
   };
