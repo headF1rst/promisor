@@ -183,4 +183,15 @@ public class TeamService {
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         return optionalMember.orElseThrow(MemberEmailNotFound::new);
     }
+
+    public List<GetTeamMembersLocationResponse> getTeamMembersLocation(String email, Long teamId) {
+        if (checkMemberInTeam(email, teamId)) {
+            throw new MemberNotBelongsToTeam();
+        }
+        List<TeamMember> teamMemberList = teamMemberRepository.findMembersByTeamId(teamId);
+        List<GetTeamMembersLocationResponse> result = teamMemberList.stream()
+                .map(m -> new GetTeamMembersLocationResponse(m.getTeam().getId(), m.getMember().getId(), m.getMember().getName(), m.getLatitude(), m.getLongitude()))
+                .collect(toList());
+        return result;
+    }
 }
