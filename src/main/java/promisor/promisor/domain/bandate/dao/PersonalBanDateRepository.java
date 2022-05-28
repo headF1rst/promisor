@@ -12,7 +12,8 @@ import java.util.Date;
 @Transactional(readOnly = true)
 public interface PersonalBanDateRepository extends JpaRepository<PersonalBanDate, Long> {
     @Transactional
-    @Query("select pbd from PersonalBanDate pbd join fetch pbd.member where pbd.member = :member and " +
+    @Query("select pbd from PersonalBanDate pbd " +
+            "join fetch pbd.member where pbd.member = :member and " +
             "function('date_format',pbd.date,'%Y-%m-%d') = function('date_format', :date, '%Y-%m-%d')")
-    PersonalBanDate getPersonalBanDateByMemberAndDate(@Param("member") Member member, String date);
+    PersonalBanDate getPersonalBanDateByMemberAndDate(@Param("member") Member member, @Param("date") String date);
 }
