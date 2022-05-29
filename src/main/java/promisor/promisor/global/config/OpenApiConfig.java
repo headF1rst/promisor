@@ -31,13 +31,18 @@ public class OpenApiConfig {
         return GroupedOpenApi.builder().group("팀 관련 API").pathsToMatch(paths).build();
     }
     @Bean
-    public GroupedOpenApi BanDateApi(){
+    public GroupedOpenApi banDateApi(){
         String[] paths = {"/bandate/**"};
         return GroupedOpenApi.builder().group("일정 관련 API").pathsToMatch(paths).build();
     }
     @Bean
-    public GroupedOpenApi PromiseApi(){
+    public GroupedOpenApi promiseApi(){
         String[] paths = {"/promises/**"};
         return GroupedOpenApi.builder().group("약속 관련 API").pathsToMatch(paths).build();
+    }
+    @Bean
+    public GroupedOpenApi friendApi(){
+        String[] paths = {"/friends/**"};
+        return GroupedOpenApi.builder().group("친구 관련 API").pathsToMatch(paths).build();
     }
 }
