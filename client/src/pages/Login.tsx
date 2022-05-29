@@ -7,6 +7,7 @@ import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import { setCookie } from "../Cookie";
 import api from "../auth/api";
+import axios from "axios";
 interface ILoginForm {
   name: string;
   email: string;
@@ -21,7 +22,7 @@ function Login() {
 
   const onLoginValid = ({ email, password }: ILoginForm) => {
     const requestBody = { email, password };
-    api
+    axios
       .post("/members/login", requestBody)
       .then((res) => {
         const {
@@ -55,7 +56,7 @@ function Login() {
       telephone,
       memberRole: "USER",
     };
-    api
+    axios
       .post("/members", requestBody)
       .then((res) => {
         alert(`${email} 로 인증 메일을 전송하였습니다.`);
