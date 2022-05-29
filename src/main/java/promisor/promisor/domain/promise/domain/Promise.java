@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.persistence.FetchType.*;
 
@@ -57,6 +58,9 @@ public class Promise extends BaseEntity {
     }
 
     public String getPromiseLocation() {
+        if (this.place == null) {
+            return null;
+        }
         return place.getLocation();
     }
 }
