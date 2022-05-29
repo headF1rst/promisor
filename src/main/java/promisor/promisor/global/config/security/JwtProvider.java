@@ -1,5 +1,6 @@
 package promisor.promisor.global.config.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,15 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import promisor.promisor.domain.member.service.CustomUserDetailService;
-import promisor.promisor.global.secret.SecretConfig;
 import promisor.promisor.global.secret.SecretKey;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -97,7 +95,19 @@ public class JwtProvider {
         return true;
     }
 
-    public Long getJwtValidityTimeFromSecret() {
-        return secret.getJwtValidityTime();
+    public Long getTokenExpireTime(String accessToken) {
+
+        Base64.Decoder decoder = Base64.getUrlDecoder();
+        String[] parts = accessToken.split("\\.");
+        ObjectMapper mapper = new ObjectMapper();
+        String payload = new String(decoder.decode(parts[1]));
+        Map exp = null;
+
+        try {
+            exp = mapper.readValue(payload, Map.class);
+            return ((Number) exp.get("exp")).longValue();
+        } catch (IOException err) {
+            throw new RuntimeException(err);
+        }
     }
 }
