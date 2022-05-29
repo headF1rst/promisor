@@ -32,7 +32,7 @@
     "universal-cookie": "^4.0.4",
     "web-vitals": "^2.1.4"
   },
-  "proxy": "http://localhost:8080",
+  "proxy": "https://promisor.site",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
