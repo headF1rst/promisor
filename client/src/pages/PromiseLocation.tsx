@@ -73,11 +73,17 @@ const PromiseLocation = () => {
     if (midLocation) {
       const initMap = () => {
         const map = new naver.maps.Map("map", {
-          center: new naver.maps.LatLng(myLat, myLon),
+          center: new naver.maps.LatLng(
+            midLocation.latitude,
+            midLocation.longitude
+          ),
           zoom: 13,
         });
         const marker = new naver.maps.Marker({
-          position: new naver.maps.LatLng(myLat, myLon),
+          position: new naver.maps.LatLng(
+            midLocation.latitude,
+            midLocation.longitude
+          ),
           map: map,
           icon: {
             content: `
