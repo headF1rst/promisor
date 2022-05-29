@@ -52,7 +52,7 @@ interface IPromise {
 
 function Promise() {
   const [showModal, setShowModal] = useState(false);
-
+  const [showPromises, setShowPromises] = useState(true);
   const selectedGroup = useRecoilValue(selectedGroupState);
   console.log(selectedGroup);
   const navigate = useNavigate();
@@ -108,34 +108,35 @@ function Promise() {
   const Container = () => {
     return (
       <>
-        <ListContainer>
-          {TEST_PROMISE &&
-            TEST_PROMISE.map((value, index) => (
-              <RoundElement
-                onClick={() => onListClick(index)}
-                key={value.id}
-                head={
-                  <Head
-                    month={value.date.split("-")[1]}
-                    date={value.date.split("-")[2]}
-                  />
-                }
-                main={value.title}
-                sub={
-                  value.location && (
-                    <A.IconText
-                      icon={
-                        <HiOutlineLocationMarker
-                          color={dark ? "#c4c4c4" : "#595959"}
+        {showPromises && promiseListData &&
+            <ListContainer>
+              {promiseListData.map((value: { id: React.Key; date: string; title: string; location: string; }, index: number) => (
+                  <RoundElement
+                      onClick={() => onListClick(index)}
+                      key={value.id}
+                      head={
+                        <Head
+                            month={value.date.split("-")[1]}
+                            date={value.date.split("-")[2]}
                         />
                       }
-                      text={value.location}
-                    />
-                  )
-                }
-              />
-            ))}
-        </ListContainer>
+                      main={value.title}
+                      sub={
+                          value.location && (
+                              <A.IconText
+                                  icon={
+                                    <HiOutlineLocationMarker
+                                        color={dark ? "#c4c4c4" : "#595959"}
+                                    />
+                                  }
+                                  text={value.location}
+                              />
+                          )
+                      }
+                  />
+              ))}
+            </ListContainer>
+        }
         {!showModal && (
           <A.CreateBtn value={"약속 생성"} onClick={onCreateClick} />
         )}
