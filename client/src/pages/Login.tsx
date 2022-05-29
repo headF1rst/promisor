@@ -20,9 +20,12 @@ function Login() {
   const navigate = useNavigate();
   const loginMatch = useMatch("/login");
 
+  const api = axios.create({
+    baseURL: "https://promisor.site",
+  });
   const onLoginValid = ({ email, password }: ILoginForm) => {
     const requestBody = { email, password };
-    axios
+    api
       .post("/members/login", requestBody)
       .then((res) => {
         const {
@@ -31,7 +34,7 @@ function Login() {
         setCookie("accessToken", accessToken);
         localStorage.setItem("refreshTokenId", refreshTokenId);
         console.log(res);
-        navigate("/");
+        // navigate("/");
       })
       .catch((err) => {
         console.log(err);
@@ -56,7 +59,7 @@ function Login() {
       telephone,
       memberRole: "USER",
     };
-    axios
+    api
       .post("/members", requestBody)
       .then((res) => {
         alert(`${email} 로 인증 메일을 전송하였습니다.`);
