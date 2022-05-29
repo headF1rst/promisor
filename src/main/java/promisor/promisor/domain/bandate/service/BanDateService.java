@@ -12,10 +12,7 @@ import promisor.promisor.domain.bandate.dao.TeamBanDateRepository;
 import promisor.promisor.domain.bandate.domain.PersonalBanDate;
 import promisor.promisor.domain.bandate.domain.PersonalBanDateReason;
 import promisor.promisor.domain.bandate.domain.TeamBanDate;
-import promisor.promisor.domain.bandate.dto.GetTeamCalendarResponse;
-import promisor.promisor.domain.bandate.dto.PersonalBanDateStatusEditRequest;
-import promisor.promisor.domain.bandate.dto.RegisterPersonalBanDateResponse;
-import promisor.promisor.domain.bandate.dto.RegisterPersonalReasonResponse;
+import promisor.promisor.domain.bandate.dto.*;
 import promisor.promisor.domain.bandate.exception.PersonalBanDateNotFoundException;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
@@ -83,5 +80,17 @@ public class BanDateService {
         PersonalBanDateReason pbd_reason = new PersonalBanDateReason(pbd, reason);
         personalBanDateReasonRepository.save(pbd_reason);
         return new RegisterPersonalReasonResponse(pbd_reason.getId(), pbd_reason.getPersonalBanDate().getId(), pbd_reason.getReason());
+    }
+
+    public List<GetPersonalCalendarResponse> getPersonalCalendar(String email) {
+        PageRequest pageRequest = PageRequest.of(0, 31, Sort.by(Sort.Direction.ASC, "date"));
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Slice<PersonalBanDate> PersonalCalenderList = personalBanDateRepository.findAllByMemberId(member.getId(), pageRequest);
+        System.out.println("-----------------------------------------------");
+        System.out.println(PersonalCalenderList);
+        List<GetPersonalCalendarResponse> result = PersonalCalenderList.stream().
+                map(p -> new GetPersonalCalendarResponse(p.getId(), p.getMember().getId(), p.getDate(), p.getDateStatus()))
+                .collect(toList());
+        return result;
     }
 }

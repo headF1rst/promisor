@@ -49,4 +49,11 @@ public class BanDateController {
                 registerReasonDto.getReason());
         return ResponseEntity.ok().body(response);
     }
+
+    @Operation(summary = "get personal calendar", description = "개인 캘린더 일정 조회")
+    @GetMapping("/personal")
+    public ResponseEntity<List<GetPersonalCalendarResponse>> getPersonalCalendar(@JwtAuth String email) {
+        List<GetPersonalCalendarResponse> response = banDateService.getPersonalCalendar(email);
+        return ResponseEntity.ok().body(response);
+    }
 }
