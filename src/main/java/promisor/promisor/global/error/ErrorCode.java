@@ -8,6 +8,9 @@ import lombok.Getter;
 public enum ErrorCode {
     // -----예외(Http 상태, 에러코드, 메시지)------ //
 
+    //Date
+    DATE_EMPTY(400,"D001" ,"날짜를 입력하지 않았습니다."),
+
     // Bandate
     BANDATE_NOT_FOUND(400, "B001", "일정이 등록되지 않았습니다."),
 
@@ -51,7 +54,10 @@ public enum ErrorCode {
     UNAUTHORIZED_USER(401, "M014", "로그인 후 이용가능합니다."),
     MEMBER_EMPTY(400,"M015","해당 멤버가 없습니다."),
     LOGIN_AGAIN(400, "M016", "로그인을 다시 시도해 주세요"),
-    MEMBER_NOT_BELONGS_TO_TEAM(400, "M017", "해당 그룹에 속하지 않는 회원입니다.");
+    MEMBER_NOT_BELONGS_TO_TEAM(400, "M017", "해당 그룹에 속하지 않는 회원입니다."),
+
+    //Reason
+    REASON_EMPTY(400,"R001" ,"무슨 일정인지 입력해주세요");
 
 
     private int httpStatus;
