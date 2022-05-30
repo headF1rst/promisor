@@ -12,19 +12,19 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class ConfirmationTokenService {
 
-    private final ConfirmationTokenDAO confirmationTokenDAO;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
 
     @Transactional
     public void saveConfirmationToken(ConfirmationToken token) {
-        confirmationTokenDAO.save(token);
+        confirmationTokenRepository.save(token);
     }
 
     public Optional<ConfirmationToken> getToken(String token) {
-        return confirmationTokenDAO.findByToken(token);
+        return confirmationTokenRepository.findByToken(token);
     }
 
-    public int setConfirmedAt(String token) {
-        return confirmationTokenDAO.updateConfirmedAt(token, LocalDateTime.now());
+    public void setConfirmedAt(String token) {
+        confirmationTokenRepository.updateConfirmedAt(token, LocalDateTime.now());
     }
 
 

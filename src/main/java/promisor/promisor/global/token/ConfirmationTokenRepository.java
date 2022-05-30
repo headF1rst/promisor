@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
-public interface ConfirmationTokenDAO extends JpaRepository<ConfirmationToken, Long> {
+public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationToken, Long> {
 
 //    TODO: Query 추가
     Optional<ConfirmationToken> findByToken(String token);
