@@ -23,7 +23,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
+                .allowedMethods("GET", "POST", "PATCH")
                 .allowedOrigins("http://localhost:8080", "https://promisor.site", "http://promisor.site",
-                        "http://localhost:3000");
+                        "http://localhost:3000", "http://api-storage.cloud.toast.com");
     }
 }
