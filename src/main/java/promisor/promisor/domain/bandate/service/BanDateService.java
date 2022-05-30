@@ -21,8 +21,7 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +38,7 @@ public class BanDateService {
     private final TeamBanDateRepository teamBanDateRepository;
 
     @Transactional
-    public RegisterPersonalBanDateResponse registerPersonal(String email, Date date) {
+    public RegisterPersonalBanDateResponse registerPersonal(String email, LocalDate date) {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         PersonalBanDate pbd = new PersonalBanDate(member,date);
         personalBanDateRepository.save(pbd);
@@ -107,7 +106,8 @@ public class BanDateService {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
         List<GetPersonalReasonResponse> result = pbdrList.stream()
-                .map(p-> new GetPersonalReasonResponse(p.getId(),p.getPersonalBanDate().getId(),p.getPersonalBanDate().getDate(), p.getReason()))
+                .map(p-> new GetPersonalReasonResponse(p.getId(), p.getPersonalBanDate().getId(),
+                        p.getPersonalBanDate().getDate(), p.getReason()))
                 .collect(Collectors.toList());
         return result;
     }
