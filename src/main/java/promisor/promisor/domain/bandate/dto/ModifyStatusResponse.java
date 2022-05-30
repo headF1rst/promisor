@@ -2,15 +2,15 @@ package promisor.promisor.domain.bandate.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Data
 public class ModifyStatusResponse {
     Long memberId;
-    Date date;
+    LocalDate date;
     String dateStatus;
 
-    public ModifyStatusResponse(Long id, Date date, String dateStatus) {
+    public ModifyStatusResponse(Long id, LocalDate date, String dateStatus) {
         this.memberId=id;
         this.date=date;
         this.dateStatus=dateStatus;

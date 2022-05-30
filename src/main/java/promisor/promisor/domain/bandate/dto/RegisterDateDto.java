@@ -10,5 +10,5 @@ import java.time.LocalDate;
 @Getter
 @NoArgsConstructor
 public class RegisterDateDto {
-    private LocalDate date;
+    private String date;
 }
