@@ -10,7 +10,7 @@ import promisor.promisor.domain.model.BaseEntity;
 import javax.persistence.*;
 
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import static javax.persistence.FetchType.*;
 
@@ -25,15 +25,22 @@ public class PersonalBanDate extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private Date date;
+    private LocalDate date;
 
     @Column(name="date_status", length = 10, columnDefinition = "varchar(10) default 'IMPOSSIBLE'")
     private String dateStatus;
 
-    public PersonalBanDate(Member member, Date date){
+    public PersonalBanDate(Member member, LocalDate date){
         super("ACTIVE");
         this.member = member;
         this.date = date;
+        this.dateStatus = "IMPOSSIBLE";
+    }
+
+    public PersonalBanDate(Member member, String date) {
+        super("ACTIVE");
+        this.member = member;
+        this.date = LocalDate.parse(date);
         this.dateStatus = "IMPOSSIBLE";
     }
 

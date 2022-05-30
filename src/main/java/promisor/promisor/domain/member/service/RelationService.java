@@ -69,9 +69,7 @@ public class RelationService {
         if (findEmail.isBlank()) {
             throw new EmailEmptyException();
         }
-        Member requester = getMember(email);
         Member receiver = getMember(findEmail);
-
         return new MemberResponse(receiver);
     }
 
