@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
-import * as A from "../atoms/_index";
-import * as S from "../styles/_index";
-import { AnimatePresence, motion } from "framer-motion";
 import PromiseDateModal from "./PromiseDateModal";
-import { FaStickyNote } from "react-icons/fa";
+import { useQuery } from "react-query";
+import api from "../auth/api";
+import { useRecoilValue } from "recoil";
+import { selectedGroupState } from "../states/selectedGroup";
+
+interface ITeamCalender {
+  id: number;
+  memberId: number;
+  name: string;
+  personalBanDateId: number;
+  date: string;
+  dateStatus: string;
+}
 
 const TEST_DATA = [
   {
@@ -21,89 +30,6 @@ const TEST_DATA = [
 
     date_status: "RED",
   },
-  {
-    id: 1,
-    member_id: 1,
-    member_name: "고산하",
-    member_img:
-      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
-
-    promise_id: 0,
-    date: "20220517",
-    reason: "가족 모임",
-
-    date_status: "RED",
-  },
-  {
-    id: 2,
-    member_name: "고산하",
-    member_id: 1,
-    member_img:
-      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
-
-    promise_id: 0,
-    date: "20220516",
-    reason: "",
-    date_status: "YELLOW",
-  },
-  {
-    id: 3,
-    member_id: 2,
-    member_img:
-      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
-    member_name: "이준석",
-    promise_id: 0,
-    date: "20220516",
-    reason: "",
-    date_status: "GREEN",
-  },
-  {
-    id: 4,
-    member_id: 3,
-    member_img:
-      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
-    member_name: "황승환",
-    promise_id: 0,
-    date: "20220517",
-    reason: "가족 모임",
-    date_status: "RED",
-  },
-  {
-    id: 5,
-    member_img:
-      "https://i.pinimg.com/236x/a4/ba/d8/a4bad8978517b1f10ddaf4d833a4fe78.jpg",
-    member_id: 2,
-    member_name: "이준석",
-    promise_id: 0,
-    date: "20220517",
-    reason: "가족 모임",
-
-    date_status: "YELLOW",
-  },
-  {
-    id: 6,
-    member_img:
-      "https://i.pinimg.com/236x/a4/ba/d8/a4bad8978517b1f10ddaf4d833a4fe78.jpg",
-    member_id: 3,
-    member_name: "김채은",
-    promise_id: 0,
-    date: "20220517",
-    reason: "가족 모임",
-
-    date_status: "YELLOW",
-  },
-  {
-    id: 7,
-    member_img:
-      "https://i.pinimg.com/236x/a4/ba/d8/a4bad8978517b1f10ddaf4d833a4fe78.jpg",
-    member_id: 3,
-    member_name: "김채은",
-    promise_id: 0,
-    date: "20220517",
-    reason: "가족 모임",
-
-    date_status: "GREEN",
-  },
 ];
 
 const RED = "RED";
@@ -113,44 +39,41 @@ const COLOR = { RED: "#ff7373", YELLOW: "#ffd37a", GREEN: "#85ba73" };
 const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 
 function PromiseDateCalendar() {
-  const [groupView, setGroupView] = useState(true);
   const [dateModal, setDateModal] = useState(false);
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [weeks, setWeeks] = useState<any[][]>([]);
   const [currentDate, setCurrentDate] = useState("");
-  useEffect(() => {
-    makeCalendar(year, month);
-  }, [month]);
-  useEffect(() => {
-    let newColors = [];
-    if (groupView) {
-      for (let i = 0; i < TEST_DATA.length; i++) {
-        const colorObj = {
-          id: TEST_DATA[i].date,
-          color: TEST_DATA[i].date_status,
-        };
-        newColors.push(colorObj);
-      }
-    } else {
-      for (let i = 0; i < TEST_DATA.length; i++) {
-        if (TEST_DATA[i].member_id === 0) {
-          const colorObj = {
-            id: TEST_DATA[i].date,
-            color: TEST_DATA[i].date_status,
-          };
-          newColors.push(colorObj);
-        }
-      }
+  const selectedGroup = useRecoilValue(selectedGroupState);
+  const { data: teamCalendarData } = useQuery<ITeamCalender[]>(
+    "teamCalendarData",
+    async () => {
+      const { data } = await api.get(`/bandate/team/${selectedGroup.id}`);
+      return data;
     }
-  }, [groupView]);
+  );
+  useEffect(() => {
+    if (!teamCalendarData) {
+      return;
+    }
+    let newColors = [];
+
+    for (let i = 0; i < teamCalendarData.length; i++) {
+      const colorObj = {
+        id: teamCalendarData[i].id,
+        color: teamCalendarData[i].dateStatus,
+      };
+      newColors.push(colorObj);
+    }
+    makeCalendar(year, month);
+  }, [teamCalendarData, month]);
   const makeCalendar = (year: number, month: number) => {
     const FEB =
       (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
     const LASTDATE = [0, 31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = LASTDATE[month];
+    const lastDate = LASTDATE[month + 1];
     let date = 1;
     let newWeeks = [];
     for (let week = 0; week < 6; week++) {
@@ -164,12 +87,12 @@ function PromiseDateCalendar() {
             String(year) +
             String(month).padStart(2, "0") +
             String(date).padStart(2, "0");
-          for (let i = 0; i < TEST_DATA.length; i++) {
-            if (TEST_DATA[i].date === id) {
-              if (TEST_DATA[i].date_status === "RED") {
+          for (let i = 0; i < teamCalendarData.length; i++) {
+            if (teamCalendarData[i].date === id) {
+              if (teamCalendarData[i].dateStatus === "RED") {
                 thisColor = "RED";
                 break;
-              } else if (TEST_DATA[i].date_status === "YELLOW") {
+              } else if (teamCalendarData[i].dateStatus === "YELLOW") {
                 thisColor = "YELLOW";
               }
             }
@@ -188,10 +111,8 @@ function PromiseDateCalendar() {
   };
 
   const onDateClick = (id: string) => {
-    if (groupView) {
-      setDateModal((prev) => !prev);
-      setCurrentDate(id);
-    }
+    setDateModal((prev) => !prev);
+    setCurrentDate(id);
   };
   const onBtnClick = (isPrev: string) => {
     const prevMonth = month;
@@ -202,16 +123,6 @@ function PromiseDateCalendar() {
       setYear(prevMonth === 11 ? year + 1 : year);
       setMonth(prevMonth === 11 ? 0 : prevMonth + 1);
     }
-    console.log(year, month);
-  };
-
-  const isNoted = (id: string) => {
-    for (let i = 0; i < TEST_DATA.length; i++) {
-      if (TEST_DATA[i].date === id && TEST_DATA[i].reason) {
-        return true;
-      }
-    }
-    return false;
   };
 
   return (
@@ -242,9 +153,9 @@ function PromiseDateCalendar() {
           weeks.map((week, week_idx) => (
             <Week key={week_idx}>
               {!(week[0].value === "" && week_idx === 5) &&
-                week.map((date, day_idx) => (
+                week.map((date, date_idx) => (
                   <DateBox
-                    key={String(week_idx) + String(day_idx)}
+                    key={String(week_idx) + String(date_idx)}
                     color={date.color}
                     onClick={() => onDateClick(date.id)}
                     style={{ color: "black" }}
@@ -272,7 +183,7 @@ function PromiseDateCalendar() {
       {dateModal && (
         <PromiseDateModal
           state={{ dateModal, setDateModal, currentDate }}
-          data={TEST_DATA}
+          data={teamCalendarData}
         />
       )}
     </Container>
