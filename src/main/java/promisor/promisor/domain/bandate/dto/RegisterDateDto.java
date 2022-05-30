@@ -11,4 +11,5 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class RegisterDateDto {
     private String date;
+    private String status;
 }

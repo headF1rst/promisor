@@ -1,6 +1,7 @@
 package promisor.promisor.domain.bandate.dto;
 
 import lombok.Data;
+import promisor.promisor.domain.bandate.domain.DateStatusType;
 
 import java.time.LocalDate;
 
@@ -8,9 +9,9 @@ import java.time.LocalDate;
 public class ModifyStatusResponse {
     Long memberId;
     LocalDate date;
-    String dateStatus;
+    DateStatusType dateStatus;
 
-    public ModifyStatusResponse(Long id, LocalDate date, String dateStatus) {
+    public ModifyStatusResponse(Long id, LocalDate date, DateStatusType dateStatus) {
         this.memberId=id;
         this.date=date;
         this.dateStatus=dateStatus;
