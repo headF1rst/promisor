@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.bandate.dao.PersonalBanDateReasonRepository;
@@ -18,9 +19,11 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -86,11 +89,18 @@ public class BanDateService {
         PageRequest pageRequest = PageRequest.of(0, 31, Sort.by(Sort.Direction.ASC, "date"));
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         Slice<PersonalBanDate> PersonalCalenderList = personalBanDateRepository.findAllByMemberId(member.getId(), pageRequest);
-        System.out.println("-----------------------------------------------");
-        System.out.println(PersonalCalenderList);
         List<GetPersonalCalendarResponse> result = PersonalCalenderList.stream().
                 map(p -> new GetPersonalCalendarResponse(p.getId(), p.getMember().getId(), p.getDate(), p.getDateStatus()))
                 .collect(toList());
+        return result;
+    }
+
+    public List<GetPersonalReasonResponse> getPersonalReason(String email) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
+        List<GetPersonalReasonResponse> result = pbdrList.stream()
+                .map(p-> new GetPersonalReasonResponse(p.getId(),p.getPersonalBanDate().getId(),p.getPersonalBanDate().getDate(), p.getReason()))
+                .collect(Collectors.toList());
         return result;
     }
 }

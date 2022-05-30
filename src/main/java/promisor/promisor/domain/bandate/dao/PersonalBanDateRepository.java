@@ -24,4 +24,8 @@ public interface PersonalBanDateRepository extends JpaRepository<PersonalBanDate
 
     @Transactional(readOnly = true)
     Slice<PersonalBanDate> findAllByMemberId(Long id, Pageable pageable);
+
+    @Query("select pbd from PersonalBanDate pbd " +
+            "join fetch pbd.member where pbd.member = :member and pbd.status = 'ACTIVE'")
+    List<PersonalBanDate> findAllByMember(@Param("member") Member member);
 }
