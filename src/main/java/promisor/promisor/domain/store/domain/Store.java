@@ -1,7 +1,6 @@
 package promisor.promisor.domain.store.domain;
 
 import lombok.Getter;
-import promisor.promisor.domain.manager.Manager;
 import promisor.promisor.domain.model.BaseEntity;
 import promisor.promisor.domain.place.domain.Place;
 
@@ -17,10 +16,6 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 public class Store extends BaseEntity {
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "manager_id")
-    private Manager manager;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "place_id")
