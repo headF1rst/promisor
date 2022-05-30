@@ -14,10 +14,7 @@ import promisor.promisor.domain.bandate.domain.PersonalBanDate;
 import promisor.promisor.domain.bandate.domain.PersonalBanDateReason;
 import promisor.promisor.domain.bandate.domain.TeamBanDate;
 import promisor.promisor.domain.bandate.dto.*;
-import promisor.promisor.domain.bandate.exception.DateEmptyException;
-import promisor.promisor.domain.bandate.exception.PersonalBanDateNotFoundException;
-import promisor.promisor.domain.bandate.exception.ReasonEmptyException;
-import promisor.promisor.domain.bandate.exception.StatusEmptyException;
+import promisor.promisor.domain.bandate.exception.*;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
@@ -39,11 +36,18 @@ public class BanDateService {
     private final TeamBanDateRepository teamBanDateRepository;
 
     @Transactional
-    public RegisterPersonalBanDateResponse registerPersonal(String email, LocalDate date) {
+    public RegisterPersonalBanDateResponse registerPersonal(String email, String date) {
+        if (date == null){
+            throw new DateEmptyException();
+        }
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
-        PersonalBanDate pbd = new PersonalBanDate(member,date);
-        personalBanDateRepository.save(pbd);
-        return new RegisterPersonalBanDateResponse(pbd.getMember().getId(), pbd.getDate());
+        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        if (pbd != null){
+            throw new RegisteredException();
+        }
+        PersonalBanDate new_pbd = new PersonalBanDate(member,date);
+        personalBanDateRepository.save(new_pbd);
+        return new RegisterPersonalBanDateResponse(new_pbd.getMember().getId(), new_pbd.getDate());
     }
 
     public PersonalBanDate findById(Long id) {
@@ -68,7 +72,7 @@ public class BanDateService {
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         pbd.editPBDStatus(status);
-        ModifyStatusResponse result = new ModifyStatusResponse(member.getId(),pbd.getDate(),pbd.getDateStatus());
+        ModifyStatusResponse result = new ModifyStatusResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
         return result;
     }
 

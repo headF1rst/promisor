@@ -37,6 +37,13 @@ public class PersonalBanDate extends BaseEntity {
         this.dateStatus = "IMPOSSIBLE";
     }
 
+    public PersonalBanDate(Member member, String date) {
+        super("ACTIVE");
+        this.member = member;
+        this.date = LocalDate.parse(date);
+        this.dateStatus = "IMPOSSIBLE";
+    }
+
     public void editPBDStatus(String status) {
         this.dateStatus = status;
     }
