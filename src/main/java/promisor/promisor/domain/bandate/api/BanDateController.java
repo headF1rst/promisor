@@ -27,10 +27,10 @@ public class BanDateController {
 
     @Operation(summary = "edit personal ban date", description = "개인 캘린더 상태 변경")
     @PatchMapping
-    public ResponseEntity<Void> editPersonalBanDateStatus(@JwtAuth String email,
-                                                          @RequestBody PersonalBanDateStatusEditRequest request) {
-        banDateService.editPersonalBanDateStatus(email, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ModifyStatusResponse> editPersonalBanDateStatus(@JwtAuth String email,
+                                                          @RequestBody ModifyStatusDto request) {
+        ModifyStatusResponse response = banDateService.editPersonalBanDateStatus(email, request.getDate(), request.getStatus());
+        return ResponseEntity.ok().body(response);
     }
 
     @Operation(summary = "get team calendar", description = "팀 캘린더 조회")

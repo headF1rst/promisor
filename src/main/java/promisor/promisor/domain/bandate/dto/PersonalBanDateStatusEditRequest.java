@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class PersonalBanDateStatusEditRequest {
-
-    Long id;
+    String date;
     String status;
 }
