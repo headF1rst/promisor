@@ -56,13 +56,12 @@ public class BanDateService {
     }
 
     @Transactional
-    public void editPersonalBanDateStatus(String email, PersonalBanDateStatusEditRequest request) {
-        PersonalBanDate pdb = findById(request.getId());
-        pdb.editPBDStatus(request.getStatus());
-        List<TeamBanDate> pbdList = findByBanDateId(pdb.getId());
-        for (int i=0; i<pbdList.size(); i++) {
-            pbdList.get(i).editTBDStatus(request.getStatus());
-        }
+    public ModifyStatusResponse editPersonalBanDateStatus(String email, String date, String status) {
+        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        pbd.editPBDStatus(status);
+        ModifyStatusResponse result = new ModifyStatusResponse(member.getId(),pbd.getDate(),pbd.getDateStatus());
+        return result;
     }
 
     public List<GetTeamCalendarResponse> getTeamCalendar(String email, Long teamId) {
