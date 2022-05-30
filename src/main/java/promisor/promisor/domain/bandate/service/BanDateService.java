@@ -17,6 +17,7 @@ import promisor.promisor.domain.bandate.dto.*;
 import promisor.promisor.domain.bandate.exception.DateEmptyException;
 import promisor.promisor.domain.bandate.exception.PersonalBanDateNotFoundException;
 import promisor.promisor.domain.bandate.exception.ReasonEmptyException;
+import promisor.promisor.domain.bandate.exception.StatusEmptyException;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
@@ -58,6 +59,12 @@ public class BanDateService {
 
     @Transactional
     public ModifyStatusResponse editPersonalBanDateStatus(String email, String date, String status) {
+        if (date == null){
+            throw new DateEmptyException();
+        }
+        if (status == null){
+            throw new StatusEmptyException();
+        }
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         pbd.editPBDStatus(status);

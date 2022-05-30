@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum ErrorCode {
     // -----예외(Http 상태, 에러코드, 메시지)------ //
 
-    //Date
+    // Date
     DATE_EMPTY(400,"D001" ,"날짜를 입력하지 않았습니다."),
 
     // Bandate
@@ -56,8 +56,11 @@ public enum ErrorCode {
     LOGIN_AGAIN(400, "M016", "로그인을 다시 시도해 주세요"),
     MEMBER_NOT_BELONGS_TO_TEAM(400, "M017", "해당 그룹에 속하지 않는 회원입니다."),
 
-    //Reason
-    REASON_EMPTY(400,"R001" ,"무슨 일정인지 입력해주세요");
+    // Reason
+    REASON_EMPTY(400,"R001" ,"무슨 일정인지 입력해주세요"),
+
+    // Status
+    STATUS_EMPTY(400,"S001" ,"상태를 입력해주세요." );
 
 
     private int httpStatus;
