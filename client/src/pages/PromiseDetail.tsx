@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useMatch } from "react-router-dom";
 import { useNavigate } from "react-router";
 import { useRecoilValue } from "recoil";
@@ -10,23 +10,32 @@ import { PromiseTitle } from "./Promise";
 import { useParams } from "react-router";
 import PromiseDate from "./PromiseDate";
 import PromiseLocation from "./PromiseLocation";
+import { useQuery } from "react-query";
+import api from "../auth/api";
 
 function PromiseDetail() {
-  const [title, setTitle] = useState();
+  const titleRef = useRef();
   const selectedGroup = useRecoilValue(selectedGroupState);
   const navigate = useNavigate();
   const params = useParams();
   const dateMatch = useMatch("/team/:id/promise/:pid/date");
+
+  // const { data: promiseDetailData } = useQuery(
+  //   "promiseDetailData",
+  //   async () => {
+  //     const { data } = await api.get(`/promises/${params.pid}`);
+  //     return data;
+  //   }
+  // );
   const onNavClick = (state: string) => {
-    navigate(`/team/${params.id}/promise/${params.pid}/${state}`);
+    if (state === "place") {
+      navigate(`/team/${params.id}/promise/${params.pid}/${state}`, {
+        replace: true,
+      });
+    } else {
+      navigate(`/team/${params.id}/promise/${params.pid}/${state}`);
+    }
   };
-
-  const onTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      target: { value },
-    } = event;
-  };
-
   const Header = () => {
     return (
       <div
@@ -50,7 +59,7 @@ function PromiseDetail() {
   const Container = () => {
     return (
       <>
-        <LineInput placeholder="제목" onChange={onTitleChange} />
+        <LineInput placeholder="제목" ref={titleRef} />
         <NavBar>
           <NavItem
             onClick={() => onNavClick("date")}

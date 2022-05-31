@@ -13,13 +13,12 @@ import promisor.promisor.domain.bandate.domain.PersonalBanDate;
 import promisor.promisor.domain.bandate.domain.PersonalBanDateReason;
 import promisor.promisor.domain.bandate.domain.TeamBanDate;
 import promisor.promisor.domain.bandate.dto.*;
+import promisor.promisor.domain.bandate.exception.*;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -34,12 +33,20 @@ public class BanDateService {
     private final TeamBanDateRepository teamBanDateRepository;
 
     @Transactional
-    public RegisterPersonalBanDateResponse registerPersonal(String email, Date date) {
-
+    public RegisterPersonalBanDateResponse registerPersonal(String email, String date, String status) {
+        if (date == null){
+            throw new DateEmptyException();
+        }
         Member member = getMember(email);
-        PersonalBanDate pbd = new PersonalBanDate(member,date);
-        personalBanDateRepository.save(pbd);
-        return new RegisterPersonalBanDateResponse(pbd.getMember().getId(), pbd.getDate());
+        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        if (pbd != null){
+            pbd.editPBDStatus(status);
+            return new RegisterPersonalBanDateResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
+        }else{
+            PersonalBanDate new_pbd = new PersonalBanDate(member, date, status);
+            personalBanDateRepository.save(new_pbd);
+            return new RegisterPersonalBanDateResponse(member.getId(), new_pbd.getDate(),new_pbd.getDateStatus());
+        }
     }
 
     private Member getMember(String email) {
@@ -55,15 +62,17 @@ public class BanDateService {
     }
 
     @Transactional
-    public void editPersonalBanDateStatus(String email, PersonalBanDateStatusEditRequest request) {
-
-        PersonalBanDate pdb = findById(request.getId());
-        pdb.editPBDStatus(request.getStatus());
-        List<TeamBanDate> pbdList = findByBanDateId(pdb.getId());
-
-        for (TeamBanDate teamBanDate : pbdList) {
-            teamBanDate.editTBDStatus(request.getStatus());
+    public ModifyStatusResponse editPersonalBanDateStatus(String email, String date, String status) {
+        if (date == null){
+            throw new DateEmptyException();
         }
+        if (status == null){
+            throw new StatusEmptyException();
+        }
+        Member member = getMember(email);
+        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        pbd.editPBDStatus(status);
+        return new ModifyStatusResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
     }
 
     public List<GetTeamCalendarResponse> getTeamCalendar(String email, Long teamId) {
@@ -79,6 +88,13 @@ public class BanDateService {
     @Transactional
     public RegisterPersonalReasonResponse registerPersonalReason(String email, String date, String reason) {
 
+        if (date == null){
+            throw new DateEmptyException();
+        }
+        if (reason == null){
+            throw new ReasonEmptyException();
+        }
+
         Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         PersonalBanDateReason pbd_reason = new PersonalBanDateReason(pbd, reason);
@@ -91,19 +107,18 @@ public class BanDateService {
         PageRequest pageRequest = PageRequest.of(0, 31, Sort.by(Sort.Direction.ASC, "date"));
         Member member = getMember(email);
         Slice<PersonalBanDate> PersonalCalenderList = personalBanDateRepository.findAllByMemberId(member.getId(), pageRequest);
-        List<GetPersonalCalendarResponse> result = PersonalCalenderList.stream().
+        return PersonalCalenderList.stream().
                 map(p -> new GetPersonalCalendarResponse(p.getId(), p.getMember().getId(), p.getDate(), p.getDateStatus()))
                 .collect(toList());
-        return result;
     }
 
     public List<GetPersonalReasonResponse> getPersonalReason(String email) {
 
         Member member = getMember(email);
         List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
-        List<GetPersonalReasonResponse> result = pbdrList.stream()
-                .map(p-> new GetPersonalReasonResponse(p.getId(),p.getPersonalBanDate().getId(),p.getPersonalBanDate().getDate(), p.getReason()))
+        return pbdrList.stream()
+                .map(p-> new GetPersonalReasonResponse(p.getId(), p.getPersonalBanDate().getId(),
+                        p.getPersonalBanDate().getDate(), p.getReason()))
                 .collect(Collectors.toList());
-        return result;
     }
 }
