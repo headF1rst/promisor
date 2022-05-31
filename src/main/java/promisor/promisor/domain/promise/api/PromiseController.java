@@ -9,6 +9,7 @@ import promisor.promisor.domain.promise.dto.PromiseResponse;
 import promisor.promisor.domain.promise.service.PromiseService;
 import promisor.promisor.global.auth.JwtAuth;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -19,23 +20,25 @@ public class PromiseController {
     private final PromiseService promiseService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<Void> createPromise(@JwtAuth String email,
-                                              @RequestBody PromiseCreateRequest request,
-                                              @PathVariable("id") Long teamId) {
+    public ResponseEntity<Void> createPromise(@JwtAuth final String email,
+                                              @Valid @RequestBody final PromiseCreateRequest request,
+                                              @PathVariable("id") final Long teamId) {
         promiseService.createPromise(email, request, teamId);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping
-    public ResponseEntity<Void> editPromiseDate(@JwtAuth String email,
-                                                @RequestBody PromiseDateEditRequest request) {
-        promiseService.editPromiseDate(email, request);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> editPromise(@JwtAuth final String email,
+                                            @RequestBody final PromiseDateEditRequest request,
+                                            @PathVariable("id") final Long promiseId) {
+        Long teamId = promiseService.editPromise(email, request, promiseId);
+        promiseService.updateToGroupMembers(email, request, promiseId, teamId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<PromiseResponse>> searchPromiseList(@JwtAuth String email,
-                                                                   @PathVariable("id") Long teamId) {
+    public ResponseEntity<List<PromiseResponse>> searchPromiseList(@JwtAuth final String email,
+                                                                   @PathVariable("id") final Long teamId) {
         List<PromiseResponse> response = promiseService.searchPromise(email, teamId);
         return ResponseEntity.ok().body(response);
     }

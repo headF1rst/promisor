@@ -7,6 +7,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
@@ -20,13 +21,10 @@ import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
-import promisor.promisor.domain.team.exception.NoRightsException;
 import promisor.promisor.domain.promise.exception.PromiseIdNotFound;
 import promisor.promisor.domain.team.exception.TeamNotFoundForMember;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -58,10 +56,19 @@ public class PromiseService {
         promiseRepository.save(promise);
     }
 
+    /*
+     *   그룹내 약속 수정 API
+     *   @Param: 이메일, 약속 Id, 약속 선정 날짜
+     *   @author: Sanha Ko
+     */
     @Transactional
-    public void editPromiseDate(String email, PromiseDateEditRequest request) {
-        Promise promise = getPromiseById(request.getPromiseId());
-        promise.editPromiseDate(request.getDate());
+    public Long editPromise(String email, PromiseDateEditRequest request, Long promiseId) {
+        Assert.notNull(email, "엑세스 토큰이 전달되지 않았습니다.");
+        Assert.notNull(promiseId, "약속 Id가 존재하지 않습니다.");
+
+        Promise promise = getPromiseById(promiseId);
+        promise.changePromiseContent(request.getName(), request.getDate(), request.getLocation());
+        return promise.getTeam().getId();
     }
 
     /*
@@ -85,19 +92,22 @@ public class PromiseService {
         return result;
     }
 
-    public Member getMember(String email) {
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        return optionalMember.orElseThrow(MemberEmailNotFound::new);
+    @Transactional
+    public void updateToGroupMembers(String email, PromiseDateEditRequest request, Long promiseId, Long teamId) {
+        List<TeamMember> members = teamMemberRepository.findMembersByTeamId(teamId);
+
     }
 
-    public Team getTeamById(Long id) {
-        Optional<Team> optionalTeam = teamRepository.findById(id);
-        return optionalTeam.orElseThrow(TeamNotFoundForMember::new);
+    private Member getMember(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(MemberEmailNotFound::new);
     }
 
-    public Promise getPromiseById(Long id) {
-        Optional<Promise> optionalPromise = promiseRepository.findById(id);
-        return optionalPromise.orElseThrow(PromiseIdNotFound::new);
+    private Team getTeamById(Long id) {
+        return teamRepository.findById(id).orElseThrow(TeamNotFoundForMember::new);
+    }
+
+    private Promise getPromiseById(Long id) {
+        return promiseRepository.findById(id).orElseThrow(PromiseIdNotFound::new);
     }
 
     public boolean checkMemberInTeam(String email, Long teamId) {

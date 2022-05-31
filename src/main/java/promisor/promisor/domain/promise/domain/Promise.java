@@ -52,9 +52,16 @@ public class Promise extends BaseEntity {
         return new Promise(status, team, promiseName);
     }
 
-    public void editPromiseDate(String date){
-        LocalDateTime promiseDate = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.date = promiseDate;
+    public void changePromiseContent(String promiseName, String date, String location){
+        if (promiseName != null) {
+            this.promiseName = promiseName;
+        }
+        if (date != null) {
+            this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        }
+        if (location != null) {
+            this.place.changeLocation(location);
+        }
     }
 
     public String getPromiseLocation() {

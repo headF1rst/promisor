@@ -23,4 +23,8 @@ public class Place extends BaseEntity {
 
     private Double latitude;
     private Double longitude;
+
+    public void changeLocation(String location) {
+        this.location = location;
+    }
 }

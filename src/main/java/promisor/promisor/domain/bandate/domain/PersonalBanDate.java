@@ -16,7 +16,6 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
-@Table(name = "personal_ban_date")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class PersonalBanDate extends BaseEntity {
