@@ -25,18 +25,14 @@ public class RelationService {
     private final MemberRepository memberRepository;
     private final RelationRepository relationRepository;
 
-    public Member getMember(String email) {
+    private Member getMember(String email) {
         log.info("Fetching member '{}'", email);
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member member = optionalMember.orElseThrow(MemberEmailNotFound::new);
-        return member;
+        return memberRepository.findByEmail(email).orElseThrow(MemberEmailNotFound::new);
     }
 
-    public Member getMemberById(Long id) {
+    private Member getMemberById(Long id) {
         log.info("Fetching member '{}'", id);
-        Optional<Member> optionalMember = memberRepository.findById(id);
-        Member member = optionalMember.orElseThrow(MemberEmailNotFound::new);
-        return member;
+        return memberRepository.findById(id).orElseThrow(MemberEmailNotFound::new);
     }
 
     /*

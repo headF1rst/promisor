@@ -49,16 +49,12 @@ public class TeamService {
         return team.getId();
     }
 
-    public Member getMemberInfo(String email){
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member member = optionalMember.orElseThrow(MemberEmailNotFound::new);
-        return member;
+    private Member getMemberInfo(String email){
+        return memberRepository.findByEmail(email).orElseThrow(MemberEmailNotFound::new);
     }
 
-    public Team getGroup(Long id) {
-        Optional<Team> optionalGroup = teamRepository.findById(id);
-        Team team = optionalGroup.orElseThrow(TeamIdNotFoundException::new);
-        return team;
+    private Team getGroup(Long id) {
+        return teamRepository.findById(id).orElseThrow(TeamIdNotFoundException::new);
     }
 
     @Transactional
@@ -77,10 +73,10 @@ public class TeamService {
     @Transactional
     public LeaveTeamResponse leaveGroup(String email, Long groupId) {
 
-        Optional<Member> optionalMember = memberRepository.findByEmail(email);
-        Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
+        Member member = getMemberInfo(email);
         Team team = getGroup(groupId);
         Member leader = team.getMember();
+
         if(leader.getId() == member.getId()){
             throw new LeaderLeaveException();
         }
@@ -96,9 +92,11 @@ public class TeamService {
 
         Member inviting = getMemberInfo(email);
         Team team = getGroup(request.getGroupId());
+
         if(!Objects.equals(team.getMember().getId(), inviting.getId())){
             throw new NoRightToInviteException();
         }
+
         Member[] invited = new Member[request.getMemberId().length];
         for(int i=0;i<request.getMemberId().length;i++) {
             invited[i] = memberRepository.findById(request.getMemberId()[i]).orElseThrow(MemberNotFoundException::new);
@@ -155,6 +153,7 @@ public class TeamService {
             throw new MemberNotBelongsToTeam();
         }
         List<TeamMember> teamMemberList = teamMemberRepository.findMembersByTeamId(teamId);
+
         float avgLatitude=0;
         float avgLongitude=0;
         for (int i=0; i<teamMemberList.size(); i++) {
