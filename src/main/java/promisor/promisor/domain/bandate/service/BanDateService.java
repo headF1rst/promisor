@@ -36,18 +36,20 @@ public class BanDateService {
     private final TeamBanDateRepository teamBanDateRepository;
 
     @Transactional
-    public RegisterPersonalBanDateResponse registerPersonal(String email, String date) {
+    public RegisterPersonalBanDateResponse registerPersonal(String email, String date, String status) {
         if (date == null){
             throw new DateEmptyException();
         }
         Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         if (pbd != null){
-            throw new RegisteredException();
+            pbd.editPBDStatus(status);
+            return new RegisterPersonalBanDateResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
+        }else{
+            PersonalBanDate new_pbd = new PersonalBanDate(member, date, status);
+            personalBanDateRepository.save(new_pbd);
+            return new RegisterPersonalBanDateResponse(member.getId(), new_pbd.getDate(),new_pbd.getDateStatus());
         }
-        PersonalBanDate new_pbd = new PersonalBanDate(member,date);
-        personalBanDateRepository.save(new_pbd);
-        return new RegisterPersonalBanDateResponse(new_pbd.getMember().getId(), new_pbd.getDate());
     }
 
     public PersonalBanDate findById(Long id) {

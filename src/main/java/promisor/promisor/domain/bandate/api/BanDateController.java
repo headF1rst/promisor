@@ -21,7 +21,8 @@ public class BanDateController {
     @PostMapping("/personal")
     public ResponseEntity<RegisterPersonalBanDateResponse> registerPersonal(@JwtAuth String email,
                                                                             @RequestBody RegisterDateDto registerDateDto){
-        RegisterPersonalBanDateResponse response = banDateService.registerPersonal(email, registerDateDto.getDate());
+        RegisterPersonalBanDateResponse response = banDateService.registerPersonal(email, registerDateDto.getDate(),
+                registerDateDto.getStatus());
         return ResponseEntity.ok().body(response);
     }
 
