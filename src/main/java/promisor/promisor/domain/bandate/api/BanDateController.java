@@ -2,6 +2,7 @@ package promisor.promisor.domain.bandate.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,9 +60,10 @@ public class BanDateController {
     }
 
     @Operation(summary = "get personal calendar reason", description = "개인 캘린더 일정에 대한 사유 조회")
-    @GetMapping("/personal/reason")
-    public ResponseEntity<List<GetPersonalReasonResponse>> getPersonalReason(@JwtAuth String email) {
-        List<GetPersonalReasonResponse> response = banDateService.getPersonalReason(email);
+    @GetMapping("/personal/reason/{date}")
+    public ResponseEntity<GetPersonalReasonResponse> getPersonalReason(@JwtAuth String email,
+                                                                             @PathVariable("date") String date) {
+        GetPersonalReasonResponse response = banDateService.getPersonalReason(email, date);
         return ResponseEntity.ok().body(response);
     }
 }
