@@ -112,13 +112,14 @@ public class BanDateService {
                 .collect(toList());
     }
 
-    public List<GetPersonalReasonResponse> getPersonalReason(String email) {
-
+    public GetPersonalReasonResponse getPersonalReason(String email, String date) {
+        if (date == null){
+            throw new DateEmptyException();
+        }
         Member member = getMember(email);
         List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
-        return pbdrList.stream()
-                .map(p-> new GetPersonalReasonResponse(p.getId(), p.getPersonalBanDate().getId(),
-                        p.getPersonalBanDate().getDate(), p.getReason()))
-                .collect(Collectors.toList());
+        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        List<String> reasons = pbdrList.stream().map(p->p.getReason()).collect(Collectors.toList());
+        return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
     }
 }
