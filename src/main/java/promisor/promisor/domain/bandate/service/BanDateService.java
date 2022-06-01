@@ -78,17 +78,18 @@ public class BanDateService {
 
     private void reflectToTeam(List<TeamBanDate> tbd, String status){
         for(int i=0; i<tbd.size(); i++){
-            if(Objects.equals(tbd.get(i).getDateStatus(), "IMPOSSIBLE")){
-                continue;
-            }
-            if (Objects.equals(status, "IMPOSSIBLE")){
-                tbd.get(i).editTBDStatus(status);
-            }
-            else if (Objects.equals(status, "UNCERTAIN")){
-                if(Objects.equals(tbd.get(i).getDateStatus(), "POSSIBLE")){
-                    tbd.get(i).editTBDStatus(status);
-                }
-            }
+            tbd.get(i).editTBDStatus(status);
+//            if(Objects.equals(tbd.get(i).getDateStatus(), "IMPOSSIBLE")){
+//                continue;
+//            }
+//            if (Objects.equals(status, "IMPOSSIBLE")){
+//                tbd.get(i).editTBDStatus(status);
+//            }
+//            else if (Objects.equals(status, "UNCERTAIN")){
+//                if(Objects.equals(tbd.get(i).getDateStatus(), "POSSIBLE")){
+//                    tbd.get(i).editTBDStatus(status);
+//                }
+//            }
         }
     }
 
