@@ -16,7 +16,6 @@ import static javax.persistence.FetchType.*;
 
 @Entity
 @Getter
-@Table(name = "personal_ban_date")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
 public class PersonalBanDate extends BaseEntity {
@@ -28,23 +27,21 @@ public class PersonalBanDate extends BaseEntity {
     private LocalDate date;
 
     @Column(name="date_status", length = 10, columnDefinition = "varchar(10) default 'IMPOSSIBLE'")
-    private String dateStatus;
+    @Enumerated(EnumType.STRING)
+    private DateStatusType dateStatus;
 
-    public PersonalBanDate(Member member, LocalDate date){
-        super("ACTIVE");
-        this.member = member;
-        this.date = date;
-        this.dateStatus = "IMPOSSIBLE";
-    }
 
-    public PersonalBanDate(Member member, String date) {
+    public PersonalBanDate(Member member, String date, String dateStatus) {
         super("ACTIVE");
         this.member = member;
         this.date = LocalDate.parse(date);
-        this.dateStatus = "IMPOSSIBLE";
+        if (dateStatus==null){this.dateStatus = DateStatusType.valueOf("IMPOSSIBLE");}
+        else{
+            this.dateStatus = DateStatusType.valueOf(dateStatus);
+        }
     }
 
     public void editPBDStatus(String status) {
-        this.dateStatus = status;
+        this.dateStatus = DateStatusType.valueOf(status);
     }
 }

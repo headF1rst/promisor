@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.bandate.dao.PersonalBanDateReasonRepository;
@@ -19,9 +18,7 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -36,29 +33,32 @@ public class BanDateService {
     private final TeamBanDateRepository teamBanDateRepository;
 
     @Transactional
-    public RegisterPersonalBanDateResponse registerPersonal(String email, String date) {
+    public RegisterPersonalBanDateResponse registerPersonal(String email, String date, String status) {
         if (date == null){
             throw new DateEmptyException();
         }
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         if (pbd != null){
-            throw new RegisteredException();
+            pbd.editPBDStatus(status);
+            return new RegisterPersonalBanDateResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
+        }else{
+            PersonalBanDate new_pbd = new PersonalBanDate(member, date, status);
+            personalBanDateRepository.save(new_pbd);
+            return new RegisterPersonalBanDateResponse(member.getId(), new_pbd.getDate(),new_pbd.getDateStatus());
         }
-        PersonalBanDate new_pbd = new PersonalBanDate(member,date);
-        personalBanDateRepository.save(new_pbd);
-        return new RegisterPersonalBanDateResponse(new_pbd.getMember().getId(), new_pbd.getDate());
     }
 
-    public PersonalBanDate findById(Long id) {
-        Optional<PersonalBanDate> optionalPersonalBanDate = personalBanDateRepository.findById(id);
-        return optionalPersonalBanDate.orElseThrow();
+    private Member getMember(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
     }
 
+    private PersonalBanDate findById(Long id) {
+        return personalBanDateRepository.findById(id).orElseThrow();
+    }
 
-    public List<TeamBanDate> findByBanDateId(Long id) {
-        Optional<List<TeamBanDate>> optionalList = teamBanDateRepository.getByBanDateId(id);
-        return optionalList.orElseThrow();
+    private List<TeamBanDate> findByBanDateId(Long id) {
+        return teamBanDateRepository.getByBanDateId(id).orElseThrow();
     }
 
     @Transactional
@@ -69,33 +69,33 @@ public class BanDateService {
         if (status == null){
             throw new StatusEmptyException();
         }
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         pbd.editPBDStatus(status);
-        ModifyStatusResponse result = new ModifyStatusResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
-        return result;
+        return new ModifyStatusResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
     }
 
     public List<GetTeamCalendarResponse> getTeamCalendar(String email, Long teamId) {
         PageRequest pageRequest = PageRequest.of(0, 31, Sort.by(Sort.Direction.ASC, "date"));
         Slice<TeamBanDate> teamCalendarList = teamBanDateRepository.findAllByTeamId(teamId, pageRequest);
 
-        List<GetTeamCalendarResponse> result = teamCalendarList.stream()
+        return teamCalendarList.stream()
                 .map(p -> new GetTeamCalendarResponse(p.getId(), p.getMember().getId(), p.getMember().getName(),
                         p.getPersonalBanDate().getId(), p.getDate(), p.getDateStatus()))
                 .collect(toList());
-        return result;
     }
 
     @Transactional
     public RegisterPersonalReasonResponse registerPersonalReason(String email, String date, String reason) {
+
         if (date == null){
             throw new DateEmptyException();
         }
         if (reason == null){
             throw new ReasonEmptyException();
         }
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+
+        Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         PersonalBanDateReason pbd_reason = new PersonalBanDateReason(pbd, reason);
         personalBanDateReasonRepository.save(pbd_reason);
@@ -103,22 +103,23 @@ public class BanDateService {
     }
 
     public List<GetPersonalCalendarResponse> getPersonalCalendar(String email) {
+
         PageRequest pageRequest = PageRequest.of(0, 31, Sort.by(Sort.Direction.ASC, "date"));
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+        Member member = getMember(email);
         Slice<PersonalBanDate> PersonalCalenderList = personalBanDateRepository.findAllByMemberId(member.getId(), pageRequest);
-        List<GetPersonalCalendarResponse> result = PersonalCalenderList.stream().
+        return PersonalCalenderList.stream().
                 map(p -> new GetPersonalCalendarResponse(p.getId(), p.getMember().getId(), p.getDate(), p.getDateStatus()))
                 .collect(toList());
-        return result;
     }
 
-    public List<GetPersonalReasonResponse> getPersonalReason(String email) {
-        Member member = memberRepository.findByEmail(email).orElseThrow(MemberNotFoundException::new);
+    public GetPersonalReasonResponse getPersonalReason(String email, String date) {
+        if (date == null){
+            throw new DateEmptyException();
+        }
+        Member member = getMember(email);
         List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
-        List<GetPersonalReasonResponse> result = pbdrList.stream()
-                .map(p-> new GetPersonalReasonResponse(p.getId(), p.getPersonalBanDate().getId(),
-                        p.getPersonalBanDate().getDate(), p.getReason()))
-                .collect(Collectors.toList());
-        return result;
+        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        List<String> reasons = pbdrList.stream().map(p->p.getReason()).collect(Collectors.toList());
+        return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
     }
 }

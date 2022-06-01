@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class PromiseDateEditRequest {
 
-    Long promiseId;
-    String date;
+    private String name;
+    private String date;
+    private String location;
 }
