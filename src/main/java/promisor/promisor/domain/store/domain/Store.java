@@ -17,8 +17,7 @@ import static javax.persistence.FetchType.*;
 @Getter
 public class Store extends BaseEntity {
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "place_id")
+    @Embedded
     private Place place;
 
     @Column(length = 50)

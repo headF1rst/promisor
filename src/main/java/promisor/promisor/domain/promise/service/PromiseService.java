@@ -56,25 +56,36 @@ public class PromiseService {
         promiseRepository.save(promise);
     }
 
-    /*
-     *   그룹내 약속 수정 API
-     *   @Param: 이메일, 약속 Id, 약속 선정 날짜
-     *   @author: Sanha Ko
+    /**
+     * 그룹내 약속 수정 API
+     * @param email
+     * @param request
+     * @param promiseId
+     * @author Sanha Ko
      */
     @Transactional
-    public Long editPromise(String email, PromiseDateEditRequest request, Long promiseId) {
+    public void editPromise(String email, PromiseDateEditRequest request, Long promiseId) {
         Assert.notNull(email, "엑세스 토큰이 전달되지 않았습니다.");
         Assert.notNull(promiseId, "약속 Id가 존재하지 않습니다.");
 
         Promise promise = getPromiseById(promiseId);
-        promise.changePromiseContent(request.getName(), request.getDate(), request.getLocation());
-        return promise.getTeam().getId();
+
+        if (!request.getDate().isEmpty()) {
+            List<TeamMember> members = teamMemberRepository.findMembersByTeamId(promise.getTeam().getId());
+
+            for (TeamMember member : members) {
+                promiseRepository.updateBandDateOfMembers(member.getMember(), request.getDate(), request.getName());
+            }
+        }
+        promise.changePromiseContent(request.getName(), request.getLocation());
     }
 
-    /*
-     *   그룹내 약속 전체 조회 API
-     *   @Param: 이메일, 팀 아이디
-     *   @author: Sanha Ko
+    /**
+     * 그룹내 약속 전체 조회 API
+     * @param email
+     * @param teamId
+     * @return
+     * @author Sanha Ko
      */
     public List<PromiseResponse> searchPromise(String email, Long teamId) {
 
@@ -85,17 +96,10 @@ public class PromiseService {
         PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "promiseName"));
         Slice<Promise> promiseList = promiseRepository.findAllByTeamId(teamId, pageRequest);
 
-        List<PromiseResponse> result = promiseList.stream()
+        return promiseList.stream()
                 .map(p -> new PromiseResponse(p.getId(), p.getPromiseName(),
                         p.getDate(), p.getPromiseLocation()))
                 .collect(toList());
-        return result;
-    }
-
-    @Transactional
-    public void updateToGroupMembers(String email, PromiseDateEditRequest request, Long promiseId, Long teamId) {
-        List<TeamMember> members = teamMemberRepository.findMembersByTeamId(teamId);
-
     }
 
     private Member getMember(String email) {

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  */
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED) //무분별한 객체 생성에 대해 한 번 더 체크
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Person implements UserDetails {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -41,8 +41,6 @@ public class Member extends Person implements UserDetails {
 
     @Lob
     private String imageUrl;
-
-    private int mannerPoint;
 
     @Column(length = 100)
     private String location;

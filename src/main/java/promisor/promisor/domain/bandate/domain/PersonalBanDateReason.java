@@ -11,7 +11,6 @@ import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
-@Table(name = "personal_ban_date_reason")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PersonalBanDateReason extends BaseEntity {
 
