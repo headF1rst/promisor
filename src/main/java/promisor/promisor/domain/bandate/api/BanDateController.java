@@ -50,7 +50,7 @@ public class BanDateController {
     @Operation(summary = "register personal reason", description = "사적인 이유 등록")
     @PostMapping("/personal/reason")
     public ResponseEntity<RegisterPersonalReasonResponse> registerPersonalReason(@JwtAuth String email,
-                                                       @RequestBody RegisterReasonDto registerReasonDto){
+                                                       @RequestBody @Valid RegisterReasonDto registerReasonDto){
         RegisterPersonalReasonResponse response = banDateService.registerPersonalReason(email, registerReasonDto.getDate(),
                 registerReasonDto.getReason());
         return ResponseEntity.ok().body(response);
