@@ -22,4 +22,6 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             " join fetch tm.member m" +
             " where m.id = :id")
     List<Team> findGroupInfoWithMembers(@Param("id") Long id);
+
+    List<Team> findAllByMember(Member member);
 }
