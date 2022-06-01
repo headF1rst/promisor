@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import promisor.promisor.domain.bandate.dao.PersonalBanDateRepository;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
@@ -24,6 +25,7 @@ import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.promise.exception.PromiseIdNotFound;
 import promisor.promisor.domain.team.exception.TeamNotFoundForMember;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -38,6 +40,8 @@ public class PromiseService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
+
+    private final PersonalBanDateRepository personalBanDateRepository;
 
     /*
      *   약속 생성 API
@@ -73,10 +77,12 @@ public class PromiseService {
         if (!request.getDate().isEmpty()) {
             List<TeamMember> members = teamMemberRepository.findMembersByTeamId(promise.getTeam().getId());
 
-            for (TeamMember member : members) {
-                promiseRepository.updateBandDateOfMembers(member.getMember(), request.getDate(), request.getName());
+            for (TeamMember teamMember : members) {
+                promiseRepository.updateBandDateOfMembers(request.getName(),
+                        teamMember.getMember(), promise.getDate());
             }
         }
+        promise.changePromiseDate(request.getDate());
         promise.changePromiseContent(request.getName(), request.getLocation());
     }
 

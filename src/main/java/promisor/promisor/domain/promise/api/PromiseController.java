@@ -1,5 +1,6 @@
 package promisor.promisor.domain.promise.api;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class PromiseController {
 
     private final PromiseService promiseService;
 
+    @Operation(summary = "Create Promise", description = "약속 생성")
     @PostMapping("/{id}")
     public ResponseEntity<Void> createPromise(@JwtAuth final String email,
                                               @Valid @RequestBody final PromiseCreateRequest request,
@@ -27,6 +29,7 @@ public class PromiseController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Update Promise", description = "약속 수정")
     @PatchMapping("/{id}")
     public ResponseEntity<Void> editPromise(@JwtAuth final String email,
                                             @RequestBody final PromiseDateEditRequest request,
@@ -35,6 +38,7 @@ public class PromiseController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Find Promise List", description = "약속 전체 조회")
     @GetMapping("/list/{id}")
     public ResponseEntity<List<PromiseResponse>> searchPromiseList(@JwtAuth final String email,
                                                                    @PathVariable("id") final Long teamId) {
@@ -42,6 +46,7 @@ public class PromiseController {
         return ResponseEntity.ok().body(response);
     }
 
+    @Operation(summary = "Find Promise", description = "약속 조회")
     @GetMapping("/{id}")
     public ResponseEntity<PromiseResponse> searchPromise(@JwtAuth final String email,
                                                          @PathVariable("id") final Long promiseId) {
