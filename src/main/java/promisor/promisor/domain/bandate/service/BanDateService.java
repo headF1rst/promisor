@@ -162,7 +162,11 @@ public class BanDateService {
         List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         List<String> reasons = pbdrList.stream().map(p->p.getReason()).collect(Collectors.toList());
-        return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
+        if (pbd == null){
+            return new GetPersonalReasonResponse("POSSIBLE");
+        }else{
+            return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
+        }
     }
 
     public List<GetTeamCalendarStatusResponse> getTeamCalendarStatus(String email, Long teamId, String yearMonth) {
