@@ -6,7 +6,6 @@ import BasedTemplate from "../template/BasedTemplate";
 import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import { setCookie } from "../Cookie";
-import api from "../auth/api";
 import axios from "axios";
 interface ILoginForm {
   name: string;
@@ -21,7 +20,7 @@ function Login() {
   const loginMatch = useMatch("/login");
 
   const api = axios.create({
-    baseURL: "https://promisor.site",
+    baseURL: "https://server.promisor.site",
   });
   const onLoginValid = ({ email, password }: ILoginForm) => {
     const requestBody = { email, password };
@@ -33,11 +32,9 @@ function Login() {
         } = res;
         setCookie("accessToken", accessToken);
         localStorage.setItem("refreshTokenId", refreshTokenId);
-        console.log(res);
-        // navigate("/");
+        navigate("/");
       })
       .catch((err) => {
-        console.log(err);
         alert(err.response.data.message);
       });
   };
