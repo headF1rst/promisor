@@ -1,27 +1,29 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
+import { useQuery } from "react-query";
+import { useParams } from "react-router";
 import styled from "styled-components";
-import { Profile, ProfileImg } from "../atoms/Profile";
-import { Input } from "../styles/Input";
+import api from "../auth/api";
 import { Overlay } from "../styles/Modal";
-interface IBanData {
-  id: number;
-  member_id: number;
-  member_name: string;
-  member_img: string;
-  promise_id: number;
-  date: string;
-  reason: string;
-  date_status: string;
-}
+import { dateFormatter } from "../utils/dateFormatter";
+
 interface IPromiseDateModal {
+  id: number;
+  memberId: number;
+  name: string;
+  personalBanDateId: number;
+  date: string;
+  dateStatus: string;
+}
+
+interface IProps {
   state: { dateModal: boolean; setDateModal: Function; currentDate: string };
-  data: IBanData[];
 }
 const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 
-function PromiseDateModal({ state, data }: IPromiseDateModal) {
+function PromiseDateModal({ state }: IProps) {
   const { dateModal, setDateModal, currentDate } = state;
+  const params = useParams();
   const onChooseClick = () => {};
   const getDayFromCurrentDate = () => {
     const strDate =
@@ -33,11 +35,28 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
     const day = new Date(strDate).getDay();
     return DAYS_OF_WEEK[day];
   };
+
+  const { data: teamModalData } = useQuery<IPromiseDateModal[]>(
+    "teamModalData",
+    async () => {
+      const { data } = await api.get(
+        `/bandate/team/${params.id}/detail/${dateFormatter(currentDate)}`
+      );
+      return data;
+    }
+  );
+
   const getPeople = (color: string) => {
+    if (!teamModalData) {
+      return;
+    }
     let peopleStr = "";
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].date === currentDate && data[i].date_status === color) {
-        peopleStr += data[i].member_name + ", ";
+    for (let i = 0; i < teamModalData.length; i++) {
+      if (
+        teamModalData[i].date === dateFormatter(currentDate) &&
+        teamModalData[i].dateStatus === color
+      ) {
+        peopleStr += teamModalData[i].name + ", ";
       }
     }
     if (peopleStr) {
@@ -74,18 +93,19 @@ function PromiseDateModal({ state, data }: IPromiseDateModal) {
                 "요일"}
             </span>
             <List>
-              {["RED", "YELLOW", "GREEN"].map((value, idx) => (
-                <div
-                  key={idx}
-                  style={{
-                    backgroundColor: "transparent",
-                  }}
-                >
-                  {getPeople(value) && (
-                    <RowElement>{getPeople(value)}</RowElement>
-                  )}
-                </div>
-              ))}
+              {teamModalData &&
+                ["IMPOSSIBLE", "UNCERTAIN", "POSSIBLE"].map((value, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    {getPeople(value) && (
+                      <RowElement>{getPeople(value)}</RowElement>
+                    )}
+                  </div>
+                ))}
             </List>
 
             <ChooseButton onClick={onChooseClick}>
@@ -157,9 +177,9 @@ const Flag = styled.div<{ color: string }>`
   width: 0.3em;
   height: 2em;
   background-color: ${(p) =>
-    p.color === "RED"
+    p.color === "IMPOSSIBLE"
       ? p.theme.flagRed
-      : p.color === "YELLOW"
+      : p.color === "UNCERTAIN"
       ? p.theme.flagYellow
       : p.theme.flagGreen};
   margin-right: 0.5em;
