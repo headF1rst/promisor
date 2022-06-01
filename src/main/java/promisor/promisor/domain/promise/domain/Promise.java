@@ -25,8 +25,7 @@ public class Promise extends BaseEntity {
     @JoinColumn(name = "team_id")
     private Team team;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "place_id")
+    @Embedded
     private Place place;
 
     @Column(length = 50)
@@ -52,15 +51,17 @@ public class Promise extends BaseEntity {
         return new Promise(status, team, promiseName);
     }
 
-    public void changePromiseContent(String promiseName, String date, String location){
+    public void changePromiseContent(String promiseName, String location){
         if (promiseName != null) {
             this.promiseName = promiseName;
         }
-        if (date != null) {
-            this.date = LocalDateTime.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        }
+
         if (location != null) {
-            this.place.changeLocation(location);
+            if (this.place == null) {
+                this.place = Place.from(location);
+            } else {
+                this.place.changeLocation(location);
+            }
         }
     }
 
@@ -68,6 +69,6 @@ public class Promise extends BaseEntity {
         if (this.place == null) {
             return null;
         }
-        return place.getLocation();
+        return place.getName();
     }
 }

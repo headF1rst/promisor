@@ -13,6 +13,11 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface PersonalBanDateRepository extends JpaRepository<PersonalBanDate, Long> {
+
+    /**
+     *
+     * 인자로 주어진 멤버와 일시에 해당하는 personalbandate 객체를 가져온다.
+     */
     @Transactional
     @Query("select pbd from PersonalBanDate pbd " +
             "join fetch pbd.member where pbd.member = :member and " +

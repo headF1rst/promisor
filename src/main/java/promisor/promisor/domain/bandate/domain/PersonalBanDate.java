@@ -35,8 +35,10 @@ public class PersonalBanDate extends BaseEntity {
         super("ACTIVE");
         this.member = member;
         this.date = LocalDate.parse(date);
-        if (dateStatus==null){this.dateStatus = DateStatusType.valueOf("IMPOSSIBLE");}
-        else{
+        if (dateStatus==null) {
+            this.dateStatus = DateStatusType.valueOf("IMPOSSIBLE");
+        }
+        else {
             this.dateStatus = DateStatusType.valueOf(dateStatus);
         }
     }

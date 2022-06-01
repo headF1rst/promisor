@@ -31,8 +31,6 @@ public class TeamMember extends BaseEntity {
 
     private float longitude;
 
-    private char arrived;
-
     public TeamMember(Member member, Team team) {
         this.member = member;
         this.team = team;

@@ -32,8 +32,7 @@ public class Team extends BaseEntity {
     @Lob
     private String imageUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id")
+    @Embedded
     private Place place;
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)

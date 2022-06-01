@@ -31,8 +31,7 @@ public class PromiseController {
     public ResponseEntity<Void> editPromise(@JwtAuth final String email,
                                             @RequestBody final PromiseDateEditRequest request,
                                             @PathVariable("id") final Long promiseId) {
-        Long teamId = promiseService.editPromise(email, request, promiseId);
-        promiseService.updateToGroupMembers(email, request, promiseId, teamId);
+        promiseService.editPromise(email, request, promiseId);
         return ResponseEntity.ok().build();
     }
 
