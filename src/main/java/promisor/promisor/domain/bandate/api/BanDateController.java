@@ -37,7 +37,7 @@ public class BanDateController {
     }
 
     @Operation(summary = "get team calendar detail", description = "팀 캘린더 날짜 별 세부 조회")
-    @GetMapping("/team/{id}/{date}")
+    @GetMapping("/team/{id}/detail/{date}")
     public ResponseEntity<List<GetTeamCalendarResponse>> getTeamCalendar(@JwtAuth String email,
                                                                          @PathVariable("id") Long teamId,
                                                                          @PathVariable("date") String date) {
@@ -66,6 +66,15 @@ public class BanDateController {
     public ResponseEntity<GetPersonalReasonResponse> getPersonalReason(@JwtAuth String email,
                                                                              @PathVariable("date") String date) {
         GetPersonalReasonResponse response = banDateService.getPersonalReason(email, date);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @Operation(summary = "get team calendar status", description = "팀 캘린더의 전체 상태 조회")
+    @GetMapping("/team/{id}/{yearMonth}")
+    public ResponseEntity<List<GetTeamCalendarStatusResponse>> getTeamCalendarStatus(@JwtAuth String email,
+                                                                               @PathVariable("id") Long id,
+                                                                               @PathVariable("yearMonth") String yearMonth) {
+        List<GetTeamCalendarStatusResponse> response = banDateService.getTeamCalendarStatus(email, id, yearMonth);
         return ResponseEntity.ok().body(response);
     }
 }

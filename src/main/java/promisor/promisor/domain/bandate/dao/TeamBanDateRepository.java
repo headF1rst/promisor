@@ -26,4 +26,8 @@ public interface TeamBanDateRepository extends JpaRepository<TeamBanDate, Long> 
     @Transactional(readOnly = true)
     @Query("select tbd from TeamBanDate tbd where tbd.team.id=:id and tbd.date=:date")
     Slice<TeamBanDate> findAllByTeamIdAndDate(Long id, LocalDate date, Pageable pageable);
+
+    @Transactional(readOnly = true)
+    @Query("select tbd from TeamBanDate tbd where tbd.team.id=:id and tbd.date=:date")
+    List<TeamBanDate> findAllByTeamIdAndDates(Long id, LocalDate date);
 }
