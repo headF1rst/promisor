@@ -1,9 +1,9 @@
 package promisor.promisor.domain.bandate.dto;
 
 import lombok.Data;
+import promisor.promisor.domain.bandate.domain.DateStatusType;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Data
 public class GetTeamCalendarResponse {
@@ -15,12 +15,12 @@ public class GetTeamCalendarResponse {
     private LocalDate date;
     private String dateStatus;
 
-    public GetTeamCalendarResponse(Long id, Long memberId, String name, Long personalBanDateId, LocalDate date, String dateStatus) {
+    public GetTeamCalendarResponse(Long id, Long memberId, String name, Long personalBanDateId, LocalDate date, DateStatusType dateStatus) {
         this.id = id;
         this.memberId = memberId;
         this.name = name;
         this.personalBanDateId = personalBanDateId;
         this.date = date;
-        this.dateStatus = dateStatus;
+        this.dateStatus = String.valueOf(dateStatus);
     }
 }

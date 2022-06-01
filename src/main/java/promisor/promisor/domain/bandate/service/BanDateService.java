@@ -1,5 +1,6 @@
 package promisor.promisor.domain.bandate.service;
 
+import com.fasterxml.jackson.databind.SequenceWriter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -17,10 +18,14 @@ import promisor.promisor.domain.bandate.exception.*;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
+import promisor.promisor.domain.team.dao.TeamRepository;
+import promisor.promisor.domain.team.domain.Team;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
@@ -33,6 +38,7 @@ public class BanDateService {
     private final PersonalBanDateReasonRepository personalBanDateReasonRepository;
     private final MemberRepository memberRepository;
     private final TeamBanDateRepository teamBanDateRepository;
+    private final TeamRepository teamRepository;
 
     @Transactional
     public RegisterPersonalBanDateResponse registerPersonal(String email, String date, String status) {
@@ -41,13 +47,44 @@ public class BanDateService {
         }
         Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        List<TeamBanDate> tbd = teamBanDateRepository.findAllByMemberAndDate(member, date);
+        List<Team> teams = teamRepository.findAllByMember(member);
         if (pbd != null){
             pbd.editPBDStatus(status);
-            return new RegisterPersonalBanDateResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
+            return getRegisterPersonalBanDateResponse(date, status, member, pbd, tbd, teams);
         }else{
             PersonalBanDate new_pbd = new PersonalBanDate(member, date, status);
             personalBanDateRepository.save(new_pbd);
-            return new RegisterPersonalBanDateResponse(member.getId(), new_pbd.getDate(),new_pbd.getDateStatus());
+            return getRegisterPersonalBanDateResponse(date, status, member, new_pbd, tbd, teams);
+        }
+    }
+
+    private RegisterPersonalBanDateResponse getRegisterPersonalBanDateResponse(String date, String status, Member member, PersonalBanDate pbd, List<TeamBanDate> tbd, List<Team> teams) {
+        if (tbd.isEmpty()){
+            for(int i=0; i<teams.size(); i++){
+                TeamBanDate new_tbd = new TeamBanDate(teams.get(i), member, pbd, date, status);
+                System.out.println(new_tbd);
+                teamBanDateRepository.save(new_tbd);
+            }
+        }else{
+            reflectToTeam(tbd,status);
+        }
+        return new RegisterPersonalBanDateResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
+    }
+
+    private void reflectToTeam(List<TeamBanDate> tbd, String status){
+        for(int i=0; i<tbd.size(); i++){
+            if(Objects.equals(tbd.get(i).getDateStatus(), "IMPOSSIBLE")){
+                continue;
+            }
+            if (Objects.equals(status, "IMPOSSIBLE")){
+                tbd.get(i).editTBDStatus(status);
+            }
+            else if (Objects.equals(status, "UNCERTAIN")){
+                if(Objects.equals(tbd.get(i).getDateStatus(), "POSSIBLE")){
+                    tbd.get(i).editTBDStatus(status);
+                }
+            }
         }
     }
 

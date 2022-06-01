@@ -34,10 +34,19 @@ public class TeamBanDate extends BaseEntity {
 
     private LocalDate date;
 
-    @Column(length = 10)
-    private String dateStatus;
+    @Column(name="date_status", length = 10, columnDefinition = "varchar(10) default 'IMPOSSIBLE'")
+    @Enumerated(EnumType.STRING)
+    private DateStatusType dateStatus;
 
+    public TeamBanDate(Team team, Member member, PersonalBanDate pbd, String date, String status) {
+        super("ACTIVE");
+        this.team = team;
+        this.member = member;
+        this.personalBanDate = pbd;
+        this.date = LocalDate.parse(date);
+        this.dateStatus = DateStatusType.valueOf(status);
+    }
     public void editTBDStatus(String status) {
-        this.dateStatus=status;
+        this.dateStatus = DateStatusType.valueOf(status);
     }
 }
