@@ -28,13 +28,15 @@ function Login() {
       .post("/members/login", requestBody)
       .then((res) => {
         const {
-          data: { accessToken, refreshTokenId },
+          data: { accessToken, refreshTokenId, tokenExpireTime },
         } = res;
         setCookie("accessToken", accessToken);
         localStorage.setItem("refreshTokenId", refreshTokenId);
+        localStorage.setItem("tokenExpireTime", String(tokenExpireTime * 1000));
         navigate("/");
       })
       .catch((err) => {
+        console.log(err);
         alert(err.response.data.message);
       });
   };

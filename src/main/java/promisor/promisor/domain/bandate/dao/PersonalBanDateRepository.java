@@ -24,7 +24,7 @@ public interface PersonalBanDateRepository extends JpaRepository<PersonalBanDate
     @Query("select pbd from PersonalBanDate pbd " +
             "join fetch pbd.member where pbd.member = :member and " +
             "function('date_format',pbd.date,'%Y-%m-%d') = function('date_format', :date, '%Y-%m-%d')")
-    PersonalBanDate getPersonalBanDateByMemberAndDate(@Param("member") Member member, @Param("date") String date);
+    PersonalBanDate findPersonalBanDateByMemberAndDate(@Param("member") Member member, @Param("date") String date);
 
     @Transactional(readOnly = true)
     Slice<PersonalBanDate> findAllByMemberId(Long id, Pageable pageable);

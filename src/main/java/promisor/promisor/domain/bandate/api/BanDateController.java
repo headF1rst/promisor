@@ -7,9 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import promisor.promisor.domain.bandate.dto.*;
+import promisor.promisor.domain.bandate.exception.DateEmptyException;
 import promisor.promisor.domain.bandate.service.BanDateService;
 import promisor.promisor.global.auth.JwtAuth;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,7 +33,7 @@ public class BanDateController {
     @Operation(summary = "edit personal ban date", description = "개인 캘린더 상태 변경")
     @PatchMapping
     public ResponseEntity<ModifyStatusResponse> editPersonalBanDateStatus(@JwtAuth String email,
-                                                          @RequestBody ModifyStatusDto request) {
+                                                                          @RequestBody @Valid ModifyStatusDto request) {
         ModifyStatusResponse response = banDateService.editPersonalBanDateStatus(email, request.getDate(), request.getStatus());
         return ResponseEntity.ok().body(response);
     }
@@ -48,7 +50,7 @@ public class BanDateController {
     @Operation(summary = "register personal reason", description = "사적인 이유 등록")
     @PostMapping("/personal/reason")
     public ResponseEntity<RegisterPersonalReasonResponse> registerPersonalReason(@JwtAuth String email,
-                                                       @RequestBody RegisterReasonDto registerReasonDto){
+                                                       @RequestBody @Valid RegisterReasonDto registerReasonDto){
         RegisterPersonalReasonResponse response = banDateService.registerPersonalReason(email, registerReasonDto.getDate(),
                 registerReasonDto.getReason());
         return ResponseEntity.ok().body(response);
@@ -65,6 +67,7 @@ public class BanDateController {
     @GetMapping("/personal/reason/{date}")
     public ResponseEntity<GetPersonalReasonResponse> getPersonalReason(@JwtAuth String email,
                                                                              @PathVariable("date") String date) {
+        if (date == null){throw new DateEmptyException();}
         GetPersonalReasonResponse response = banDateService.getPersonalReason(email, date);
         return ResponseEntity.ok().body(response);
     }

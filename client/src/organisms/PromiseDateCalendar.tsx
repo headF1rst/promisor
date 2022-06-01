@@ -4,33 +4,13 @@ import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import PromiseDateModal from "./PromiseDateModal";
 import { useQuery } from "react-query";
 import api from "../auth/api";
-import { useRecoilValue } from "recoil";
-import { selectedGroupState } from "../states/selectedGroup";
+import { useParams } from "react-router";
+import { dateFormatter } from "../utils/dateFormatter";
 
 interface ITeamCalender {
-  id: number;
-  memberId: number;
-  name: string;
-  personalBanDateId: number;
   date: string;
   dateStatus: string;
 }
-
-const TEST_DATA = [
-  {
-    id: 0,
-    member_id: 0,
-    member_name: "김채은",
-    member_img:
-      "https://i.pinimg.com/474x/6e/a6/77/6ea6778a68920e993c33405a79a41ae5.jpg",
-
-    promise_id: 0,
-    date: "20220516",
-    reason: "",
-
-    date_status: "RED",
-  },
-];
 
 const RED = "RED";
 const YELLOW = "YELLOW";
@@ -45,11 +25,13 @@ function PromiseDateCalendar() {
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [weeks, setWeeks] = useState<any[][]>([]);
   const [currentDate, setCurrentDate] = useState("");
-  const selectedGroup = useRecoilValue(selectedGroupState);
+  const params = useParams();
   const { data: teamCalendarData } = useQuery<ITeamCalender[]>(
     "teamCalendarData",
     async () => {
-      const { data } = await api.get(`/bandate/team/${selectedGroup.id}`);
+      const { data } = await api.get(
+        `/bandate/team/${params.id}/${dateFormatter(currentDate).slice(0, 7)}`
+      );
       return data;
     }
   );
@@ -61,7 +43,7 @@ function PromiseDateCalendar() {
 
     for (let i = 0; i < teamCalendarData.length; i++) {
       const colorObj = {
-        id: teamCalendarData[i].id,
+        id: teamCalendarData[i].date,
         color: teamCalendarData[i].dateStatus,
       };
       newColors.push(colorObj);
@@ -88,11 +70,11 @@ function PromiseDateCalendar() {
             String(month).padStart(2, "0") +
             String(date).padStart(2, "0");
           for (let i = 0; i < teamCalendarData.length; i++) {
-            if (teamCalendarData[i].date === id) {
-              if (teamCalendarData[i].dateStatus === "RED") {
+            if (teamCalendarData[i].date === dateFormatter(id)) {
+              if (teamCalendarData[i].dateStatus === "IMPOSSIBLE") {
                 thisColor = "RED";
                 break;
-              } else if (teamCalendarData[i].dateStatus === "YELLOW") {
+              } else if (teamCalendarData[i].dateStatus === "UNCERTAIN") {
                 thisColor = "YELLOW";
               }
             }
@@ -181,10 +163,7 @@ function PromiseDateCalendar() {
         </Button>
       </Buttons>
       {dateModal && (
-        <PromiseDateModal
-          state={{ dateModal, setDateModal, currentDate }}
-          data={teamCalendarData}
-        />
+        <PromiseDateModal state={{ dateModal, setDateModal, currentDate }} />
       )}
     </Container>
   );
