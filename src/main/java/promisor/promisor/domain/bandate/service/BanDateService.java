@@ -51,7 +51,7 @@ public class BanDateService {
             throw new DateEmptyException();
         }
         Member member = getMember(email);
-        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        PersonalBanDate pbd = personalBanDateRepository.findPersonalBanDateByMemberAndDate(member, date);
         List<TeamBanDate> tbd = teamBanDateRepository.findAllByMemberAndDate(member, date);
         List<Team> teams = teamRepository.findAllByMember(member);
         if (pbd != null){
@@ -115,7 +115,7 @@ public class BanDateService {
             throw new StatusEmptyException();
         }
         Member member = getMember(email);
-        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        PersonalBanDate pbd = personalBanDateRepository.findPersonalBanDateByMemberAndDate(member, date);
         if (pbd == null){
             throw new WrongAccess();
         }
@@ -151,7 +151,7 @@ public class BanDateService {
         }
 
         Member member = getMember(email);
-        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        PersonalBanDate pbd = personalBanDateRepository.findPersonalBanDateByMemberAndDate(member, date);
         PersonalBanDateReason pbd_reason = new PersonalBanDateReason(pbd, reason);
         personalBanDateReasonRepository.save(pbd_reason);
         return new RegisterPersonalReasonResponse(pbd_reason.getId(), pbd_reason.getPersonalBanDate().getId(), pbd_reason.getReason());
@@ -168,16 +168,13 @@ public class BanDateService {
     }
 
     public GetPersonalReasonResponse getPersonalReason(String email, String date) {
-        if (date == null){
-            throw new DateEmptyException();
-        }
         Member member = getMember(email);
-        List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
-        PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
-        List<String> reasons = pbdrList.stream().map(p->p.getReason()).collect(Collectors.toList());
+        PersonalBanDate pbd = personalBanDateRepository.findPersonalBanDateByMemberAndDate(member, date);
         if (pbd == null){
             return new GetPersonalReasonResponse("POSSIBLE");
         }else{
+            List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByPBD(pbd);
+            List<String> reasons = pbdrList.stream().map(p->p.getReason()).collect(Collectors.toList());
             return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
         }
     }

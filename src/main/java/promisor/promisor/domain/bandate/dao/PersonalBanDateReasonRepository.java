@@ -4,7 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+import promisor.promisor.domain.bandate.domain.PersonalBanDate;
 import promisor.promisor.domain.bandate.domain.PersonalBanDateReason;
+import promisor.promisor.domain.member.domain.Member;
 
 import java.util.List;
 
@@ -16,4 +18,7 @@ public interface PersonalBanDateReasonRepository extends JpaRepository<PersonalB
             "where pbd.member_id = :memberId",
     nativeQuery = true)
     List<PersonalBanDateReason> findAllByMember(@Param("memberId") Long id);
+
+    @Query("select pbdr from PersonalBanDateReason pbdr join pbdr.personalBanDate pbd where pbd = :pbd")
+    List<PersonalBanDateReason> findAllByPBD(@Param("pbd") PersonalBanDate pbd);
 }
