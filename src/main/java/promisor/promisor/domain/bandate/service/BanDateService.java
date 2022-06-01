@@ -24,6 +24,7 @@ import promisor.promisor.domain.team.domain.Team;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -161,5 +162,44 @@ public class BanDateService {
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         List<String> reasons = pbdrList.stream().map(p->p.getReason()).collect(Collectors.toList());
         return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
+    }
+
+    public List<GetTeamCalendarStatusResponse> getTeamCalendarStatus(String email, Long teamId, String yearMonth) {
+        List<GetTeamCalendarStatusResponse> result = new ArrayList<>();
+        String impossible = "IMPOSSIBLE";
+        String uncertain = "UNCERTAIN";
+        Long year = Long.parseLong(yearMonth.substring(0, 4));
+        Long month = Long.parseLong(yearMonth.substring(5));
+        int daySize = 31;
+        if (month == 2) {
+            daySize = (year%4==0&&year%100!=0)||year%400==0?29:28;
+        }
+        else if (month%2==0) {
+            daySize = 30;
+        }
+        System.out.println(daySize);
+        for (int day=1; day<=daySize; day++) {
+            String dayString = null;
+            if (day<10) {
+                dayString = "0"+String.valueOf(day);
+            }
+            else {
+                dayString = String.valueOf(day);
+            }
+            LocalDate date = LocalDate.parse(yearMonth + "-" + dayString, DateTimeFormatter.ISO_DATE);
+            List<TeamBanDate> tbdList = teamBanDateRepository.findAllByTeamIdAndDates(teamId, date);
+            String check = "POSSIBLE";
+            for (int i = 0; i < tbdList.size(); i++) {
+                if (tbdList.get(i).getDateStatus().equals(impossible)) {
+                    check = "IMPOSSIBLE";
+                    break;
+                }
+                if (tbdList.get(i).getDateStatus().equals(uncertain)) {
+                    check = "UNCERTAIN";
+                }
+            }
+            result.add(new GetTeamCalendarStatusResponse(date, check));
+        }
+        return result;
     }
 }

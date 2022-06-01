@@ -27,6 +27,9 @@ public interface TeamBanDateRepository extends JpaRepository<TeamBanDate, Long> 
     @Query("select tbd from TeamBanDate tbd where tbd.team.id=:id and tbd.date=:date")
     Slice<TeamBanDate> findAllByTeamIdAndDate(Long id, LocalDate date, Pageable pageable);
 
+    @Query("select tbd from TeamBanDate tbd where tbd.team.id=:id and tbd.date=:date")
+    List<TeamBanDate> findAllByTeamIdAndDates(Long id, LocalDate date);
+  
     @Query("select tbd from TeamBanDate tbd " +
             "join fetch tbd.member where tbd.member = :member and " +
             "function('date_format',tbd.date,'%Y-%m-%d') = function('date_format', :date, '%Y-%m-%d')")
