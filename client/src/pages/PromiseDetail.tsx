@@ -12,21 +12,31 @@ import PromiseDate from "./PromiseDate";
 import PromiseLocation from "./PromiseLocation";
 import { useQuery } from "react-query";
 import api from "../auth/api";
-
+interface IPromiseDetail {
+  id: number;
+  name: string;
+  time: string;
+  location: string;
+}
 function PromiseDetail() {
-  const titleRef = useRef();
+  const titleRef = useRef<HTMLInputElement>();
   const selectedGroup = useRecoilValue(selectedGroupState);
   const navigate = useNavigate();
   const params = useParams();
   const dateMatch = useMatch("/team/:id/promise/:pid/date");
 
-  // const { data: promiseDetailData } = useQuery(
-  //   "promiseDetailData",
-  //   async () => {
-  //     const { data } = await api.get(`/promises/${params.pid}`);
-  //     return data;
-  //   }
-  // );
+  const { data: promiseDetailData } = useQuery<IPromiseDetail>(
+    "promiseDetailData",
+    async () => {
+      const { data } = await api.get(`/promises/${params.pid}`);
+      return data;
+    },
+    {
+      onSuccess: (data) => {
+        titleRef.current.value = data.name;
+      },
+    }
+  );
   const onNavClick = (state: string) => {
     if (state === "place") {
       navigate(`/team/${params.id}/promise/${params.pid}/${state}`, {
@@ -74,7 +84,11 @@ function PromiseDetail() {
             장소
           </NavItem>
         </NavBar>
-        {dateMatch ? <PromiseDate /> : <PromiseLocation />}
+        {dateMatch ? (
+          <PromiseDate date={promiseDetailData.time} />
+        ) : (
+          <PromiseLocation location={promiseDetailData.location} />
+        )}
       </>
     );
   };
