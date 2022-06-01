@@ -35,10 +35,17 @@ public class PromiseController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/list/{id}")
     public ResponseEntity<List<PromiseResponse>> searchPromiseList(@JwtAuth final String email,
                                                                    @PathVariable("id") final Long teamId) {
-        List<PromiseResponse> response = promiseService.searchPromise(email, teamId);
+        List<PromiseResponse> response = promiseService.searchPromises(email, teamId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PromiseResponse> searchPromise(@JwtAuth final String email,
+                                                         @PathVariable("id") final Long promiseId) {
+        PromiseResponse response = promiseService.searchPromise(email, promiseId);
         return ResponseEntity.ok().body(response);
     }
 }

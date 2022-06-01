@@ -1,7 +1,6 @@
 package promisor.promisor.domain.promise.dto;
 
 import lombok.Data;
-import promisor.promisor.domain.promise.domain.Promise;
 
 import java.time.LocalDateTime;
 
