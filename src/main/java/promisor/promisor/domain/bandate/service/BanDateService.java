@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.bandate.dao.PersonalBanDateReasonRepository;
 import promisor.promisor.domain.bandate.dao.PersonalBanDateRepository;
 import promisor.promisor.domain.bandate.dao.TeamBanDateRepository;
+import promisor.promisor.domain.bandate.domain.DateStatusType;
 import promisor.promisor.domain.bandate.domain.PersonalBanDate;
 import promisor.promisor.domain.bandate.domain.PersonalBanDateReason;
 import promisor.promisor.domain.bandate.domain.TeamBanDate;
@@ -183,8 +184,8 @@ public class BanDateService {
 
     public List<GetTeamCalendarStatusResponse> getTeamCalendarStatus(String email, Long teamId, String yearMonth) {
         List<GetTeamCalendarStatusResponse> result = new ArrayList<>();
-        String impossible = "IMPOSSIBLE";
-        String uncertain = "UNCERTAIN";
+        DateStatusType impossible = DateStatusType.valueOf("IMPOSSIBLE");
+        DateStatusType uncertain = DateStatusType.valueOf("UNCERTAIN");
         Integer year = Integer.parseInt(yearMonth.substring(0, 4));
         Integer month = Integer.parseInt(yearMonth.substring(5));
         List<Integer> monthSize = Arrays.asList(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
@@ -200,7 +201,10 @@ public class BanDateService {
             LocalDate date = LocalDate.parse(yearMonth + "-" + dayString, DateTimeFormatter.ISO_DATE);
             List<TeamBanDate> tbdList = teamBanDateRepository.findAllByTeamIdAndDates(teamId, date);
             String check = "POSSIBLE";
+            System.out.println(date);
+            System.out.println(tbdList.size());
             for (int i = 0; i < tbdList.size(); i++) {
+                System.out.println(tbdList.get(i).getDateStatus());
                 if (tbdList.get(i).getDateStatus().equals(impossible)) {
                     check = "IMPOSSIBLE";
                     break;
