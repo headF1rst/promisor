@@ -10,6 +10,7 @@ import promisor.promisor.domain.bandate.dto.*;
 import promisor.promisor.domain.bandate.service.BanDateService;
 import promisor.promisor.global.auth.JwtAuth;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class BanDateController {
     @Operation(summary = "edit personal ban date", description = "개인 캘린더 상태 변경")
     @PatchMapping
     public ResponseEntity<ModifyStatusResponse> editPersonalBanDateStatus(@JwtAuth String email,
-                                                          @RequestBody ModifyStatusDto request) {
+                                                                          @RequestBody @Valid ModifyStatusDto request) {
         ModifyStatusResponse response = banDateService.editPersonalBanDateStatus(email, request.getDate(), request.getStatus());
         return ResponseEntity.ok().body(response);
     }

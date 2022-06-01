@@ -21,6 +21,8 @@ import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
+import promisor.promisor.domain.team.exception.NoRightsException;
+import promisor.promisor.global.error.ErrorCode;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -77,17 +79,18 @@ public class BanDateService {
 
     private void reflectToTeam(List<TeamBanDate> tbd, String status){
         for(int i=0; i<tbd.size(); i++){
-            if(Objects.equals(tbd.get(i).getDateStatus(), "IMPOSSIBLE")){
-                continue;
-            }
-            if (Objects.equals(status, "IMPOSSIBLE")){
-                tbd.get(i).editTBDStatus(status);
-            }
-            else if (Objects.equals(status, "UNCERTAIN")){
-                if(Objects.equals(tbd.get(i).getDateStatus(), "POSSIBLE")){
-                    tbd.get(i).editTBDStatus(status);
-                }
-            }
+            tbd.get(i).editTBDStatus(status);
+//            if(Objects.equals(tbd.get(i).getDateStatus(), "IMPOSSIBLE")){
+//                continue;
+//            }
+//            if (Objects.equals(status, "IMPOSSIBLE")){
+//                tbd.get(i).editTBDStatus(status);
+//            }
+//            else if (Objects.equals(status, "UNCERTAIN")){
+//                if(Objects.equals(tbd.get(i).getDateStatus(), "POSSIBLE")){
+//                    tbd.get(i).editTBDStatus(status);
+//                }
+//            }
         }
     }
 
@@ -113,7 +116,16 @@ public class BanDateService {
         }
         Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        if (pbd == null){
+            throw new WrongAccess();
+        }
         pbd.editPBDStatus(status);
+        List<TeamBanDate> tbd = teamBanDateRepository.findAllByMemberAndDate(member, date);
+        if (!tbd.isEmpty()){
+            for(int i=0; i<tbd.size(); i++) {
+                tbd.get(i).editTBDStatus(status);
+            }
+        }
         return new ModifyStatusResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
     }
 
@@ -163,7 +175,11 @@ public class BanDateService {
         List<PersonalBanDateReason> pbdrList = personalBanDateReasonRepository.findAllByMember(member.getId());
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
         List<String> reasons = pbdrList.stream().map(p->p.getReason()).collect(Collectors.toList());
-        return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
+        if (pbd == null){
+            return new GetPersonalReasonResponse("POSSIBLE");
+        }else{
+            return new GetPersonalReasonResponse(pbd.getDateStatus(), reasons);
+        }
     }
 
     public List<GetTeamCalendarStatusResponse> getTeamCalendarStatus(String email, Long teamId, String yearMonth) {

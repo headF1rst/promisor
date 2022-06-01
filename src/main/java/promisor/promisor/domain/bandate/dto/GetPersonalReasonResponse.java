@@ -14,4 +14,8 @@ public class GetPersonalReasonResponse {
         this.dateStatus = dateStatus;
         this.reason = reason;
     }
+
+    public GetPersonalReasonResponse(String dateStatus) {
+        this.dateStatus = DateStatusType.valueOf(dateStatus);
+    }
 }
