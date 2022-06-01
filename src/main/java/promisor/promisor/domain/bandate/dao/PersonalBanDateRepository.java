@@ -3,12 +3,14 @@ package promisor.promisor.domain.bandate.dao;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.bandate.domain.PersonalBanDate;
 import promisor.promisor.domain.member.domain.Member;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Transactional(readOnly = true)
@@ -30,4 +32,10 @@ public interface PersonalBanDateRepository extends JpaRepository<PersonalBanDate
     @Query("select pbd from PersonalBanDate pbd " +
             "join fetch pbd.member where pbd.member = :member and pbd.status = 'ACTIVE'")
     List<PersonalBanDate> findAllByMember(@Param("member") Member member);
+
+    @Modifying
+    @Query("update PersonalBanDate pd" +
+            " set pd.date = :date" +
+            " where pd.member = :member")
+    void updatePromiseDate(@Param("member") Member member, @Param("date") LocalDate date);
 }

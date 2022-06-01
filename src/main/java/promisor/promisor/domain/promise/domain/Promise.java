@@ -9,6 +9,7 @@ import promisor.promisor.domain.place.domain.Place;
 
 import javax.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -31,9 +32,9 @@ public class Promise extends BaseEntity {
     @Column(length = 50)
     private String promiseName;
 
-    private LocalDateTime date;
+    private LocalDate date;
 
-    private Promise(String status, Team team, Place place, String promiseName, LocalDateTime date) {
+    private Promise(String status, Team team, Place place, String promiseName, LocalDate date) {
         super(status);
         this.team = team;
         this.place = place;
@@ -70,5 +71,9 @@ public class Promise extends BaseEntity {
             return null;
         }
         return place.getName();
+    }
+
+    public void changePromiseDate(String date) {
+        this.date = LocalDate.parse(date);
     }
 }

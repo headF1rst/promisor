@@ -10,20 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.promise.domain.Promise;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public interface PromiseRepository extends JpaRepository<Promise, Long> {
 
     @Transactional(readOnly = true)
     Slice<Promise> findAllByTeamId(Long id, Pageable pageable);
 
-    @Modifying(clearAutomatically = true)
-    @Query( "update PersonalBanDateReason pbr" +
+    @Modifying
+    @Query("update PersonalBanDateReason pbr" +
             " set pbr.reason = :promiseName" +
             " where pbr.personalBanDate =" +
-                " (select pb from PersonalBanDate pb " +
+                " (select pb from PersonalBanDate pb" +
                 " left join pb.member" +
                 " where pb.member = :member" +
-                " and function('date_format', pb.date, '%Y-%m-%d') = function('date_format', :date, '%Y-%m-%d'))")
-    void updateBandDateOfMembers(@Param("member") Member member,
-                                 @Param("date") String date,
-                                 @Param("promiseName") String promiseName);
+                " and pb.date = :date)")
+    void updateBandDateOfMembers(@Param("promiseName") String promiseName,
+                                 @Param("member") Member member,
+                                 @Param("date") LocalDate date);
 }
