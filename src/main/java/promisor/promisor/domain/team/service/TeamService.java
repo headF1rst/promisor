@@ -100,7 +100,7 @@ public class TeamService {
         Member[] invited = new Member[request.getMemberId().length];
         for(int i=0;i<request.getMemberId().length;i++) {
             invited[i] = memberRepository.findById(request.getMemberId()[i]).orElseThrow(MemberNotFoundException::new);
-            inviteRepository.save(new Invite(invited[i],team, '0'));
+            teamMemberRepository.save(new TeamMember(invited[i], team));
         }
         return new InviteTeamResponse(
                 team.getId()
