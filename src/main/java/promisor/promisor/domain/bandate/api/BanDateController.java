@@ -10,6 +10,7 @@ import promisor.promisor.domain.bandate.dto.*;
 import promisor.promisor.domain.bandate.service.BanDateService;
 import promisor.promisor.global.auth.JwtAuth;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -35,11 +36,12 @@ public class BanDateController {
         return ResponseEntity.ok().body(response);
     }
 
-    @Operation(summary = "get team calendar", description = "팀 캘린더 조회")
-    @GetMapping("/team/{id}")
+    @Operation(summary = "get team calendar detail", description = "팀 캘린더 날짜 별 세부 조회")
+    @GetMapping("/team/{id}/{date}")
     public ResponseEntity<List<GetTeamCalendarResponse>> getTeamCalendar(@JwtAuth String email,
-                                                                         @PathVariable("id") Long teamId) {
-        List<GetTeamCalendarResponse> response = banDateService.getTeamCalendar(email, teamId);
+                                                                         @PathVariable("id") Long teamId,
+                                                                         @PathVariable("date") String date) {
+        List<GetTeamCalendarResponse> response = banDateService.getTeamCalendarDetail(email, teamId, date);
         return ResponseEntity.ok().body(response);
     }
 

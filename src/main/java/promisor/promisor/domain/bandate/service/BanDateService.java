@@ -18,6 +18,8 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,10 +77,11 @@ public class BanDateService {
         return new ModifyStatusResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
     }
 
-    public List<GetTeamCalendarResponse> getTeamCalendar(String email, Long teamId) {
-        PageRequest pageRequest = PageRequest.of(0, 31, Sort.by(Sort.Direction.ASC, "date"));
-        Slice<TeamBanDate> teamCalendarList = teamBanDateRepository.findAllByTeamId(teamId, pageRequest);
-
+    @Transactional
+    public List<GetTeamCalendarResponse> getTeamCalendarDetail(String email, Long teamId, String date) {
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        LocalDate inputDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);
+        Slice<TeamBanDate> teamCalendarList = teamBanDateRepository.findAllByTeamIdAndDate(teamId, inputDate, pageRequest);
         return teamCalendarList.stream()
                 .map(p -> new GetTeamCalendarResponse(p.getId(), p.getMember().getId(), p.getMember().getName(),
                         p.getPersonalBanDate().getId(), p.getDate(), p.getDateStatus()))
