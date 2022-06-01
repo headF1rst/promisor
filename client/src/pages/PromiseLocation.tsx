@@ -29,12 +29,17 @@ interface IPlace {
   place_url: string;
   category_group_name: string;
 }
-const PromiseLocation = () => {
+const PromiseLocation = ({ location }: { location: string }) => {
   const selectedGroup = useRecoilValue(selectedGroupState);
   const [myLat, setMyLat] = useState<number>();
   const [myLon, setMyLon] = useState<number>();
   const [places, setPlaces] = useState<IPlace[]>();
   const queryClient = useQueryClient();
+
+  const fixedPlaceRef = useRef<HTMLInputElement>();
+  useEffect(() => {
+    fixedPlaceRef.current.value = location;
+  }, []);
 
   useEffect(() => {
     getMidLocation();
@@ -129,7 +134,7 @@ const PromiseLocation = () => {
       setPlaces(data);
     }
   };
-  const fixedPlaceRef = useRef();
+
   return (
     <div>
       <BoxInput placeholder="만남 장소" ref={fixedPlaceRef} />
