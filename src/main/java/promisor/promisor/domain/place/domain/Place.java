@@ -1,12 +1,11 @@
 package promisor.promisor.domain.place.domain;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.springframework.security.core.parameters.P;
-import promisor.promisor.domain.model.BaseEntity;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
 
 /**
  * Place 도메인 객체를 나타내는 자바 빈
@@ -14,6 +13,7 @@ import javax.persistence.Entity;
  * @author Sanha Ko
  */
 @Embeddable
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Place {
 

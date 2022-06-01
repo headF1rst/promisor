@@ -10,9 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.promise.domain.Promise;
 
-import java.util.List;
-import java.util.Optional;
-
 public interface PromiseRepository extends JpaRepository<Promise, Long> {
 
     @Transactional(readOnly = true)

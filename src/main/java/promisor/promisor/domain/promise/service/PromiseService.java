@@ -87,7 +87,7 @@ public class PromiseService {
      * @return
      * @author Sanha Ko
      */
-    public List<PromiseResponse> searchPromise(String email, Long teamId) {
+    public List<PromiseResponse> searchPromises(String email, Long teamId) {
 
         if (checkMemberInTeam(email, teamId)) {
             throw new MemberNotBelongsToTeam();
@@ -100,6 +100,15 @@ public class PromiseService {
                 .map(p -> new PromiseResponse(p.getId(), p.getPromiseName(),
                         p.getDate(), p.getPromiseLocation()))
                 .collect(toList());
+    }
+
+    public PromiseResponse searchPromise(String email, Long promiseId) {
+        Assert.notNull(email, "엑세스 토큰이 전달되지 않았습니다.");
+        Assert.notNull(promiseId, "약속 Id가 존재하지 않습니다.");
+
+        Promise promise = getPromiseById(promiseId);
+        return new PromiseResponse(promise.getId(), promise.getPromiseName(),
+                promise.getDate(), promise.getPromiseLocation());
     }
 
     private Member getMember(String email) {

@@ -24,8 +24,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedMethods("GET", "POST", "PATCH")
-                .allowedOrigins("http://localhost:8080", "https://promisor.site", "http://promisor.site",
+                .allowedOrigins("http://localhost:8080", "http://promisor.site", "https://promisor.site",
                         "http://localhost:3000", "http://api-storage.cloud.toast.com",
-                        "https://server.promisor.site", "http://server.promisor.site");
+                        "http://server.promisor.site", "https://server.promisor.site",
+                        "http://promisor-client.s3-website.ap-northeast-2.amazonaws.com");
     }
 }

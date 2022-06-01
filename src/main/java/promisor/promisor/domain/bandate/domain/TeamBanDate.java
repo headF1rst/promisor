@@ -10,7 +10,6 @@ import promisor.promisor.domain.team.domain.Team;
 import javax.persistence.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static javax.persistence.FetchType.LAZY;
 
