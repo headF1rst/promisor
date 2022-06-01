@@ -20,6 +20,8 @@ import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
+import promisor.promisor.domain.team.exception.NoRightsException;
+import promisor.promisor.global.error.ErrorCode;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
@@ -112,7 +114,16 @@ public class BanDateService {
         }
         Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.getPersonalBanDateByMemberAndDate(member, date);
+        if (pbd == null){
+            throw new WrongAccess();
+        }
         pbd.editPBDStatus(status);
+        List<TeamBanDate> tbd = teamBanDateRepository.findAllByMemberAndDate(member, date);
+        if (!tbd.isEmpty()){
+            for(int i=0; i<tbd.size(); i++) {
+                tbd.get(i).editTBDStatus(status);
+            }
+        }
         return new ModifyStatusResponse(member.getId(), pbd.getDate(), pbd.getDateStatus());
     }
 
