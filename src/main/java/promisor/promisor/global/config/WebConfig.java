@@ -27,6 +27,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedOrigins("http://localhost:8080", "http://promisor.site", "https://promisor.site",
                         "http://localhost:3000", "http://api-storage.cloud.toast.com",
                         "http://server.promisor.site", "https://server.promisor.site",
-                        "http://promisor-client.s3-website.ap-northeast-2.amazonaws.com");
+                        "http://promisor-client.s3-website.ap-northeast-2.amazonaws.com",
+                        "https://dapi.kakao.com/v2/maps/sdk.js?appkey=175fa8a0273175de3f4f82ba92ebffb8&libraries=services",
+                        "https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=cs1gq3mwri&submodules=geocoder");
     }
 }
