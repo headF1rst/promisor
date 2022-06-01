@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import promisor.promisor.domain.bandate.dto.*;
+import promisor.promisor.domain.bandate.exception.DateEmptyException;
 import promisor.promisor.domain.bandate.service.BanDateService;
 import promisor.promisor.global.auth.JwtAuth;
 
@@ -66,6 +67,7 @@ public class BanDateController {
     @GetMapping("/personal/reason/{date}")
     public ResponseEntity<GetPersonalReasonResponse> getPersonalReason(@JwtAuth String email,
                                                                              @PathVariable("date") String date) {
+        if (date == null){throw new DateEmptyException();}
         GetPersonalReasonResponse response = banDateService.getPersonalReason(email, date);
         return ResponseEntity.ok().body(response);
     }
