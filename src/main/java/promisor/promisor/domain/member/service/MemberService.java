@@ -25,6 +25,7 @@ import promisor.promisor.infra.email.EmailValidator;
 import promisor.promisor.infra.email.exception.EmailConfirmedException;
 import promisor.promisor.infra.email.exception.EmailNotValid;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -243,7 +244,7 @@ public class MemberService {
 
 
     @Transactional
-    public ModifyMemberResponse modifyInfo(String email , ModifyMemberDto modifyMemberDto){
+    public ModifyMemberResponse modifyInfo(String email , @Valid ModifyMemberDto modifyMemberDto){
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
         member.modifyMemberInfo(modifyMemberDto.getName(), modifyMemberDto.getImageUrl(), modifyMemberDto.getLocation());
