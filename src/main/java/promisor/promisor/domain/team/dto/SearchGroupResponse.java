@@ -15,7 +15,8 @@ public class SearchGroupResponse {
     private Long groupId;
     private String groupName;
     private String imageURL;
-    private List<GroupMemberDto> groupMembers;
+//    private List<GroupMemberDto> groupMembers;
+    private List<String> membersNames;
 
 //    public SearchGroupResponse(Team team) {
 //        this.groupId = team.getId();
@@ -26,12 +27,13 @@ public class SearchGroupResponse {
 //                .collect(toList());
 //    }
 
-    public SearchGroupResponse(Long groupId, String groupName, String imageURL, List<TeamMember> groupMembers) {
+    public SearchGroupResponse(Long groupId, String groupName, String imageURL, List<String> membersNames) {
         this.groupId = groupId;
         this.groupName = groupName;
         this.imageURL = imageURL;
-        this.groupMembers = groupMembers.stream()
-                .map(teamMembers -> new GroupMemberDto(teamMembers))
-                .collect(toList());
+//        this.groupMembers = groupMembers.stream()
+//                .map(teamMembers -> new GroupMemberDto(teamMembers))
+//                .collect(toList());
+        this.membersNames = membersNames;
     }
 }

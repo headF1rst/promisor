@@ -18,6 +18,7 @@ import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.team.dto.*;
 import promisor.promisor.domain.team.exception.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -130,10 +131,21 @@ public class TeamService {
 
         System.out.println(email);
         Member member = getMemberInfo(email);
-        List<Team> teams = teamRepository.findGroupInfoWithMembers(member.getId());
-        List<SearchGroupResponse> result = teams.stream()
-                .map(m -> new SearchGroupResponse(m.getId(), m.getGroupName(), m.getImageUrl(), m.getTeamMembers()))
-                .collect(toList());
+        List<SearchGroupResponse> result = new ArrayList<>();
+        List<Team> team = teamRepository.findGroupInfoWithMembers(member.getId());
+        System.out.println(team);
+        for (int i = 0; i<team.size(); i++) {
+            List<TeamMember> teamMembers = teamMemberRepository.findMembersByTeamId(team.get(i).getId());
+            List<String> membersName = new ArrayList<>();
+            System.out.println(teamMembers);
+            for (int j = 0; j<teamMembers.size(); j++) {
+                membersName.add(teamMembers.get(j).getMember().getName());
+            }
+            System.out.println(membersName);
+            System.out.println(new SearchGroupResponse(team.get(i).getId(), team.get(i).getGroupName(), team.get(i).getImageUrl(), membersName));
+            result.add(new SearchGroupResponse(team.get(i).getId(), team.get(i).getGroupName(), team.get(i).getImageUrl(), membersName));
+        }
+        System.out.println(result);
         return result;
     }
 
