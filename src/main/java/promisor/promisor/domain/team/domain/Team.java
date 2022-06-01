@@ -38,7 +38,7 @@ public class Team extends BaseEntity {
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
     private final List<TeamMember> teamMembers = new ArrayList<>();
 
-    private LocalDateTime date;
+//    private LocalDateTime date;
 
     public Team(Member member, String groupName) {
         super("ACTIVE");
