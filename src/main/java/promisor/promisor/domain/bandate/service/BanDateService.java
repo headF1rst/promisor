@@ -25,6 +25,7 @@ import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -168,17 +169,11 @@ public class BanDateService {
         List<GetTeamCalendarStatusResponse> result = new ArrayList<>();
         String impossible = "IMPOSSIBLE";
         String uncertain = "UNCERTAIN";
-        Long year = Long.parseLong(yearMonth.substring(0, 4));
-        Long month = Long.parseLong(yearMonth.substring(5));
-        int daySize = 31;
-        if (month == 2) {
-            daySize = (year%4==0&&year%100!=0)||year%400==0?29:28;
-        }
-        else if (month%2==0) {
-            daySize = 30;
-        }
-        System.out.println(daySize);
-        for (int day=1; day<=daySize; day++) {
+        Integer year = Integer.parseInt(yearMonth.substring(0, 4));
+        Integer month = Integer.parseInt(yearMonth.substring(5));
+        List<Integer> monthSize = Arrays.asList(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
+        monthSize.set(2, (year%4==0&&year%100!=0)||year%400==0?29:28);
+        for (int day=1; day<=monthSize.get(month); day++) {
             String dayString = null;
             if (day<10) {
                 dayString = "0"+String.valueOf(day);
