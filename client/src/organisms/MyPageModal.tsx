@@ -1,87 +1,93 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useRef, useState } from "react";
 import styled from "styled-components";
-import { Profile, ProfileImg } from "../atoms/Profile";
 import { Input } from "../styles/Input";
 import { Overlay } from "../styles/Modal";
-import { AiTwotoneLock } from "react-icons/ai";
 import { BsCheckCircle } from "react-icons/bs";
 import { FaChevronCircleRight, FaChevronCircleLeft } from "react-icons/fa";
-interface IReasonData {
+import { dateFormatter } from "../utils/dateFormatter";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import api from "../auth/api";
+interface IBanDateInfo {
   id: number;
   date: string;
-  reason: string;
-}
-interface IDateStatusData {
-  id: number;
-  date: string;
-  date_status: string;
+  dateStatus: string;
+  reason: string[];
 }
 interface IMyPageModal {
   state: { dateModal: boolean; setDateModal: Function; currentDate: string };
-  data: { reasonData: IReasonData[]; statusData: IDateStatusData[] };
 }
 const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 
-function MyPageModal({ state, data }: IMyPageModal) {
+function MyPageModal({ state }: IMyPageModal) {
   const { dateModal, setDateModal, currentDate } = state;
-  const { reasonData, statusData } = data;
   const [reason, setReason] = useState("");
-  const [privateReason, setPrivateReason] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState(false);
   const [changeStatus, setChangeStatus] = useState(false);
+  const queryClient = useQueryClient();
+  const tokenId = localStorage.getItem("refreshTokenId");
+
+  const { mutate: createReason } = useMutation(
+    ["createReason", currentDate],
+    async () => {
+      const requestBody = {
+        date: dateFormatter(currentDate),
+        reason,
+      };
+      return await api.post("/bandate/personal/reason", requestBody);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["getBandateInfo"]);
+      },
+    }
+  );
+  const { data: bandateInfo } = useQuery<IBanDateInfo>(
+    ["getBandateInfo", currentDate],
+    async () => {
+      const { data } = await api.get(
+        `/bandate/personal/reason/${dateFormatter(currentDate)}`
+      );
+      return data;
+    }
+  );
   const onReasonSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(selectedStatus, reason, privateReason);
+    createReason();
     setReason("");
-    setPrivateReason(false);
   };
 
   const onReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReason(e.target.value);
   };
-  const onPrivateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPrivateReason(e.target.checked);
-  };
-  const onStatusChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedStatus(e.target.checked);
-  };
+
   const onOverlayClick = () => {
     setDateModal((p: boolean) => !p);
     setReason("");
-    setPrivateReason(false);
-    setSelectedStatus(false);
     setChangeStatus(false);
   };
   const getDayFromCurrentDate = () => {
-    const strDate =
-      currentDate.slice(0, 4) +
-      "-" +
-      currentDate.slice(4, 6) +
-      "-" +
-      currentDate.slice(6, 8);
+    const strDate = dateFormatter(currentDate);
     const day = new Date(strDate).getDay();
     return DAYS_OF_WEEK[day];
   };
   const getColor = (date_status: string) => {
-    if (date_status === "RED") {
+    if (date_status === "IMPOSSIBLE") {
       return "#ff7373";
-    } else if (date_status === "YELLOW") {
+    } else if (date_status === "UNCERTAIN") {
       return "#ffd37a";
     } else {
       return "#85ba73";
     }
   };
-  const getDateStatus = (date: string) => {
-    for (let i = 0; i < statusData.length; i++) {
-      if (statusData[i].date === date) {
-        return statusData[i].date_status;
-      }
-    }
-    return "GREEN";
-  };
-  const onStatusSubmit = (date_status: string) => {
-    // 해당 날짜의 status 변경 api 호출
+  const onStatusSubmit = async (date_status: string) => {
+    const requestBody = {
+      date: dateFormatter(currentDate),
+      status: date_status,
+    };
+    await api.post("/bandate/personal", requestBody).then((res) => {
+      queryClient.invalidateQueries("getBandateInfo");
+      queryClient.invalidateQueries("personalBandateStatus");
+    });
   };
   return (
     <AnimatePresence>
@@ -109,13 +115,13 @@ function MyPageModal({ state, data }: IMyPageModal) {
                 style={{ cursor: "pointer", marginTop: "0.1em" }}
                 onClick={() => setChangeStatus((p) => !p)}
               >
-                {changeStatus ? (
+                {changeStatus && bandateInfo ? (
                   <FaChevronCircleLeft
-                    color={getColor(getDateStatus(currentDate))}
+                    color={getColor(bandateInfo?.dateStatus)}
                   />
                 ) : (
                   <FaChevronCircleRight
-                    color={getColor(getDateStatus(currentDate))}
+                    color={getColor(bandateInfo?.dateStatus)}
                   />
                 )}
               </span>
@@ -123,16 +129,16 @@ function MyPageModal({ state, data }: IMyPageModal) {
               {changeStatus && (
                 <>
                   <Circle
-                    onClick={() => onStatusSubmit("RED")}
-                    color={getColor("RED")}
+                    onClick={() => onStatusSubmit("IMPOSSIBLE")}
+                    color={getColor("IMPOSSIBLE")}
                   />
                   <Circle
-                    onClick={() => onStatusSubmit("YELLOW")}
-                    color={getColor("YELLOW")}
+                    onClick={() => onStatusSubmit("UNCERTAIN")}
+                    color={getColor("UNCERTAIN")}
                   />
                   <Circle
-                    onClick={() => onStatusSubmit("GREEN")}
-                    color={getColor("GREEN")}
+                    onClick={() => onStatusSubmit("POSSIBLE")}
+                    color={getColor("POSSIBLE")}
                   />
                 </>
               )}
@@ -153,18 +159,14 @@ function MyPageModal({ state, data }: IMyPageModal) {
               />
             </form>
             <List>
-              {reasonData.map(
-                (value, idx) =>
-                  value.date === currentDate &&
-                  value.reason && (
-                    <RowElement key={value.id}>
-                      <span style={{ marginTop: "2px" }}>
-                        <BsCheckCircle />
-                      </span>
-                      {value.reason}
-                    </RowElement>
-                  )
-              )}
+              {bandateInfo?.reason?.map((value, idx) => (
+                <RowElement key={idx}>
+                  <span style={{ marginTop: "2px" }}>
+                    <BsCheckCircle />
+                  </span>
+                  {value}
+                </RowElement>
+              ))}
             </List>
           </Modal>
           <Overlay
