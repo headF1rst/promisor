@@ -142,16 +142,11 @@ public class BanDateService {
 
     @Transactional
     public RegisterPersonalReasonResponse registerPersonalReason(String email, String date, String reason) {
-
-        if (date == null){
-            throw new DateEmptyException();
-        }
-        if (reason == null){
-            throw new ReasonEmptyException();
-        }
-
         Member member = getMember(email);
         PersonalBanDate pbd = personalBanDateRepository.findPersonalBanDateByMemberAndDate(member, date);
+        if (pbd == null){
+            throw new WrongAccess();
+        }
         PersonalBanDateReason pbd_reason = new PersonalBanDateReason(pbd, reason);
         personalBanDateReasonRepository.save(pbd_reason);
         return new RegisterPersonalReasonResponse(pbd_reason.getId(), pbd_reason.getPersonalBanDate().getId(), pbd_reason.getReason());
