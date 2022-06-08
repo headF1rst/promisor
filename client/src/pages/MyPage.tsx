@@ -2,29 +2,28 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import MyPageModal from "../organisms/MyPageModal";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import user from "../image/user.png";
 import { motion } from "framer-motion";
 import api from "../auth/api";
+import { dateFormatter } from "../utils/dateFormatter";
 interface IProfileData {
   id: number;
   name: string;
   imageUrl: string;
 }
-const PERSONAL_DATA = [{ id: 1, date: "20220425", date_status: "RED" }];
-
-const TEST_DATA = [
-  {
-    id: 1,
-    date: "20220425",
-    reason: "산하 생일",
-  },
-  {
-    id: 2,
-    date: "20220425",
-    reason: "가족 사정",
-  },
-];
+interface IBandateStatus {
+  id: number;
+  memberId: number;
+  date: string;
+  dateStatus: string;
+}
+interface IBandateReason {
+  id: number;
+  personalBandateId: number;
+  date: string;
+  reason: string;
+}
 
 const RED = "RED";
 const YELLOW = "YELLOW";
@@ -39,24 +38,34 @@ function MyPage() {
   const [weeks, setWeeks] = useState<any[][]>([]);
   const [dateModal, setDateModal] = useState(false);
   const [currentDate, setCurrentDate] = useState("");
-
+  const tokenId = localStorage.getItem("refreshTokenId");
   const { data: profileData, isLoading } = useQuery<IProfileData>(
-    "membersProfile",
+    ["membersProfile"],
     async () => {
       const { data } = await api.get("/members/profile");
       return data;
     }
   );
 
+  const { data: personalBandateStatus } = useQuery<IBandateStatus[]>(
+    ["personalBandateStatus"],
+    async () => {
+      const { data } = await api.get("/bandate/personal");
+      return data;
+    }
+  );
   useEffect(() => {
     makeCalendar(year, month);
-  }, [month]);
+  }, [personalBandateStatus, month]);
   const makeCalendar = (year: number, month: number) => {
+    if (!personalBandateStatus) {
+      return;
+    }
     const FEB =
       (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
     const LASTDATE = [0, 31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = LASTDATE[month];
+    const lastDate = LASTDATE[month + 1];
     let date = 1;
     let newWeeks = [];
     for (let week = 0; week < 6; week++) {
@@ -70,11 +79,12 @@ function MyPage() {
             String(year) +
             String(month + 1).padStart(2, "0") +
             String(date).padStart(2, "0");
-          for (let i = 0; i < PERSONAL_DATA.length; i++) {
-            if (PERSONAL_DATA[i].date === id) {
-              if (PERSONAL_DATA[i].date_status === "RED") {
+
+          for (let i = 0; i < personalBandateStatus.length; i++) {
+            if (personalBandateStatus[i].date === dateFormatter(id)) {
+              if (personalBandateStatus[i].dateStatus === "IMPOSSIBLE") {
                 thisColor = "RED";
-              } else if (PERSONAL_DATA[i].date_status === "YELLOW") {
+              } else if (personalBandateStatus[i].dateStatus === "UNCERTAIN") {
                 thisColor = "YELLOW";
               }
             }
@@ -141,7 +151,7 @@ function MyPage() {
         <Month>
           <Week>
             {DAYS_OF_WEEK.map((day, idx) => (
-              <DateBox key={idx} height={"5vh"} isDay={true}>
+              <DateBox key={day} height={"5vh"} isDay={true}>
                 {day}
               </DateBox>
             ))}
@@ -150,9 +160,9 @@ function MyPage() {
             weeks.map((week, week_idx) => (
               <Week key={week_idx}>
                 {!(week[0].value === "" && week_idx === 5) &&
-                  week.map((date, day_idx) => (
+                  week.map((date, date_idx) => (
                     <DateBox
-                      key={String(week_idx) + String(day_idx)}
+                      key={String(week_idx) + String(date_idx)}
                       color={date.color}
                       style={{ color: "black" }}
                       onClick={() => onDateClick(date.id)}
@@ -164,10 +174,9 @@ function MyPage() {
             ))}
         </Month>
       </CalendarContainer>
-      <MyPageModal
-        state={{ dateModal, setDateModal, currentDate }}
-        data={{ reasonData: TEST_DATA, statusData: PERSONAL_DATA }}
-      />
+      {dateModal && (
+        <MyPageModal state={{ dateModal, setDateModal, currentDate }} />
+      )}
     </>
   );
 }

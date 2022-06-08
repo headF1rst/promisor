@@ -12,16 +12,13 @@ import promisor.promisor.domain.promise.exception.MemberNotBelongsToTeam;
 import promisor.promisor.domain.team.dao.InviteRepository;
 import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
-import promisor.promisor.domain.team.domain.Invite;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.team.dto.*;
 import promisor.promisor.domain.team.exception.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
@@ -124,11 +121,10 @@ public class TeamService {
 
         Member member = getMemberByEmail(email);
         List<TeamMember> teams = teamRepository.findGroupInfoWithMembers(member);
-        List<SearchGroupResponse> result = teams.stream()
+        return teams.stream()
                 .map(m -> new SearchGroupResponse(m.getTeamIdFromTeam(), m.getGroupNameFromTeam(),
                         m.getImageUrlFromTeam(), m.getTeamMembersFromTeam()))
                 .collect(toList());
-        return result;
     }
 
     @Transactional
