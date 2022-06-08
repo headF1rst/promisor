@@ -37,19 +37,18 @@ public class TeamController {
     @Operation(summary = "Create group", description = "그룹 생성")
     @PostMapping
     public ResponseEntity<Long> createGroup(@JwtAuth String email,
-                                            @RequestBody @Valid final CreateTeamDto request) {
+                                            @RequestBody @Valid CreateTeamDto request) {
 
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok().body(teamService.createGroup(email, request));
-        } else {
-            throw new TooManyRequestException();
         }
+        throw new TooManyRequestException();
     }
 
     @Operation(summary = "Edit group name", description = "그룹 이름 수정")
     @PatchMapping
     public ResponseEntity<ChangeTeamNameResponse> editGroup(@JwtAuth String email,
-                                                            @RequestBody @Valid final EditTeamDto request) {
+                                                            @RequestBody @Valid EditTeamDto request) {
         return ResponseEntity.ok().body(teamService.editGroup(email, request));
     }
 
@@ -63,14 +62,14 @@ public class TeamController {
     @Operation(summary = "Invite group", description = "그룹 초대")
     @PostMapping("/invite")
     public ResponseEntity<InviteTeamResponse> inviteGroup(@JwtAuth String email,
-                                                          @RequestBody @Valid final InviteTeamDto request){
+                                                          @RequestBody @Valid InviteTeamDto request){
         return ResponseEntity.ok().body(teamService.inviteGroup(email,request));
     }
 
     @Operation(summary = "Delegate GroupLeader", description = "그룹장 위임")
     @PatchMapping("/delegate")
     public ResponseEntity<DelegateLeaderResponse> delegateLeader(@JwtAuth String email,
-                                                                 @RequestBody @Valid final DelegateLeaderDto request) {
+                                                                 @RequestBody @Valid DelegateLeaderDto request) {
         return ResponseEntity.ok().body(teamService.delegateLeader(email, request));
     }
 

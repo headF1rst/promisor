@@ -8,6 +8,8 @@ import promisor.promisor.domain.model.BaseEntity;
 
 import javax.persistence.*;
 
+import java.util.Set;
+
 import static javax.persistence.FetchType.*;
 
 @Entity
@@ -39,5 +41,21 @@ public class TeamMember extends BaseEntity {
     public void editMyLocation(float latitude, float longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
+    }
+
+    public Long getTeamIdFromTeam() {
+        return this.team.getId();
+    }
+
+    public String getGroupNameFromTeam() {
+        return this.team.getGroupName();
+    }
+
+    public String getImageUrlFromTeam() {
+        return this.team.getImageUrl();
+    }
+
+    public Set<TeamMember> getTeamMembersFromTeam() {
+        return this.team.getTeamMembers();
     }
 }
