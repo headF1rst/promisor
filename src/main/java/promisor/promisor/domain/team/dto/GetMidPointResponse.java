@@ -6,10 +6,10 @@ import lombok.Getter;
 public class GetMidPointResponse {
 
     private final Long teamId;
-    private final float latitude;
-    private final float longitude;
+    private final double latitude;
+    private final double longitude;
 
-    public GetMidPointResponse(Long teamId, float latitude, float longitude) {
+    public GetMidPointResponse(Long teamId, double latitude, double longitude) {
         this.teamId = teamId;
         this.latitude = latitude;
         this.longitude = longitude;
