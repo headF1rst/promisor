@@ -14,9 +14,9 @@ import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.promise.dao.PromiseRepository;
 import promisor.promisor.domain.promise.domain.Promise;
-import promisor.promisor.domain.promise.dto.PromiseCreateRequest;
-import promisor.promisor.domain.promise.dto.PromiseDateEditRequest;
-import promisor.promisor.domain.promise.dto.PromiseResponse;
+import promisor.promisor.domain.promise.dto.request.PromiseCreateRequest;
+import promisor.promisor.domain.promise.dto.request.PromiseDateEditRequest;
+import promisor.promisor.domain.promise.dto.response.PromiseResponse;
 import promisor.promisor.domain.promise.exception.MemberNotBelongsToTeam;
 import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
@@ -25,7 +25,6 @@ import promisor.promisor.domain.team.domain.TeamMember;
 import promisor.promisor.domain.promise.exception.PromiseIdNotFound;
 import promisor.promisor.domain.team.exception.TeamNotFoundForMember;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;

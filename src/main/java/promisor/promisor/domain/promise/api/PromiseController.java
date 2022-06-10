@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import promisor.promisor.domain.promise.dto.PromiseCreateRequest;
-import promisor.promisor.domain.promise.dto.PromiseDateEditRequest;
-import promisor.promisor.domain.promise.dto.PromiseResponse;
+import promisor.promisor.domain.promise.dto.request.PromiseCreateRequest;
+import promisor.promisor.domain.promise.dto.request.PromiseDateEditRequest;
+import promisor.promisor.domain.promise.dto.response.PromiseResponse;
 import promisor.promisor.domain.promise.service.PromiseService;
 import promisor.promisor.global.auth.JwtAuth;
 

@@ -1,4 +1,4 @@
-package promisor.promisor.domain.member.dto;
+package promisor.promisor.domain.member.dto.response;
 
 import lombok.Getter;
 

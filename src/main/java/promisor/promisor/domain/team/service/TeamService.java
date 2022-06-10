@@ -14,7 +14,8 @@ import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
-import promisor.promisor.domain.team.dto.*;
+import promisor.promisor.domain.team.dto.request.*;
+import promisor.promisor.domain.team.dto.response.*;
 import promisor.promisor.domain.team.exception.*;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class TeamService {
      *   @author: Sanha Ko
      */
     @Transactional
-    public Long createGroup(String email, CreateTeamDto request) {
+    public Long createGroup(String email, CreateTeamRequest request) {
 
         Member member = getMemberByEmail(email);
         Team team = teamRepository.save(new Team(member, request.getGroupName()));
@@ -48,7 +49,7 @@ public class TeamService {
     }
 
     @Transactional
-    public ChangeTeamNameResponse editGroup(String email, EditTeamDto request) {
+    public ChangeTeamNameResponse editGroup(String email, EditTeamRequest request) {
 
         Member member = getMemberByEmail(email);
         Team team = getGroupById(request.getGroupId());
@@ -78,7 +79,7 @@ public class TeamService {
     }
 
     @Transactional
-    public InviteTeamResponse inviteGroup(String email, InviteTeamDto request){
+    public InviteTeamResponse inviteGroup(String email, InviteTeamRequest request){
 
         Member inviting = getMemberByEmail(email);
         Team team = getGroupById(request.getGroupId());
@@ -99,7 +100,7 @@ public class TeamService {
     }
 
     @Transactional
-    public DelegateLeaderResponse delegateLeader(String email, DelegateLeaderDto request) {
+    public DelegateLeaderResponse delegateLeader(String email, DelegateLeaderRequest request) {
 
         Member oldLeader = getMemberByEmail(email);
         Member newLeader = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
@@ -128,7 +129,7 @@ public class TeamService {
     }
 
     @Transactional
-    public EditMyLocationResponse editMyLocation(String email, EditMyLocationDto request) {
+    public EditMyLocationResponse editMyLocation(String email, EditMyLocationRequest request) {
 
         Member member = getMemberByEmail(email);
         TeamMember teamMember = teamMemberRepository.findMemberByMemberIdAndTeamId(member.getId(), request.getTeamId());
