@@ -5,10 +5,10 @@ import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
 import io.swagger.v3.oas.annotations.Operation;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import promisor.promisor.domain.team.dto.*;
+import promisor.promisor.domain.team.dto.request.*;
+import promisor.promisor.domain.team.dto.response.*;
 import promisor.promisor.domain.team.exception.TooManyRequestException;
 import promisor.promisor.domain.team.service.TeamService;
 import promisor.promisor.global.auth.JwtAuth;
@@ -37,7 +37,7 @@ public class TeamController {
     @Operation(summary = "Create group", description = "그룹 생성")
     @PostMapping
     public ResponseEntity<Long> createGroup(@JwtAuth String email,
-                                            @RequestBody @Valid CreateTeamDto request) {
+                                            @RequestBody @Valid CreateTeamRequest request) {
 
         if (bucket.tryConsume(1)) {
             return ResponseEntity.ok().body(teamService.createGroup(email, request));
@@ -48,7 +48,7 @@ public class TeamController {
     @Operation(summary = "Edit group name", description = "그룹 이름 수정")
     @PatchMapping
     public ResponseEntity<ChangeTeamNameResponse> editGroup(@JwtAuth String email,
-                                                            @RequestBody @Valid EditTeamDto request) {
+                                                            @RequestBody @Valid EditTeamRequest request) {
         return ResponseEntity.ok().body(teamService.editGroup(email, request));
     }
 
@@ -62,14 +62,14 @@ public class TeamController {
     @Operation(summary = "Invite group", description = "그룹 초대")
     @PostMapping("/invite")
     public ResponseEntity<InviteTeamResponse> inviteGroup(@JwtAuth String email,
-                                                          @RequestBody @Valid InviteTeamDto request){
+                                                          @RequestBody @Valid InviteTeamRequest request){
         return ResponseEntity.ok().body(teamService.inviteGroup(email,request));
     }
 
     @Operation(summary = "Delegate GroupLeader", description = "그룹장 위임")
     @PatchMapping("/delegate")
     public ResponseEntity<DelegateLeaderResponse> delegateLeader(@JwtAuth String email,
-                                                                 @RequestBody @Valid DelegateLeaderDto request) {
+                                                                 @RequestBody @Valid DelegateLeaderRequest request) {
         return ResponseEntity.ok().body(teamService.delegateLeader(email, request));
     }
 
@@ -82,7 +82,7 @@ public class TeamController {
     @Operation(summary = "Edit My Location", description = "그룹 내 자신의 위치 수정")
     @PatchMapping("/location")
     public ResponseEntity<EditMyLocationResponse> editMyLocation(@JwtAuth String email,
-                                                                @RequestBody EditMyLocationDto request) {
+                                                                 @RequestBody EditMyLocationRequest request) {
         return ResponseEntity.ok().body(teamService.editMyLocation(email, request));
     }
 
@@ -97,7 +97,7 @@ public class TeamController {
     @Operation(summary = "Get Team Members Location", description = "그룹원들의 위치 조회")
     @GetMapping("/location/{teamId}")
     public ResponseEntity<List<GetTeamMembersLocationResponse>> getTeamMembersLocation(@JwtAuth String email,
-                                                                                 @PathVariable Long teamId) {
+                                                                                       @PathVariable Long teamId) {
         List<GetTeamMembersLocationResponse> result = teamService.getTeamMembersLocation(email, teamId);
         return ResponseEntity.ok().body(result);
     }

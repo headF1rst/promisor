@@ -13,9 +13,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.MimeTypeUtils;
-import promisor.promisor.domain.member.dto.LoginDto;
+import promisor.promisor.domain.member.dto.request.LoginRequest;
 import promisor.promisor.domain.member.exception.LoginInfoNotFoundException;
-import promisor.promisor.global.error.ErrorCode;
 import promisor.promisor.domain.member.exception.EmailEmptyException;
 import promisor.promisor.domain.member.exception.PasswordEmptyException;
 
@@ -57,17 +56,17 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         if (request.getContentType().equals(MimeTypeUtils.APPLICATION_JSON_VALUE)) {
             // 요청이 Json 형태인 경우
             try {
-                LoginDto loginDto = objectMapper.readValue(request.getReader().lines().collect(Collectors.joining()), LoginDto.class);
-                if (loginDto.getEmail().isEmpty()) {
+                LoginRequest loginRequest = objectMapper.readValue(request.getReader().lines().collect(Collectors.joining()), LoginRequest.class);
+                if (loginRequest.getEmail().isEmpty()) {
                     throw new EmailEmptyException();
                 }
 
-                if (loginDto.getPassword().isEmpty()) {
+                if (loginRequest.getPassword().isEmpty()) {
                     throw new PasswordEmptyException();
                 }
-                log.info("Email is: {}", loginDto.getEmail()); log.info("Password is: {}", loginDto.getPassword());
+                log.info("Email is: {}", loginRequest.getEmail()); log.info("Password is: {}", loginRequest.getPassword());
                 // 아직 인증되지 않음
-                authenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+                authenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
                 log.info("Token = {}", authenticationToken);
             } catch (IOException err) {
                 err.printStackTrace();

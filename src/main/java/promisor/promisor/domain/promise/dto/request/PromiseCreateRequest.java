@@ -1,4 +1,4 @@
-package promisor.promisor.domain.promise.dto;
+package promisor.promisor.domain.promise.dto.request;
 
 import lombok.Data;
 

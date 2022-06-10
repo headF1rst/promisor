@@ -1,4 +1,4 @@
-package promisor.promisor.domain.member.dto;
+package promisor.promisor.domain.member.dto.request;
 
 import lombok.Data;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class LoginDto {
+public class LoginRequest {
 
     @NotBlank(message = "이메일을 입력해주세요.")
     @Email(message = "이메일 형식이 잘못되었습니다.")

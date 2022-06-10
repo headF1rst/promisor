@@ -12,7 +12,10 @@ import promisor.promisor.domain.member.domain.RefreshToken;
 import promisor.promisor.domain.member.dao.RefreshTokenRepository;
 import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
-import promisor.promisor.domain.member.dto.*;
+import promisor.promisor.domain.member.dto.request.LoginRequest;
+import promisor.promisor.domain.member.dto.request.ModifyMemberRequest;
+import promisor.promisor.domain.member.dto.request.SignUpRequest;
+import promisor.promisor.domain.member.dto.response.*;
 import promisor.promisor.domain.member.exception.*;
 import promisor.promisor.global.config.security.JwtProvider;
 import promisor.promisor.global.token.exception.InvalidTokenException;
@@ -45,7 +48,7 @@ public class MemberService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Transactional
-    public String save(SignUpDto request) {
+    public String save(SignUpRequest request) {
         boolean isValidEmail = emailValidator.test(request.getEmail());
 
         if (!isValidEmail) {
@@ -191,10 +194,10 @@ public class MemberService {
                 "</div></div>";
     }
 
-    public LoginResponse login(LoginDto loginDto) {
+    public LoginResponse login(LoginRequest loginRequest) {
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-        TokenResponse createToken = createTokenReturn(loginDto);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        TokenResponse createToken = createTokenReturn(loginRequest);
 
         Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
 
@@ -204,16 +207,16 @@ public class MemberService {
                 tokenExpireTime);
     }
 
-    public LoginResponse refreshToken(LoginDto.GetRefreshTokenDto getRefreshTokenDto) {
+    public LoginResponse refreshToken(LoginRequest.GetRefreshTokenDto getRefreshTokenDto) {
 
         String refreshToken = refreshTokenRepository.findRefreshTokenById(getRefreshTokenDto.getRefreshId());
 
         if (jwtProvider.validateJwtToken(refreshToken)) {
             String email = jwtProvider.extractEmail(refreshToken);
-            LoginDto loginDto = new LoginDto();
-            loginDto.setEmail(email);
+            LoginRequest loginRequest = new LoginRequest();
+            loginRequest.setEmail(email);
 
-            TokenResponse createToken = createTokenReturn(loginDto);
+            TokenResponse createToken = createTokenReturn(loginRequest);
             Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
 
             return new LoginResponse(
@@ -225,14 +228,14 @@ public class MemberService {
         }
     }
 
-    private TokenResponse createTokenReturn(LoginDto loginDto) {
+    private TokenResponse createTokenReturn(LoginRequest loginRequest) {
 
-        String accessToken = jwtProvider.createAccessToken(loginDto.getEmail());
-        String refreshToken = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshToken");
-        String refreshTokenExpirationAt = jwtProvider.createRefreshToken(loginDto.getEmail()).get("refreshTokenExpirationAt");
+        String accessToken = jwtProvider.createAccessToken(loginRequest.getEmail());
+        String refreshToken = jwtProvider.createRefreshToken(loginRequest.getEmail()).get("refreshToken");
+        String refreshTokenExpirationAt = jwtProvider.createRefreshToken(loginRequest.getEmail()).get("refreshTokenExpirationAt");
 
         RefreshToken insertRefreshToken = new RefreshToken(
-                loginDto.getEmail(),
+                loginRequest.getEmail(),
                 accessToken,
                 refreshToken,
                 refreshTokenExpirationAt
@@ -244,10 +247,10 @@ public class MemberService {
 
 
     @Transactional
-    public ModifyMemberResponse modifyInfo(String email , @Valid ModifyMemberDto modifyMemberDto){
+    public ModifyMemberResponse modifyInfo(String email , @Valid ModifyMemberRequest modifyMemberRequest){
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(MemberNotFoundException::new);
-        member.modifyMemberInfo(modifyMemberDto.getName(), modifyMemberDto.getImageUrl(), modifyMemberDto.getLocation());
+        member.modifyMemberInfo(modifyMemberRequest.getName(), modifyMemberRequest.getImageUrl(), modifyMemberRequest.getLocation());
         return new ModifyMemberResponse(
                 member.getName(),
                 member.getImageUrl(),
