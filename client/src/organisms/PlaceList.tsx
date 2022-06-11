@@ -36,6 +36,9 @@ const PlaceList = ({ places }: IPlaces) => {
               <IconText icon={<FaMapMarkerAlt />} text={value.address_name} />
             }
             tail={"no"}
+            onClick={() => {
+              window.open(value.place_url);
+            }}
           />
         ))}
     </ListContainer>

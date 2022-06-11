@@ -10,7 +10,7 @@ import { PromiseTitle } from "./Promise";
 import { useParams } from "react-router";
 import PromiseDate from "./PromiseDate";
 import PromiseLocation from "./PromiseLocation";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import api from "../auth/api";
 interface IPromiseDetail {
   id: number;
@@ -19,24 +19,46 @@ interface IPromiseDetail {
   location: string;
 }
 function PromiseDetail() {
-  const titleRef = useRef<HTMLInputElement>();
+  const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
+  const [location, setLocation] = useState("");
   const selectedGroup = useRecoilValue(selectedGroupState);
   const navigate = useNavigate();
   const params = useParams();
   const dateMatch = useMatch("/team/:id/promise/:pid/date");
-
+  const queryClient = useQueryClient();
   const { data: promiseDetailData } = useQuery<IPromiseDetail>(
-    "promiseDetailData",
+    ["promiseDetailData", params.pid],
     async () => {
       const { data } = await api.get(`/promises/${params.pid}`);
       return data;
     },
     {
       onSuccess: (data) => {
-        titleRef.current.value = data.name;
+        setTitle(data.name);
+        setDate(data.time);
+        setLocation(data.location);
       },
     }
   );
+
+  const { mutate: patchPromiseInfo } = useMutation(
+    async () => {
+      const requestBody = {
+        name: title,
+        date,
+        location,
+      };
+      return await api.patch(`promises/${params.pid}`, requestBody);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["promiseDetailData", params.pid]);
+      },
+      mutationKey: ["patchPromiseInfo", params.pid],
+    }
+  );
+
   const onNavClick = (state: string) => {
     if (state === "place") {
       navigate(`/team/${params.id}/promise/${params.pid}/${state}`, {
@@ -66,10 +88,11 @@ function PromiseDetail() {
       </div>
     );
   };
+  const onTitleChange = () => {};
   const Container = () => {
     return (
       <>
-        <LineInput placeholder="제목" ref={titleRef} />
+        <LineInput placeholder="제목" value={title} onChange={onTitleChange} />
         <NavBar>
           <NavItem
             onClick={() => onNavClick("date")}
@@ -85,9 +108,11 @@ function PromiseDetail() {
           </NavItem>
         </NavBar>
         {dateMatch ? (
-          <PromiseDate date={promiseDetailData.time} />
+          <PromiseDate props={{ date, setDate, patchPromiseInfo }} />
         ) : (
-          <PromiseLocation location={promiseDetailData.location} />
+          <PromiseLocation
+            props={{ location, setLocation, patchPromiseInfo }}
+          />
         )}
       </>
     );

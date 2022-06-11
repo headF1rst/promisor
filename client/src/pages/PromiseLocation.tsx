@@ -8,6 +8,8 @@ import PromiseLocationMap from "../organisms/PromiseLocationMap";
 import PlaceList from "../organisms/PlaceList";
 import styled from "styled-components";
 import { BoxInput } from "../styles/Input";
+import { RoundBtn } from "../atoms/Btn";
+import { useParams } from "react-router";
 
 declare var naver: any;
 declare global {
@@ -29,23 +31,41 @@ interface IPlace {
   place_url: string;
   category_group_name: string;
 }
-const PromiseLocation = ({ location }: { location: string }) => {
+
+interface IPromiseLocation {
+  props: {
+    location: string;
+    setLocation: Function;
+    patchPromiseInfo: Function;
+  };
+}
+
+const PromiseLocation = ({ props }: IPromiseLocation) => {
   const selectedGroup = useRecoilValue(selectedGroupState);
   const [myLat, setMyLat] = useState<number>();
   const [myLon, setMyLon] = useState<number>();
   const [places, setPlaces] = useState<IPlace[]>();
+  const { location, setLocation, patchPromiseInfo } = props;
   const queryClient = useQueryClient();
 
   const fixedPlaceRef = useRef<HTMLInputElement>();
+
+  const params = useParams();
+
   useEffect(() => {
-    fixedPlaceRef.current.value = location;
-  }, []);
+    if (location) {
+      fixedPlaceRef.current.value = location;
+    }
+    return () => {
+      patchPromiseInfo();
+    };
+  }, [location]);
 
   useEffect(() => {
     getMidLocation();
   }, []);
+
   const { mutate: editLocation } = useMutation(
-    "editLocation",
     async () => {
       const requestBody = {
         teamId: selectedGroup.id,
@@ -56,15 +76,14 @@ const PromiseLocation = ({ location }: { location: string }) => {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("getMidLocation");
+        queryClient.invalidateQueries(["getMidLocation", params.id]);
       },
     }
   );
+
   const { mutate: getMidLocation, data } = useMutation(
-    "getMidLocation",
     async () => {
       const { data } = await api.get(`/groups/mid-point/${selectedGroup.id}`);
-
       return data;
     },
     {
@@ -78,9 +97,9 @@ const PromiseLocation = ({ location }: { location: string }) => {
           }
         });
       },
+      mutationKey: ["getMidLocation", params.id],
     }
   );
-
   useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -93,11 +112,9 @@ const PromiseLocation = ({ location }: { location: string }) => {
   }, []);
 
   const initMap = (midLocation: ILocation) => {
+    console.log(midLocation);
     const map = new naver.maps.Map("map", {
-      center: new naver.maps.LatLng(
-        midLocation.latitude,
-        midLocation.longitude
-      ),
+      center: new naver.maps.LatLng(33.3590628, 126.534361),
       zoom: 13,
     });
     const marker = new naver.maps.Marker({
@@ -135,6 +152,12 @@ const PromiseLocation = ({ location }: { location: string }) => {
     }
   };
 
+  const onClick = () => {
+    if (myLat && myLon) {
+      editLocation();
+    }
+  };
+
   return (
     <div>
       <BoxInput placeholder="만남 장소" ref={fixedPlaceRef} />
@@ -152,6 +175,7 @@ const PromiseLocation = ({ location }: { location: string }) => {
         <span className="title"></span>
       </div>
       <PromiseLocationMap />
+      <RoundBtn value={"내 위치 불러오기"} onClick={onClick} center={true} />
       <PlaceList places={places} />
     </div>
   );
