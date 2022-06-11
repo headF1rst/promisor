@@ -1,15 +1,13 @@
-package promisor.promisor.domain.member.dto;
+package promisor.promisor.domain.member.dto.request;
 
 import lombok.Data;
-import promisor.promisor.domain.member.domain.MemberRole;
-import promisor.promisor.global.error.exception.Enum;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
-public class SignUpDto {
+public class SignUpRequest {
 
     @NotBlank(message = "이름을 입력해주세요.")
     private String name;

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import promisor.promisor.domain.member.dto.MemberResponse;
+import promisor.promisor.domain.member.dto.response.MemberResponse;
 import promisor.promisor.domain.member.service.RelationService;
 import promisor.promisor.global.auth.JwtAuth;
 

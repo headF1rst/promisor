@@ -7,13 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.dao.RelationRepository;
 import promisor.promisor.domain.member.domain.Member;
-import promisor.promisor.domain.member.dto.MemberResponse;
+import promisor.promisor.domain.member.dto.response.MemberResponse;
 import promisor.promisor.domain.member.exception.EmailEmptyException;
 import promisor.promisor.domain.member.exception.ExistFriendException;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service

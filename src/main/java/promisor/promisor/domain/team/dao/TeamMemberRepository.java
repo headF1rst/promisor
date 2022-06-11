@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
-import promisor.promisor.domain.team.dto.GetMidPointResponse;
 
 import java.util.List;
 
