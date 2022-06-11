@@ -39,14 +39,13 @@ function Promise() {
   const queryClient = useQueryClient();
 
   const { data: promiseListData, error } = useQuery<IPromiseList[]>(
-    "promiseList",
+    ["promiseList", params.id],
     async () => {
-      const { data } = await api.get(`/promises/${params.id}`);
+      const { data } = await api.get(`/promises/list/${params.id}`);
       return data;
     }
   );
   const { mutate: createPromise } = useMutation(
-    "promise",
     async () => {
       return await api.post(`/promises/${params.id}`, {
         name: promiseName,

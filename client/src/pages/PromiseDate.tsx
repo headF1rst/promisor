@@ -1,15 +1,27 @@
 import React, { useEffect, useRef } from "react";
 import { BoxInput } from "../styles/Input";
 import PromiseDateCalendar from "../organisms/PromiseDateCalendar";
-
-function PromiseDate({ date }: { date: string }) {
+import { useQueryClient } from "react-query";
+interface PromiseDate {
+  props: {
+    date: string;
+    setDate: Function;
+    patchPromiseInfo: Function;
+  };
+}
+function PromiseDate({ props }: PromiseDate) {
   const fixedDateRef = useRef<HTMLInputElement>();
+  const { date, setDate, patchPromiseInfo } = props;
+  const queryClient = useQueryClient();
   useEffect(() => {
-    fixedDateRef.current.value = date;
-  }, []);
+    return () => {
+      patchPromiseInfo();
+    };
+  });
+
   return (
     <>
-      <BoxInput type="date" ref={fixedDateRef} />
+      <BoxInput type="date" value={date} />
       <PromiseDateCalendar />
     </>
   );

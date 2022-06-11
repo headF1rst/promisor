@@ -12,27 +12,12 @@ import api from "../auth/api";
 import defaultImage from "../image/out.jpg";
 import { RoundElement } from "../organisms/RoundElement";
 
-interface IGroupMembers {
-  memberName: string;
-}
-
 interface IGroup {
   groupId: number;
   groupName: string;
   imageURL: string;
-  groupMembers: IGroupMembers[];
+  membersNames: string[];
 }
-
-const makeMembersString = (members: IGroupMembers[]) => {
-  let result = "";
-  members.map((value, idx) => {
-    result += value.memberName;
-    if (idx != members.length - 1) {
-      result += ", ";
-    }
-  });
-  return result;
-};
 
 function Group() {
   const setSelectedGroup = useSetRecoilState(selectedGroupState);
@@ -42,10 +27,13 @@ function Group() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const { data: groupListData } = useQuery<IGroup[]>("groupList", async () => {
-    const { data } = await api.get("/groups");
-    return data;
-  });
+  const { data: groupListData } = useQuery<IGroup[]>(
+    ["groupList"],
+    async () => {
+      const { data } = await api.get("/groups");
+      return data;
+    }
+  );
 
   const { mutate } = useMutation(
     async () => {
@@ -78,6 +66,20 @@ function Group() {
   const onToggleClick = () => {
     setShowModal((prev) => !prev);
   };
+
+  const makeMembersString = (members: string[]) => {
+    if (members) {
+      let result = "";
+      members.forEach((value, idx) => {
+        result += value;
+        if (idx != members.length - 1) {
+          result += ", ";
+        }
+      });
+      return result;
+    }
+  };
+
   return (
     <>
       {!showModal && <A.CreateBtn value={"팀 생성"} onClick={onToggleClick} />}
@@ -88,7 +90,7 @@ function Group() {
           exit={{ opacity: 0 }}
           transition={{ type: "linear" }}
         >
-          {groupListData.map((value, index) => (
+          {groupListData?.map((value, index) => (
             <RoundElement
               key={value.groupId}
               onClick={() => onGroupClick(value.groupId, value.groupName)}
@@ -104,7 +106,7 @@ function Group() {
               sub={
                 <A.IconText
                   icon={<GoPerson />}
-                  text={makeMembersString(value.groupMembers)}
+                  text={makeMembersString(value.membersNames)}
                 />
               }
             />

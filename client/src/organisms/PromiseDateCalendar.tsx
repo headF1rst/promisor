@@ -22,15 +22,21 @@ function PromiseDateCalendar() {
   const [dateModal, setDateModal] = useState(false);
   const now = new Date();
   const [year, setYear] = useState(now.getFullYear());
-  const [month, setMonth] = useState(now.getMonth() + 1);
+  const [month, setMonth] = useState(now.getMonth());
   const [weeks, setWeeks] = useState<any[][]>([]);
   const [currentDate, setCurrentDate] = useState("");
   const params = useParams();
   const { data: teamCalendarData } = useQuery<ITeamCalender[]>(
-    "teamCalendarData",
+    [
+      "teamCalendarData",
+      params.id,
+      String(year) + "-" + String(month + 1).padStart(2, "0"),
+    ],
     async () => {
       const { data } = await api.get(
-        `/bandate/team/${params.id}/${dateFormatter(currentDate).slice(0, 7)}`
+        `/bandate/team/${params.id}/${
+          String(year) + "-" + String(month + 1).padStart(2, "0")
+        }`
       );
       return data;
     }
@@ -53,31 +59,31 @@ function PromiseDateCalendar() {
   const makeCalendar = (year: number, month: number) => {
     const FEB =
       (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
-    const LASTDATE = [0, 31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    const LASTDATE = [31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = LASTDATE[month + 1];
+    const lastDate = LASTDATE[month];
     let date = 1;
     let newWeeks = [];
     for (let week = 0; week < 6; week++) {
       let newWeek = [];
       for (let day = 0; day < 7; day++) {
         if (date > lastDate || (week == 0 && firstDay > day)) {
-          newWeek.push({ id: null, value: "", color: "null" });
+          newWeek.push({
+            id: String(week) + String(day),
+            value: "",
+            color: "null",
+          });
         } else {
           let thisColor = GREEN;
           const id =
             String(year) +
-            String(month).padStart(2, "0") +
+            String(month + 1).padStart(2, "0") +
             String(date).padStart(2, "0");
-          for (let i = 0; i < teamCalendarData.length; i++) {
-            if (teamCalendarData[i].date === dateFormatter(id)) {
-              if (teamCalendarData[i].dateStatus === "IMPOSSIBLE") {
-                thisColor = "RED";
-                break;
-              } else if (teamCalendarData[i].dateStatus === "UNCERTAIN") {
-                thisColor = "YELLOW";
-              }
-            }
+
+          if (teamCalendarData[date - 1].dateStatus === "IMPOSSIBLE") {
+            thisColor = "RED";
+          } else if (teamCalendarData[date - 1].dateStatus === "UNCERTAIN") {
+            thisColor = "YELLOW";
           }
           newWeek.push({
             id: id,
@@ -115,7 +121,7 @@ function PromiseDateCalendar() {
           onClick={() => onBtnClick("prev")}
         />
         <span>
-          {year}-{String(month).padStart(2, "0")}
+          {year}-{String(month + 1).padStart(2, "0")}
         </span>
         <VscTriangleRight
           style={{ cursor: "pointer" }}

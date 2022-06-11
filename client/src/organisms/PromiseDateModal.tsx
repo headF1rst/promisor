@@ -37,7 +37,7 @@ function PromiseDateModal({ state }: IProps) {
   };
 
   const { data: teamModalData } = useQuery<IPromiseDateModal[]>(
-    "teamModalData",
+    ["teamModalData", params.id, currentDate],
     async () => {
       const { data } = await api.get(
         `/bandate/team/${params.id}/detail/${dateFormatter(currentDate)}`
@@ -45,18 +45,21 @@ function PromiseDateModal({ state }: IProps) {
       return data;
     }
   );
-
+  console.log(teamModalData);
   const getPeople = (color: string) => {
     if (!teamModalData) {
       return;
     }
+    let visited = Array<number>();
     let peopleStr = "";
     for (let i = 0; i < teamModalData.length; i++) {
       if (
         teamModalData[i].date === dateFormatter(currentDate) &&
-        teamModalData[i].dateStatus === color
+        teamModalData[i].dateStatus === color &&
+        !visited.includes(teamModalData[i].memberId)
       ) {
         peopleStr += teamModalData[i].name + ", ";
+        visited.push(teamModalData[i].memberId);
       }
     }
     if (peopleStr) {
