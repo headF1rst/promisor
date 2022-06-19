@@ -20,6 +20,7 @@ interface IAddModal {
 function AddModal({ props }: IAddModal) {
   const onModalToggle = () => {
     props.setShowModal((p: boolean) => !p);
+    props.setInputValue("");
   };
   const opacityVariants = {
     initial: {

@@ -4,7 +4,7 @@ import styled from "styled-components";
 interface IBtn {
   value: string;
   center?: boolean;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
   fontSize?: number;
 }
 export function RoundBtn({ value, center, onClick, fontSize }: IBtn) {
@@ -19,12 +19,9 @@ export function CreateBtn({ value, onClick }: IBtn) {
   return <SCreateBtn onClick={onClick}>{value}</SCreateBtn>;
 }
 
-const SRoundBtn = styled.div<{ center?: boolean; fontSize?: number }>`
+const SRoundBtn = styled.button<{ center?: boolean; fontSize?: number }>`
   background-color: ${(p) => p.theme.btnColor};
   color: ${(p) => p.theme.bgColor};
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   border-radius: 1em;
   text-align: center;
   cursor: pointer;
@@ -32,6 +29,7 @@ const SRoundBtn = styled.div<{ center?: boolean; fontSize?: number }>`
   width: 8em;
   height: 2em;
   margin: ${(p) => p.center && "0 auto"};
+  border: none;
 `;
 
 const SCreateBtn = styled(SRoundBtn)`
