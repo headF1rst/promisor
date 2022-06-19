@@ -10,7 +10,6 @@ import { useRecoilValue } from "recoil";
 import { darkModeState } from "../states/darkmode";
 import BottomMenu from "../organisms/BottomMenu";
 import { useMatch } from "react-router";
-import { getCookie } from "../Cookie";
 interface IBasedTemplate {
   header: object;
   container: object;
@@ -47,18 +46,19 @@ function BasedTemplate({ header, container }: IBasedTemplate) {
   };
   return (
     <AnimatePresence>
-      <>
-        <STemplate
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-        >
+      <motion.div
+        key="template"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      >
+        <STemplate>
           <SHeader variants={headerVariants} animate={headerAnimation}>
             {header}
           </SHeader>
           <SContainer>{container}</SContainer>
         </STemplate>
-      </>
+      </motion.div>
       {!loginMatch && !registerMatch && (
         <SBottomMenu>
           <BottomMenu />

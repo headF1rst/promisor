@@ -43,6 +43,7 @@ function AddModal({ props }: IAddModal) {
       {props.showModal && (
         <>
           <Modal
+            key="addModal"
             variants={opacityVariants}
             initial="initial"
             animate="animate"
@@ -65,6 +66,7 @@ function AddModal({ props }: IAddModal) {
             />
           </Modal>
           <S.Overlay
+            key={"addOverlay"}
             variants={opacityVariants}
             initial="initial"
             animate="animate"
