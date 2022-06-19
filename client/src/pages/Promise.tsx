@@ -9,13 +9,14 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { selectedGroupState } from "../states/selectedGroup";
 import { RoundElement } from "../organisms/RoundElement";
 import * as A from "../atoms/_index";
-import AddModal from "../organisms/AddModal";
 import { ListContainer } from "../styles/Base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import api from "../auth/api";
-import { getCookie } from "../Cookie";
 import { useParams } from "react-router";
 import { BsFillCalendarMinusFill } from "react-icons/bs";
+import { useForm } from "react-hook-form";
+import * as S from "../styles/_index";
+import { motion } from "framer-motion";
 interface IPromise {
   month?: string;
   date?: string;
@@ -27,16 +28,19 @@ interface IPromiseList {
   time: string;
   location: string;
 }
-
+interface IPromiseNameForm {
+  promiseName: string;
+}
 function Promise() {
   const selectedGroup = useRecoilValue(selectedGroupState);
   const params = useParams();
-  const [promiseName, setPromiseName] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   const dark = useRecoilValue(darkModeState);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
+  const { register, setValue, handleSubmit } = useForm<IPromiseNameForm>();
 
   const { data: promiseListData, error } = useQuery<IPromiseList[]>(
     ["promiseList", params.id],
@@ -46,7 +50,7 @@ function Promise() {
     }
   );
   const { mutate: createPromise } = useMutation(
-    async () => {
+    async (promiseName: string) => {
       return await api.post(`/promises/${params.id}`, {
         name: promiseName,
       });
@@ -62,12 +66,28 @@ function Promise() {
     navigate(`${index}/date`);
   };
 
-  const onBtnClick = () => {
-    createPromise();
-    setShowModal(false);
-  };
   const onCreateClick = () => {
     setShowModal(true);
+    setValue("promiseName", "");
+  };
+
+  const onPromiseValid = ({ promiseName }: IPromiseNameForm) => {
+    createPromise(promiseName);
+    setShowModal(false);
+  };
+  const onOverlayClick = () => {
+    setShowModal(false);
+  };
+  const opacityVariants = {
+    initial: {
+      opacity: 0,
+    },
+    animate: {
+      opacity: 1,
+    },
+    exit: {
+      opacity: 0,
+    },
   };
   const Header = () => {
     return (
@@ -138,18 +158,36 @@ function Promise() {
           <A.CreateBtn value={"약속 생성"} onClick={onCreateClick} />
         )}
 
-        <AddModal
-          props={{
-            titleText: "약속 생성",
-            placeholderText: "어떤 약속인가요?",
-            btnText: "생성",
-            inputValue: promiseName,
-            setInputValue: setPromiseName,
-            onBtnClick,
-            showModal,
-            setShowModal,
-          }}
-        />
+        {showModal && (
+          <>
+            <Modal
+              key="promiseModal"
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={opacityVariants}
+            >
+              <span>약속 생성</span>
+              <Form onSubmit={handleSubmit(onPromiseValid)}>
+                <S.LabelInput>
+                  <S.Input
+                    placeholder={"어떤 약속인가요?"}
+                    {...register("promiseName")}
+                  />
+                </S.LabelInput>
+                <A.RoundBtn center={true} value={"생성"} />
+              </Form>
+            </Modal>
+            <S.Overlay
+              key={"promiseOverlay"}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              variants={opacityVariants}
+              onClick={onOverlayClick}
+            />
+          </>
+        )}
       </>
     );
   };
@@ -174,4 +212,32 @@ const FlatDate = styled.span`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const Modal = styled(motion.div)`
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  border-radius: 1em;
+  background-color: ${(p) => p.theme.smoke};
+  color: ${(p) => p.theme.textColor};
+  width: 80%;
+  @media screen and (min-width: 900px) {
+    width: 40%;
+  }
+  height: 14em;
+  padding: 2em;
+  justify-content: space-around;
+  z-index: 3;
+  span {
+    background-color: transparent;
+  }
+  input {
+    margin-bottom: 1em;
+  }
+`;
+const Form = styled.form`
+  flex-direction: column;
+  display: flex;
+  justify-content: space-between;
 `;
