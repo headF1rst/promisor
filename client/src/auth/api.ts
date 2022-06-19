@@ -1,9 +1,9 @@
 import axios from "axios";
-import { refresh, refreshErrorHandler } from "./refresh";
+import { refresh } from "./refresh";
 const api = axios.create({
   baseURL: "https://server.promisor.site",
 });
 
-api.interceptors.request.use(refresh, refreshErrorHandler);
+api.interceptors.request.use(refresh);
 
 export default api;
