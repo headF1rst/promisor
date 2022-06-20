@@ -7,7 +7,7 @@ interface IRoundElement {
   head: Object;
   main: string;
   sub?: Object;
-  tail?: string;
+  tail?: Object;
 }
 
 export const RoundElement = ({
@@ -26,11 +26,7 @@ export const RoundElement = ({
           {sub}
         </SFlatElement>
       </Row>
-      {tail && tail.includes("checkbox") ? (
-        <Checkbox id={tail.slice(8)} />
-      ) : !tail ? (
-        <DotsVertical />
-      ) : null}
+      {tail}
     </SFlatList>
   );
 };

@@ -7,6 +7,7 @@ const refresh = async (
   const refreshTokenId = localStorage.getItem("refreshTokenId");
   let accessToken = getCookie("accessToken");
   const expiredAt = localStorage.getItem("tokenExpireTime");
+
   if (Number(expiredAt) - new Date().getTime() < 0 && refreshTokenId) {
     const body = {
       refreshId: refreshTokenId,
@@ -21,11 +22,6 @@ const refresh = async (
         setCookie("accessToken", accessToken);
         localStorage.setItem("refreshTokenId", res.data.data.refreshTokenId);
         localStorage.setItem("tokenExpireTime", res.data.data.expiredAt);
-      })
-      .catch(() => {
-        localStorage.removeItem("refreshTokenId");
-        window.location.reload();
-        return;
       });
   }
 
@@ -34,4 +30,8 @@ const refresh = async (
   return config;
 };
 
-export { refresh };
+const refreshError = () => {
+  localStorage.removeItem("refreshTokenId");
+};
+
+export { refresh, refreshError };

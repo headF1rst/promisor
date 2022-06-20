@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { useParams } from "react-router";
 import styled from "styled-components";
 import api from "../auth/api";
@@ -24,6 +24,7 @@ const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 function PromiseDateModal({ state }: IProps) {
   const { dateModal, setDateModal, currentDate } = state;
   const params = useParams();
+
   const onChooseClick = () => {};
   const getDayFromCurrentDate = () => {
     const strDate =
@@ -45,7 +46,6 @@ function PromiseDateModal({ state }: IProps) {
       return data;
     }
   );
-  console.log(teamModalData);
   const getPeople = (color: string) => {
     if (!teamModalData) {
       return;
@@ -77,6 +77,7 @@ function PromiseDateModal({ state }: IProps) {
       {dateModal && (
         <>
           <Modal
+            key="dateModal"
             initial={{
               opacity: 0,
             }}
@@ -111,11 +112,12 @@ function PromiseDateModal({ state }: IProps) {
                 ))}
             </List>
 
-            <ChooseButton onClick={onChooseClick}>
-              이 날짜 선택하기
-            </ChooseButton>
+            {/*<ChooseButton onClick={onChooseClick}>*/}
+            {/*  이 날짜 선택하기*/}
+            {/*</ChooseButton>*/}
           </Modal>
           <Overlay
+            key="dateOverlay"
             initial={{
               opacity: 0,
             }}

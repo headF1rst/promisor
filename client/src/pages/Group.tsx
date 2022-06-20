@@ -90,27 +90,30 @@ function Group() {
           exit={{ opacity: 0 }}
           transition={{ type: "linear" }}
         >
-          {groupListData?.map((value, index) => (
-            <RoundElement
-              key={value.groupId}
-              onClick={() => onGroupClick(value.groupId, value.groupName)}
-              head={
-                <A.ProfileImg
-                  imgProps={{
-                    type: "group",
-                    imgSrc: `${value.imageURL ? value.imageURL : defaultImage}`,
-                  }}
-                />
-              }
-              main={value.groupName}
-              sub={
-                <A.IconText
-                  icon={<GoPerson />}
-                  text={makeMembersString(value.membersNames)}
-                />
-              }
-            />
-          ))}
+          {groupListData &&
+            groupListData?.map((value, index) => (
+              <RoundElement
+                key={value.groupId}
+                onClick={() => onGroupClick(value.groupId, value.groupName)}
+                head={
+                  <A.ProfileImg
+                    imgProps={{
+                      type: "group",
+                      imgSrc: `${
+                        value.imageURL ? value.imageURL : defaultImage
+                      }`,
+                    }}
+                  />
+                }
+                main={value.groupName}
+                sub={
+                  <A.IconText
+                    icon={<GoPerson />}
+                    text={makeMembersString(value.membersNames)}
+                  />
+                }
+              />
+            ))}
         </ListContainer>
       )}
       <AddModal
