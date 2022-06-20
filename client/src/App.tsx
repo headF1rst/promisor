@@ -8,13 +8,14 @@ import {
   Login,
   GroupMaker,
   Promise,
-  PromiseDetail,
   GroupChatRoom,
   Group,
   Home,
+  PromiseDate,
+  PromisePlace,
 } from "./pages/_index";
-import PromiseDate from "./pages/PromiseDate";
-import PromiseLocation from "./pages/PromiseLocation";
+import { useEffect } from "react";
+import { getCookie } from "./Cookie";
 const GlobalStyle = createGlobalStyle`
 @font-face { 
   font-family: 'Winkle';
@@ -29,7 +30,7 @@ const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
+del, dfn, em, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
 b, u, i, center,
 dl, dt, dd, menu, ol, ul, li,
@@ -48,6 +49,9 @@ time, mark, audio, video {
   vertical-align: baseline;
   background-color: ${(p) => p.theme.bgColor};
   color: ${(p) => p.theme.textColor}
+}
+img{
+  background-color:rgba(0, 0, 0, 0);
 }
 ::selection { background-color: rgba(4, 201, 148, 0.2)}
 /* HTML5 display-role reset for older browsers */
@@ -97,7 +101,6 @@ a {
 `;
 function App() {
   const [dark, setDark] = useRecoilState(darkModeState);
-
   return (
     <ThemeProvider theme={dark ? darkTheme : lightTheme}>
       <GlobalStyle />
@@ -107,12 +110,11 @@ function App() {
           <Route path="/register" element={<Login />} />
           <Route path="/team/:id/invite" element={<GroupMaker />} />
           <Route path="/team/:id/promise" element={<Promise />} />
-          <Route path="/team/:id/promise/:pid/*" element={<PromiseDetail />} />
-          {/* <Route path="/team/:id/promise/:pid/date" element={<PromiseDate />} />
+          <Route path="/team/:id/promise/:pid/date" element={<PromiseDate />} />
           <Route
             path="/team/:id/promise/:pid/place"
-            element={<PromiseLocation />}
-          /> */}
+            element={<PromisePlace />}
+          />
           <Route path="/team/:id" element={<GroupChatRoom />} />
           <Route path="/" element={<Home />}>
             <Route path="/team" element={<Group />}></Route>

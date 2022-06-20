@@ -2,20 +2,18 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import PromiseDateModal from "./PromiseDateModal";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import api from "../auth/api";
 import { useParams } from "react-router";
-import { dateFormatter } from "../utils/dateFormatter";
 
 interface ITeamCalender {
   date: string;
   dateStatus: string;
 }
 
-const RED = "RED";
-const YELLOW = "YELLOW";
-const GREEN = "GREEN";
-const COLOR = { RED: "#ff7373", YELLOW: "#ffd37a", GREEN: "#85ba73" };
+const RED = "IMPOSSIBLE";
+const YELLOW = "UNCERTAIN";
+const GREEN = "POSSIBLE";
 const DAYS_OF_WEEK = ["일", "월", "화", "수", "목", "금", "토"];
 
 function PromiseDateCalendar() {
@@ -45,23 +43,16 @@ function PromiseDateCalendar() {
     if (!teamCalendarData) {
       return;
     }
-    let newColors = [];
-
-    for (let i = 0; i < teamCalendarData.length; i++) {
-      const colorObj = {
-        id: teamCalendarData[i].date,
-        color: teamCalendarData[i].dateStatus,
-      };
-      newColors.push(colorObj);
-    }
     makeCalendar(year, month);
   }, [teamCalendarData, month]);
+
   const makeCalendar = (year: number, month: number) => {
     const FEB =
       (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0 ? 29 : 28;
     const LASTDATE = [31, FEB, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     const firstDay = new Date(year, month, 1).getDay();
     const lastDate = LASTDATE[month];
+
     let date = 1;
     let newWeeks = [];
     for (let week = 0; week < 6; week++) {
@@ -69,26 +60,20 @@ function PromiseDateCalendar() {
       for (let day = 0; day < 7; day++) {
         if (date > lastDate || (week == 0 && firstDay > day)) {
           newWeek.push({
-            id: String(week) + String(day),
+            id: String(year) + String(month) + String(week) + String(day),
             value: "",
             color: "null",
           });
         } else {
-          let thisColor = GREEN;
           const id =
             String(year) +
             String(month + 1).padStart(2, "0") +
             String(date).padStart(2, "0");
 
-          if (teamCalendarData[date - 1].dateStatus === "IMPOSSIBLE") {
-            thisColor = "RED";
-          } else if (teamCalendarData[date - 1].dateStatus === "UNCERTAIN") {
-            thisColor = "YELLOW";
-          }
           newWeek.push({
             id: id,
             value: date,
-            color: thisColor,
+            color: teamCalendarData[date - 1].dateStatus,
           });
           date++;
         }
@@ -112,7 +97,6 @@ function PromiseDateCalendar() {
       setMonth(prevMonth === 11 ? 0 : prevMonth + 1);
     }
   };
-
   return (
     <Container>
       <Elements>
@@ -132,18 +116,22 @@ function PromiseDateCalendar() {
       <Month>
         <Week>
           {DAYS_OF_WEEK.map((day, idx) => (
-            <DateBox key={idx} height={"5vh"} isDay={true}>
+            <DateBox
+              key={String(year) + String(month) + String(idx)}
+              height={"5vh"}
+              isDay={true}
+            >
               {day}
             </DateBox>
           ))}
         </Week>
         {weeks &&
           weeks.map((week, week_idx) => (
-            <Week key={week_idx}>
+            <Week key={String(year) + String(month) + String(week_idx)}>
               {!(week[0].value === "" && week_idx === 5) &&
                 week.map((date, date_idx) => (
                   <DateBox
-                    key={String(week_idx) + String(date_idx)}
+                    key={date.id}
                     color={date.color}
                     onClick={() => onDateClick(date.id)}
                     style={{ color: "black" }}
@@ -156,15 +144,15 @@ function PromiseDateCalendar() {
       </Month>
       <Buttons>
         <Button>
-          <Circle color={COLOR[RED]} />
+          <Circle color={"#ff7373"} />
           불가능
         </Button>
         <Button>
-          <Circle color={COLOR[YELLOW]} />
+          <Circle color={"#ffd37a"} />
           애매함
         </Button>
         <Button>
-          <Circle color={COLOR[GREEN]} />
+          <Circle color={"#85ba73"} />
           가능
         </Button>
       </Buttons>
