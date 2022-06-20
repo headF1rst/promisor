@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { VscTriangleLeft, VscTriangleRight } from "react-icons/vsc";
 import MyPageModal from "../organisms/MyPageModal";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import user from "../image/user.png";
 import { motion } from "framer-motion";
 import api from "../auth/api";
@@ -151,7 +151,7 @@ function MyPage() {
         <Month>
           <Week>
             {DAYS_OF_WEEK.map((day, idx) => (
-              <DateBox key={day} height={"5vh"} isDay={true}>
+              <DateBox key={idx} height={"5vh"} isDay={true}>
                 {day}
               </DateBox>
             ))}
@@ -159,7 +159,8 @@ function MyPage() {
           {weeks &&
             weeks.map((week, week_idx) => (
               <Week key={week_idx}>
-                {!(week[0].value === "" && week_idx === 5) &&
+                {week &&
+                  !(week[0].value === "" && week_idx === 5) &&
                   week.map((date, date_idx) => (
                     <DateBox
                       key={String(week_idx) + String(date_idx)}
