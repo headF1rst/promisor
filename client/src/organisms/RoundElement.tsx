@@ -73,6 +73,6 @@ export const SFlatElement = styled.div`
   span {
     font-size: 0.8rem;
     margin-top: 0.5rem;
-    color: ${(p) => p.theme.grey};
+    color: ${(p) => p.theme.textColor};
   }
 `;

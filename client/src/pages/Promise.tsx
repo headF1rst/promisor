@@ -31,6 +31,11 @@ interface IPromiseList {
 interface IPromiseNameForm {
   promiseName: string;
 }
+interface IPromiseNameInvalid {
+  promiseName?: {
+    message?: string;
+  };
+}
 function Promise() {
   const selectedGroup = useRecoilValue(selectedGroupState);
   const params = useParams();
@@ -74,6 +79,9 @@ function Promise() {
   const onPromiseValid = ({ promiseName }: IPromiseNameForm) => {
     createPromise(promiseName);
     setShowModal(false);
+  };
+  const onPromiseInvalid = ({ promiseName }: IPromiseNameInvalid) => {
+    alert(promiseName.message);
   };
   const onOverlayClick = () => {
     setShowModal(false);
@@ -168,11 +176,17 @@ function Promise() {
               variants={opacityVariants}
             >
               <span>약속 생성</span>
-              <Form onSubmit={handleSubmit(onPromiseValid)}>
+              <Form onSubmit={handleSubmit(onPromiseValid, onPromiseInvalid)}>
                 <S.LabelInput>
                   <S.Input
                     placeholder={"어떤 약속인가요?"}
-                    {...register("promiseName")}
+                    {...register("promiseName", {
+                      required: "약속 이름을 입력해주세요",
+                      maxLength: {
+                        value: 20,
+                        message: "약속 이름은 20자 이하여야 합니다.",
+                      },
+                    })}
                   />
                 </S.LabelInput>
                 <A.RoundBtn center={true} value={"생성"} />
