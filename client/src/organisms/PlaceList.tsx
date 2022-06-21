@@ -11,6 +11,8 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import api from "../auth/api";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { UseFormSetValue } from "react-hook-form";
+import { IPlaceForm } from "../pages/PromisePlace";
 
 interface ILocation {
   teamId: number;
@@ -29,8 +31,15 @@ interface IPlace {
   place_url: string;
   category_group_name: string;
 }
-const PlaceList = (props: IPromiseDetail) => {
-  const { id, name, time } = props;
+
+interface IProps {
+  props: {
+    promiseDetailData: IPromiseDetail;
+    setValue: UseFormSetValue<IPlaceForm>;
+  };
+}
+const PlaceList = ({ props }: IProps) => {
+  const { promiseDetailData, setValue } = props;
   const params = useParams();
   const [places, setPlaces] = useState<IPlace[]>();
   const [midAddress, setMidAddress] = useState("");
@@ -39,17 +48,21 @@ const PlaceList = (props: IPromiseDetail) => {
   const { mutate: patchPromiseInfo } = useMutation(
     async (location: string) => {
       const requestBody = {
-        name: name,
-        date: time,
+        name: promiseDetailData?.name,
+        date: promiseDetailData?.time,
         location,
       };
-      return await api.patch(`promises/${id}`, requestBody);
+      setValue("place", location);
+      return await api.patch(`promises/${promiseDetailData?.id}`, requestBody);
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["promiseDetailData", String(id)]);
+        queryClient.invalidateQueries([
+          "promiseDetailData",
+          String(promiseDetailData?.id),
+        ]);
       },
-      mutationKey: ["patchPromiseInfoPlace", id],
+      mutationKey: ["patchPromiseInfoPlace", promiseDetailData?.id],
     }
   );
   const { data: midLocation } = useQuery<ILocation>(

@@ -13,6 +13,8 @@ import { IPromiseDetail } from "./PromiseDate";
 import { useParams } from "react-router";
 import { HiLocationMarker } from "react-icons/hi";
 import PlaceList from "../organisms/PlaceList";
+import styled from "styled-components";
+import { useForm } from "react-hook-form";
 
 interface ILocation {
   teamId: number;
@@ -20,19 +22,19 @@ interface ILocation {
   longitude: number;
 }
 
-export interface IPlace {
-  address_name: string;
-  place_name: string;
-  place_url: string;
-  category_group_name: string;
+export interface IPlaceForm {
+  place: string;
 }
 const PromisePlace = () => {
   const selectedGroup = useRecoilValue(selectedGroupState);
   const params = useParams();
   const [myLat, setMyLat] = useState<number>();
   const [myLon, setMyLon] = useState<number>();
+  const [editing, setEditing] = useState(false);
 
   const queryClient = useQueryClient();
+
+  const { register, handleSubmit, setValue } = useForm<IPlaceForm>();
 
   const midLocation = queryClient.getQueryData<ILocation>([
     "midLocation",
@@ -62,7 +64,25 @@ const PromisePlace = () => {
       },
     }
   );
-
+  const { mutate: patchPromiseInfo } = useMutation(
+    async (location: string) => {
+      const requestBody = {
+        name: promiseDetailData.name,
+        date: promiseDetailData.time,
+        location,
+      };
+      return await api.patch(`promises/${params.pid}`, requestBody);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([
+          "promiseDetailData",
+          String(params.pid),
+        ]);
+      },
+      mutationKey: ["patchPromiseInfoPlace", params?.pid],
+    }
+  );
   // useEffect(() => {
   //   if (navigator.geolocation) {
   //     navigator.geolocation.getCurrentPosition(
@@ -73,6 +93,11 @@ const PromisePlace = () => {
   //     );
   //   }
   // }, []);
+
+  const onPlaceValid = ({ place }: IPlaceForm) => {
+    patchPromiseInfo(place);
+    setEditing(false);
+  };
 
   const Header = () => {
     return (
@@ -99,15 +124,39 @@ const PromisePlace = () => {
       <>
         <PromiseDetailTitle {...promiseDetailData} />
         <PromiseDetailNav />
-        <div style={{ width: "80%", marginBottom: "1em" }}>
-          <HiLocationMarker
-            size={20}
-            style={{ paddingTop: "0.2em", marginRight: "0.3em" }}
-          />
-          {promiseDetailData?.location ? promiseDetailData.location : "미정"}
-        </div>
+
+        {editing ? (
+          <Form onSubmit={handleSubmit(onPlaceValid)}>
+            <LineInput
+              placeholder="약속 장소"
+              defaultValue={
+                promiseDetailData?.location
+                  ? promiseDetailData.location
+                  : "미정"
+              }
+              {...register("place")}
+            />
+            <button type={"submit"}>완료</button>
+          </Form>
+        ) : (
+          <RowDiv>
+            <span>
+              <HiLocationMarker
+                size={20}
+                style={{ paddingTop: "0.2em", marginRight: "0.3em" }}
+              />
+              {promiseDetailData?.location
+                ? promiseDetailData.location
+                : "미정"}
+            </span>
+            <button type={"button"} onClick={() => setEditing(true)}>
+              직접입력
+            </button>
+          </RowDiv>
+        )}
+
         <PromiseLocationMap midLocation={midLocation} />
-        <PlaceList {...promiseDetailData} />
+        <PlaceList props={{ promiseDetailData, setValue }} />
       </>
     );
   };
@@ -116,3 +165,43 @@ const PromisePlace = () => {
 };
 
 export default React.memo(PromisePlace);
+const RowDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+  width: 80%;
+  justify-content: space-between;
+  button {
+    border: none;
+    background: none;
+    color: ${(p) => p.theme.grey};
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+const LineInput = styled.input`
+  width: 80%;
+  height: 5vh;
+  border: none;
+  border-bottom: solid 1px ${(p) => p.theme.grey};
+  &:focus {
+    outline: none;
+  }
+  background-color: transparent;
+`;
+const Form = styled.form`
+  display: flex;
+  flex-direction: row;
+  width: 80%;
+  margin-bottom: 1em;
+  justify-content: space-between;
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: grey;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
