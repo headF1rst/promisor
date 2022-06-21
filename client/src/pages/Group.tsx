@@ -133,5 +133,3 @@ function Group() {
 }
 
 export default Group;
-
-const CreateButton = styled.button``;

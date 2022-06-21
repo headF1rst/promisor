@@ -44,8 +44,9 @@ time, mark, audio, video {
   padding: 0;
   border: 0;
   font-size: 100%;
-  font-family: 'InfinitySans-RegularA1', sans-serif !important;
+  font-family: 'InfinitySans-RegularA1';
   font: inherit;
+  font-weight: 400;
   vertical-align: baseline;
   background-color: ${(p) => p.theme.bgColor};
   color: ${(p) => p.theme.textColor}

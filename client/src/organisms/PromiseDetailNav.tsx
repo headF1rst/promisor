@@ -20,13 +20,13 @@ function PromiseDetailNav() {
     <NavBar>
       <NavItem
         onClick={() => onNavClick("date")}
-        style={{ color: dateMatch ? "black" : "grey" }}
+        dateMatch={dateMatch ? true : false}
       >
         일시
       </NavItem>
       <NavItem
         onClick={() => onNavClick("place")}
-        style={{ color: dateMatch ? "grey" : "black" }}
+        dateMatch={dateMatch ? false : true}
       >
         장소
       </NavItem>
@@ -45,7 +45,9 @@ const NavBar = styled.div`
   justify-content: space-between;
   align-items: center;
 `;
-const NavItem = styled.span`
+const NavItem = styled.span<{ dateMatch: boolean }>`
   background-color: transparent;
   cursor: pointer;
+  font-size: ${(p) => (p.dateMatch ? "1em" : "0.9em")};
+  font-weight: ${(p) => (p.dateMatch ? 700 : 300)};
 `;

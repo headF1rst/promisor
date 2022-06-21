@@ -70,7 +70,9 @@ function GroupMaker() {
         {" "}
         <ArrowBack />
         <span>그룹 초대</span>
-        <span onClick={onClick}>완료</span>
+        <Button type={"submit"} form={"inviteGroupMember"}>
+          완료
+        </Button>
       </div>
     );
   };
@@ -88,4 +90,8 @@ function GroupMaker() {
 
 export default GroupMaker;
 
-const Bubbling = styled.div``;
+const Button = styled.button`
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+`;
