@@ -7,7 +7,7 @@ import promisor.promisor.global.config.security.JwtProvider;
 
 @Service
 @RequiredArgsConstructor
-public class jwtService {
+public class JwtService {
 
     private final JwtProvider jwtProvider;
 

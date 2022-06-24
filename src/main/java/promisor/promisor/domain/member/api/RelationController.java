@@ -42,9 +42,9 @@ public class RelationController {
     }
 
     @Operation(summary = "Delete Friend", description = "친구 삭제")
-    @PatchMapping("/{friendId}")
+    @PatchMapping("/{id}")
     public ResponseEntity<Void> deleteFriend(@JwtAuth final String email,
-                                             @PathVariable("friendId") final Long friendId) {
+                                             @PathVariable("id") final Long friendId) {
         relationService.deleteFriend(email, friendId);
         return ResponseEntity.ok().build();
     }
