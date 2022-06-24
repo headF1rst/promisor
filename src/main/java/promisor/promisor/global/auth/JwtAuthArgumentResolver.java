@@ -15,7 +15,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtAuthArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final jwtService jwtService;
+    private final JwtService jwtService;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {

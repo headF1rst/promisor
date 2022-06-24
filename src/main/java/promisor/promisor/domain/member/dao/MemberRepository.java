@@ -18,8 +18,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Modifying
     @Query("update Member m " +
             "set m.status = 'ACTIVE' where m.email = :email")
-    int enableMember(@Param("email") String email);
+    void enableMember(@Param("email") String email);
 
     boolean existsByEmail(String email);
 }
-

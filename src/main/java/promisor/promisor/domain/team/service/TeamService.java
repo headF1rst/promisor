@@ -32,7 +32,6 @@ public class TeamService {
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
-    private final InviteRepository inviteRepository;
 
     /*
      *   그룹 생성 API
@@ -187,5 +186,4 @@ public class TeamService {
         }
         return true;
     }
-
 }
