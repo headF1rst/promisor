@@ -58,4 +58,12 @@ public class TeamMember extends BaseEntity {
     public Set<TeamMember> getTeamMembersFromTeam() {
         return this.team.getTeamMembers();
     }
+
+    public double addLatitude(double avgLatitude) {
+        return this.latitude + avgLatitude;
+    }
+
+    public double addLongitude(double avgLongitude) {
+        return this.longitude + avgLongitude;
+    }
 }
