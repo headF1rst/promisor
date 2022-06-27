@@ -145,14 +145,14 @@ public class TeamService {
             throw new MemberNotBelongsToTeam();
         }
 
-        List<TeamMember> teamMemberList = teamMemberRepository.findMembersByTeamId(teamId);
+        List<TeamMember> teamMembers = teamMemberRepository.findMembersByTeamId(teamId);
 
-        for (TeamMember teamMember : teamMemberList) {
-            avgLatitude = avgLatitude + teamMember.getLatitude();
-            avgLongitude = avgLongitude + teamMember.getLongitude();
+        for (TeamMember teamMember : teamMembers) {
+            avgLatitude = teamMember.addLatitude(avgLatitude);
+            avgLongitude = teamMember.addLongitude(avgLongitude);
         }
-        avgLatitude = avgLatitude / teamMemberList.size();
-        avgLongitude = avgLongitude / teamMemberList.size();
+        avgLatitude = avgLatitude / teamMembers.size();
+        avgLongitude = avgLongitude / teamMembers.size();
         return new GetMidPointResponse(teamId, avgLatitude, avgLongitude);
     }
 
@@ -160,8 +160,8 @@ public class TeamService {
         if (checkMemberInTeam(email, teamId)) {
             throw new MemberNotBelongsToTeam();
         }
-        List<TeamMember> teamMemberList = teamMemberRepository.findMembersByTeamId(teamId);
-        return teamMemberList.stream()
+        List<TeamMember> teamMembers = teamMemberRepository.findMembersByTeamId(teamId);
+        return teamMembers.stream()
                 .map(m -> new GetTeamMembersLocationResponse(m.getTeam().getId(), m.getMember().getId(),
                         m.getMember().getName(), m.getLatitude(), m.getLongitude()))
                 .collect(toList());
