@@ -29,8 +29,10 @@ repositories {
 
 dependencies {
 
+	// DB
+	implementation 'mysql:mysql-connector-java'
+
 	// Spring Boot
-	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-tomcat', version: '2.6.3'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -39,9 +41,6 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7")
-
-	// DB
-	implementation 'mysql:mysql-connector-java'
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'

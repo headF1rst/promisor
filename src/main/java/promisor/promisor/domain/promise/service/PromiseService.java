@@ -98,7 +98,7 @@ public class PromiseService {
             throw new MemberNotBelongsToTeam();
         }
 
-        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "promiseName"));
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "createdAt"));
         Slice<Promise> promiseList = promiseRepository.findAllByTeamId(teamId, pageRequest);
 
         return promiseList.stream()

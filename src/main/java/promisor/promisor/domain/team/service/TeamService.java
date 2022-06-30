@@ -2,12 +2,16 @@ package promisor.promisor.domain.team.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
+import promisor.promisor.domain.promise.domain.Promise;
 import promisor.promisor.domain.promise.exception.MemberNotBelongsToTeam;
 import promisor.promisor.domain.team.dao.InviteRepository;
 import promisor.promisor.domain.team.dao.TeamMemberRepository;
@@ -120,7 +124,9 @@ public class TeamService {
     public List<SearchGroupResponse> searchGroup(String email) {
 
         Member member = getMemberByEmail(email);
-        List<TeamMember> teams = teamRepository.findGroupInfoWithMembers(member);
+
+        PageRequest pageRequest = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Slice<TeamMember> teams = teamRepository.findGroupInfoWithMembers(member, pageRequest);
         return teams.stream()
                 .map(m -> new SearchGroupResponse(m.getTeamIdFromTeam(), m.getGroupNameFromTeam(),
                         m.getImageUrlFromTeam(), m.getTeamMembersFromTeam()))

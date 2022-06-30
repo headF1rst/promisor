@@ -1,5 +1,7 @@
 package promisor.promisor.domain.team.dao;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,9 +20,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
     @Query("select tm from TeamMember tm join fetch tm.member m "+
             "where m in " +
             "(select t from Team t inner join t.member m on m = :member) " +
-            "or m =: member " +
-            "order by tm.team.createdAt desc")
-    List<TeamMember> findGroupInfoWithMembers(@Param("member") Member member);
+            "or m =: member")
+    Slice<TeamMember> findGroupInfoWithMembers(@Param("member") Member member, Pageable pageable);
 
     List<Team> findAllByMember(Member member);
 }
