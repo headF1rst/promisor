@@ -1,10 +1,6 @@
 package promisor.promisor.global.secret;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import org.springframework.stereotype.Component;
-
 /**
  * KEY를 가져다 줄 클래스 SecretKey
  *
