@@ -1,4 +1,4 @@
-package promisor.promisor.global.config.security;
+package promisor.promisor.global.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
@@ -7,16 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import promisor.promisor.domain.member.service.CustomUserDetailService;
-import promisor.promisor.global.secret.SecretKey;
+import promisor.promisor.global.auth.secret.SecretKey;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-@Component
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class JwtProvider {
@@ -24,46 +24,31 @@ public class JwtProvider {
     private final SecretKey secret;
     private final CustomUserDetailService customUserDetailService;
 
-    public String createAccessToken(String email) {
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("type", "token");
+    public String createAccessToken(String payload) {
+        Claims claims = Jwts.claims().setSubject(payload);
+        Date now = new Date();
+        Date validityTime = new Date(now.getTime() + secret.getJwtValidityTime());
 
-        Map<String, Object> payloads = new HashMap<>();
-        payloads.put("email", email);
-
-        log.info("accessExpireTime : '{}'", secret.getJwtValidityTime());
-
-        Date expiration = new Date();
-        expiration.setTime(expiration.getTime() + secret.getJwtValidityTime());
-
-        return Jwts
-                .builder()
-                .setHeader(headers)
-                .setClaims(payloads)
-                .setSubject("member")
-                .setExpiration(expiration)
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validityTime)
                 .signWith(SignatureAlgorithm.HS256, secret.getJwtSecretKey())
                 .compact();
     }
 
-    public Map<String, String> createRefreshToken(String email) {
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("type", "token");
+    public Map<String, String> createRefreshToken(String payload) {
 
-        Map<String, Object> payloads = new HashMap<>();
-        payloads.put("email", email);
-
-        Date expiration = new Date();
-        expiration.setTime(expiration.getTime() + secret.getRefreshValidityTime());
+        Claims claims = Jwts.claims().setSubject(payload);
+        Date now = new Date();
+        Date validityTime = new Date(now.getTime() + secret.getJwtValidityTime());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
-        String refreshTokenExpirationAt = simpleDateFormat.format(expiration);
+        String refreshTokenExpirationAt = simpleDateFormat.format(validityTime);
 
-        String jwt = Jwts
-                .builder()
-                .setHeader(headers)
-                .setClaims(payloads)
-                .setSubject("member")
-                .setExpiration(expiration)
+        String jwt = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validityTime)
                 .signWith(SignatureAlgorithm.HS256, secret.getJwtSecretKey())
                 .compact();
 
@@ -90,9 +75,14 @@ public class JwtProvider {
         return header.replace("Bearer ", "");
     }
 
-    public boolean validateJwtToken(String authToken) {
-        Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(authToken);
-        return true;
+    public boolean validateJwtToken(String token) {
+        try {
+            Jws<Claims> claims = Jwts.parser().setSigningKey(secret.getJwtSecretKey())
+                    .parseClaimsJws(token);
+            return !claims.getBody().getExpiration().before(new Date());
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new IllegalArgumentException("유효하지 않은 토큰 정보입니다.");
+        }
     }
 
     public Long getTokenExpireTime(String accessToken) {
