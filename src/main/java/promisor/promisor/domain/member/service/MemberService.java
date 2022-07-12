@@ -17,7 +17,7 @@ import promisor.promisor.domain.member.dto.request.ModifyMemberRequest;
 import promisor.promisor.domain.member.dto.request.SignUpRequest;
 import promisor.promisor.domain.member.dto.response.*;
 import promisor.promisor.domain.member.exception.*;
-import promisor.promisor.global.config.security.JwtProvider;
+import promisor.promisor.global.auth.JwtProvider;
 import promisor.promisor.global.token.exception.InvalidTokenException;
 import promisor.promisor.global.token.exception.TokenExpiredException;
 import promisor.promisor.global.token.ConfirmationToken;
@@ -198,9 +198,7 @@ public class MemberService {
 
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         TokenResponse createToken = createTokenReturn(loginRequest);
-
         Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
-
         return new LoginResponse(
                 createToken.getAccessToken(),
                 createToken.getRefreshId(),
