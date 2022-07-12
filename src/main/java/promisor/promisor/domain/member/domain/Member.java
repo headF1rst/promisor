@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member extends Person implements UserDetails {
+public class Member extends Person {
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Relation> friends = new HashSet<>();
@@ -65,37 +65,6 @@ public class Member extends Person implements UserDetails {
         return new Member(name, email, password,  telephone, memberRole);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(memberRole.name());
-        return Collections.singletonList(authority);
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return Objects.equals(getStatus(), "ACTIVE");
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return Objects.equals(getStatus(), "ACTIVE");
-    }
-
     public void setEncodedPassword(String encodedPassword) {
         this.password = encodedPassword;
     }
@@ -133,7 +102,6 @@ public class Member extends Person implements UserDetails {
         }
         throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
     }
-
     public void changeRole(MemberRole memberRole) {
         this.memberRole = memberRole;
     }
