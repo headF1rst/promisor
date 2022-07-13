@@ -57,10 +57,6 @@ public class Member extends Person {
         this.memberRole = memberRole;
     }
 
-    public String getRole() {
-        return memberRole.role;
-    }
-
     public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {
         return new Member(name, email, password,  telephone, memberRole);
     }
@@ -95,14 +91,10 @@ public class Member extends Person {
         this.location = location;
     }
     public void deleteFriend(Member friend) {
-
         if (getMemberFriends().contains(friend)) {
             friends.removeIf(friendShip -> friendShip.getFriend().equals(friend));
             return;
         }
         throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
-    }
-    public void changeRole(MemberRole memberRole) {
-        this.memberRole = memberRole;
     }
 }
