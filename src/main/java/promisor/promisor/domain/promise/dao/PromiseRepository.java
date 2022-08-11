@@ -19,10 +19,10 @@ public interface PromiseRepository extends JpaRepository<Promise, Long> {
     Slice<Promise> findAllByTeamId(Long id, Pageable pageable);
 
     @Modifying
-    @Query("update PersonalBanDateReason pbr" +
+    @Query("update PersonalSchedule pbr" +
             " set pbr.reason = :promiseName" +
             " where pbr.personalBanDate =" +
-                " (select pb from PersonalBanDate pb" +
+                " (select pb from PersonalCalender pb" +
                 " left join pb.member" +
                 " where pb.member = :member" +
                 " and pb.date = :date)")

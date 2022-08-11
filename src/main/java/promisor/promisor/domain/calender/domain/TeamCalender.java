@@ -1,4 +1,4 @@
-package promisor.promisor.domain.bandate.domain;
+package promisor.promisor.domain.calender.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Table(name = "team_ban_date")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class TeamBanDate extends BaseEntity {
+public class TeamCalender extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "team_id")
@@ -29,7 +29,7 @@ public class TeamBanDate extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "personal_id")
-    private PersonalBanDate personalBanDate;
+    private PersonalCalender personalCalender;
 
     private LocalDate date;
 
@@ -37,15 +37,15 @@ public class TeamBanDate extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private DateStatusType dateStatus;
 
-    public TeamBanDate(Team team, Member member, PersonalBanDate pbd, String date, String status) {
+    public TeamCalender(Team team, Member member, PersonalCalender personalCalender, String date, String status) {
         super("ACTIVE");
         this.team = team;
         this.member = member;
-        this.personalBanDate = pbd;
+        this.personalCalender = personalCalender;
         this.date = LocalDate.parse(date);
         this.dateStatus = DateStatusType.valueOf(status);
     }
-    public void editTBDStatus(String status) {
+    public void modifyStatus(String status) {
         this.dateStatus = DateStatusType.valueOf(status);
     }
 }

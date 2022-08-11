@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
-import promisor.promisor.domain.bandate.dao.PersonalBanDateRepository;
+import promisor.promisor.domain.calender.dao.PersonalCalenderRepository;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
@@ -40,7 +40,7 @@ public class PromiseService {
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
 
-    private final PersonalBanDateRepository personalBanDateRepository;
+    private final PersonalCalenderRepository personalBanDateRepository;
 
     /*
      *   약속 생성 API

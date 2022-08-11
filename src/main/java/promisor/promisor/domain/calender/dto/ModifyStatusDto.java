@@ -1,6 +1,5 @@
-package promisor.promisor.domain.bandate.dto;
+package promisor.promisor.domain.calender.dto;
 
-import com.sun.istack.Nullable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
