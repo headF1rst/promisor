@@ -1,4 +1,4 @@
-package promisor.promisor.domain.bandate.domain;
+package promisor.promisor.domain.calender.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import static javax.persistence.FetchType.*;
 
@@ -18,7 +19,7 @@ import static javax.persistence.FetchType.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @DynamicInsert
-public class PersonalBanDate extends BaseEntity {
+public class PersonalCalender extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
@@ -31,19 +32,14 @@ public class PersonalBanDate extends BaseEntity {
     private DateStatusType dateStatus;
 
 
-    public PersonalBanDate(Member member, String date, String dateStatus) {
+    public PersonalCalender(Member member, String date, String dateStatus) {
         super("ACTIVE");
         this.member = member;
         this.date = LocalDate.parse(date);
-        if (dateStatus==null) {
-            this.dateStatus = DateStatusType.valueOf("IMPOSSIBLE");
-        }
-        else {
-            this.dateStatus = DateStatusType.valueOf(dateStatus);
-        }
+        this.dateStatus = DateStatusType.valueOf(Objects.requireNonNullElse(dateStatus, "IMPOSSIBLE"));
     }
 
-    public void editPBDStatus(String status) {
+    public void modifyStatus(String status) {
         this.dateStatus = DateStatusType.valueOf(status);
     }
 }

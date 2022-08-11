@@ -1,10 +1,7 @@
-package promisor.promisor.domain.bandate.dto;
+package promisor.promisor.domain.calender.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDate;
 
 
 @Getter

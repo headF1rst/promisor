@@ -1,7 +1,7 @@
-package promisor.promisor.domain.bandate.dto;
+package promisor.promisor.domain.calender.dto;
 
 import lombok.Data;
-import promisor.promisor.domain.bandate.domain.DateStatusType;
+import promisor.promisor.domain.calender.domain.DateStatusType;
 
 import java.time.LocalDate;
 

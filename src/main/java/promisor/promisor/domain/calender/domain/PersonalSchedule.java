@@ -1,4 +1,4 @@
-package promisor.promisor.domain.bandate.domain;
+package promisor.promisor.domain.calender.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,18 +12,19 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class PersonalBanDateReason extends BaseEntity {
+public class PersonalSchedule extends BaseEntity {
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "personal_ban_date_id")
-    private PersonalBanDate personalBanDate;
+    @JoinColumn(name = "personal_calender_id")
+    private
+    PersonalCalender personalCalender;
 
     @Column(length = 50)
     private String reason;
 
-    public PersonalBanDateReason(PersonalBanDate pbd, String reason){
+    public PersonalSchedule(PersonalCalender personalCalender, String reason){
         super("ACTIVE");
-        this.personalBanDate = pbd;
+        this.personalCalender = personalCalender;
         this.reason = reason;
     }
 }
