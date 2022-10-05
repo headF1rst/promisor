@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class InviteTeamRequest {
     private Long[] memberId;
-    private Long groupId;
+    private Long teamId;
 }
