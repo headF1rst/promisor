@@ -1,4 +1,4 @@
-package promisor.promisor.global.config.security;
+package promisor.promisor.global.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;

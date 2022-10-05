@@ -1,4 +1,4 @@
-package promisor.promisor.domain.bandate.domain;
+package promisor.promisor.domain.calender.domain;
 
 public enum DateStatusType {
     IMPOSSIBLE, UNCERTAIN, POSSIBLE

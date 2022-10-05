@@ -13,7 +13,7 @@ import promisor.promisor.global.error.exception.ApplicationException;
 @Slf4j
 public class ApplicationExceptionHandler {
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler
     protected ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(final MethodArgumentNotValidException err) {
         log.error("handleMethodArgumentNotValidException", err);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_INPUT_VALUE, err.getBindingResult());
@@ -21,7 +21,7 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(ApplicationException.class)
+    @ExceptionHandler
     protected ResponseEntity<ErrorResponse> handleApplicationException(final ApplicationException err) {
         log.error("handleEntityNotFoundException", err);
         final ErrorCode errorCode = err.getErrorCode();
@@ -29,14 +29,14 @@ public class ApplicationExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(errorCode.getHttpStatus()));
     }
 
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler
     protected ResponseEntity<ErrorResponse> handleAuthenticationException(final AuthenticationException err) {
         log.error("handleAuthenticationException", err);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_LOGIN_INFO);
         return new ResponseEntity<>(response, HttpStatus.valueOf(response.getHttpStatus()));
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler
     protected ResponseEntity<ErrorResponse> handleCommonException(final Exception err) {
         log.error("CommonException", err);
         final ErrorResponse response = ErrorResponse.of(ErrorCode.INTERNAL_SERVER_ERROR);

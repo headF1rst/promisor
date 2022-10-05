@@ -28,7 +28,6 @@ public class JwtProvider {
         Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();
         Date validityTime = new Date(now.getTime() + secret.getJwtValidityTime());
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
@@ -38,7 +37,6 @@ public class JwtProvider {
     }
 
     public Map<String, String> createRefreshToken(String payload) {
-
         Claims claims = Jwts.claims().setSubject(payload);
         Date now = new Date();
         Date validityTime = new Date(now.getTime() + secret.getJwtValidityTime());
@@ -64,7 +62,8 @@ public class JwtProvider {
     }
 
     public String extractEmail(String token) {
-        return (String) Jwts.parser().setSigningKey(secret.getJwtSecretKey()).parseClaimsJws(token).getBody().get("email");
+        return (String) Jwts.parser().setSigningKey(secret.getJwtSecretKey())
+                .parseClaimsJws(token).getBody().get("email");
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -86,7 +85,6 @@ public class JwtProvider {
     }
 
     public Long getTokenExpireTime(String accessToken) {
-
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String[] parts = accessToken.split("\\.");
         ObjectMapper mapper = new ObjectMapper();

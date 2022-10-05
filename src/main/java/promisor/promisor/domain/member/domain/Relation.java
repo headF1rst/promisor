@@ -5,9 +5,6 @@ import promisor.promisor.domain.model.BaseEntity;
 
 import javax.persistence.*;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-
 import static javax.persistence.FetchType.*;
 
 @Entity
