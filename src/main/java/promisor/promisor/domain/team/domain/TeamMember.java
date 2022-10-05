@@ -46,19 +46,21 @@ public class TeamMember extends BaseEntity {
         this.longitude = longitude;
     }
 
-    public Long getTeamIdFromTeam() {
+    public Long getTeamId() {
         return this.team.getId();
     }
 
-    public String getGroupNameFromTeam() {
-        return this.team.getGroupName();
+    public Long getMemberId() { return this.member.getId(); }
+
+    public String getTeamName() {
+        return this.team.getTeamName();
     }
 
-    public String getImageUrlFromTeam() {
+    public String getImageUrl() {
         return this.team.getImageUrl();
     }
 
-    public Set<TeamMember> getTeamMembersFromTeam() {
+    public Set<TeamMember> getTeamMembers() {
         return this.team.getTeamMembers();
     }
 
@@ -68,5 +70,9 @@ public class TeamMember extends BaseEntity {
 
     public double addLongitude(double avgLongitude) {
         return this.longitude + avgLongitude;
+    }
+
+    public String getMemberName() {
+        return member.getName();
     }
 }
