@@ -33,15 +33,11 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Slf4j
 public class TeamService {
+
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
 
-    /*
-     *   그룹 생성 API
-     *   @Param: 생성자 이메일, 그룹 이름
-     *   @author: Sanha Ko
-     */
     @Transactional
     public Long createGroup(String email, CreateTeamRequest request) {
 
@@ -57,6 +53,11 @@ public class TeamService {
         Member member = getMemberByEmail(email);
         Team team = getGroupById(request.getGroupId());
         Member leader = team.getMember();
+
+        if (member.isNotLeader(leader.getId())) {
+            throw new IllegalArgumentException(String.format("회원 Id = %s와 그룹장 Id = %s가 일치하지 않습니다.",
+                    member.getId(), leader.getId()));
+        }
         if (leader.getId() != member.getId()){
             throw new NoRightsException();
         }

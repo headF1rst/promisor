@@ -3,10 +3,7 @@ package promisor.promisor.domain.store.domain;
 import lombok.Getter;
 import promisor.promisor.domain.model.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import static javax.persistence.FetchType.*;
 
@@ -18,6 +15,10 @@ import static javax.persistence.FetchType.*;
 @Entity
 @Getter
 public class StoreImage extends BaseEntity {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @ManyToOne(fetch = LAZY)
     private Store store;

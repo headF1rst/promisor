@@ -19,9 +19,6 @@ import java.time.LocalDateTime;
 @Getter
 public abstract class BaseEntity implements Serializable {
 
-    @Id @GeneratedValue
-    private Long id;
-
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
