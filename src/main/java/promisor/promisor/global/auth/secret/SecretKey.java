@@ -1,4 +1,4 @@
-package promisor.promisor.global.secret;
+package promisor.promisor.global.auth.secret;
 
 import lombok.Getter;
 /**

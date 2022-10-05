@@ -1,4 +1,4 @@
-package promisor.promisor.global.secret;
+package promisor.promisor.global.auth.secret;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

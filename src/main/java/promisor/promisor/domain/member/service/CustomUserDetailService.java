@@ -27,12 +27,10 @@ public class CustomUserDetailService implements UserDetailsService {
         if (email.isBlank()) {
             throw new EmailEmptyException();
         }
-
         Optional<Member> optionalMember = memberRepository.findByEmail(email);
         Member member = optionalMember.orElseThrow(LoginInfoNotFoundException::new);
-
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(member.getRole()));
+        authorities.add(new SimpleGrantedAuthority("USER"));
         return new User(member.getEmail(), member.getPassword(), authorities);
     }
 }

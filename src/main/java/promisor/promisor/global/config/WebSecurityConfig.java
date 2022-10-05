@@ -16,9 +16,9 @@ import promisor.promisor.domain.member.service.CustomUserDetailService;
 import promisor.promisor.domain.member.service.MemberLoginFailHandler;
 import promisor.promisor.global.PasswordEncoder;
 import promisor.promisor.global.auth.JwtExceptionFilter;
-import promisor.promisor.global.config.security.CustomAuthenticationFilter;
-import promisor.promisor.global.config.security.JwtAuthenticationFilter;
-import promisor.promisor.global.config.security.JwtProvider;
+import promisor.promisor.global.auth.CustomAuthenticationFilter;
+import promisor.promisor.global.auth.JwtAuthenticationFilter;
+import promisor.promisor.global.auth.JwtProvider;
 import promisor.promisor.global.error.CustomAuthenticationEntryPoint;
 import promisor.promisor.global.error.WebAccessDeniedHandler;
 
