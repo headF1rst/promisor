@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Person {
 
+    @Id
+    @GeneratedValue
+    private Long id;
+
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Relation> friends = new HashSet<>();
 
@@ -96,5 +100,9 @@ public class Member extends Person {
             return;
         }
         throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
+    }
+
+    public boolean isNotLeader(Long id) {
+        return this.id != id;
     }
 }
