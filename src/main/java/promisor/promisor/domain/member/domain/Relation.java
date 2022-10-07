@@ -11,6 +11,9 @@ import static javax.persistence.FetchType.*;
 @Getter
 public class Relation extends BaseEntity {
 
+    @Id @GeneratedValue
+    private Long id;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member owner;

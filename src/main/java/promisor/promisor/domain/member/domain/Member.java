@@ -3,9 +3,7 @@ package promisor.promisor.domain.member.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import promisor.promisor.domain.model.Person;
 import promisor.promisor.global.error.ErrorCode;
 import promisor.promisor.global.error.exception.ApplicationException;
@@ -15,15 +13,14 @@ import javax.validation.constraints.Digits;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Member 도메인 객체를 나타내는 자바 빈
- *
- * @author Sanha Ko
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends Person {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Relation> friends = new HashSet<>();
@@ -96,5 +93,13 @@ public class Member extends Person {
             return;
         }
         throw new ApplicationException(ErrorCode.FORBIDDEN_USER);
+    }
+
+    public boolean isNotLeader(Long id) {
+        return this.id != id;
+    }
+
+    public boolean isLeader(Long id) {
+        return this.id == id;
     }
 }

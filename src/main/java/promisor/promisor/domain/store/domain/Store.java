@@ -17,6 +17,9 @@ import static javax.persistence.FetchType.*;
 @Getter
 public class Store extends BaseEntity {
 
+    @Id @GeneratedValue
+    private Long id;
+
     @Embedded
     private Place place;
 

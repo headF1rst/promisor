@@ -11,9 +11,7 @@ import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberEmailNotFound;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
-import promisor.promisor.domain.promise.domain.Promise;
 import promisor.promisor.domain.promise.exception.MemberNotBelongsToTeam;
-import promisor.promisor.domain.team.dao.InviteRepository;
 import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
@@ -23,7 +21,6 @@ import promisor.promisor.domain.team.dto.response.*;
 import promisor.promisor.domain.team.exception.*;
 
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.stream.Collectors.toList;
 
@@ -33,20 +30,16 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 @Slf4j
 public class TeamService {
+
     private final MemberRepository memberRepository;
     private final TeamRepository teamRepository;
     private final TeamMemberRepository teamMemberRepository;
 
-    /*
-     *   그룹 생성 API
-     *   @Param: 생성자 이메일, 그룹 이름
-     *   @author: Sanha Ko
-     */
     @Transactional
     public Long createGroup(String email, CreateTeamRequest request) {
 
         Member member = getMemberByEmail(email);
-        Team team = teamRepository.save(new Team(member, request.getGroupName()));
+        Team team = teamRepository.save(new Team(member.getId(), request.getGroupName()));
         teamMemberRepository.save(new TeamMember(member, team));
         return team.getId();
     }
@@ -55,81 +48,71 @@ public class TeamService {
     public ChangeTeamNameResponse editGroup(String email, EditTeamRequest request) {
 
         Member member = getMemberByEmail(email);
-        Team team = getGroupById(request.getGroupId());
-        Member leader = team.getMember();
-        if (leader.getId() != member.getId()){
-            throw new NoRightsException();
+        Team team = getTeamById(request.getGroupId());
+
+        if (member.isNotLeader(team.getTeamLeaderId())) {
+            throw new IllegalArgumentException(String.format("회원 Id = %s와 그룹장 Id = %s가 일치하지 않습니다.",
+                    member.getId(), team.getTeamLeaderId()));
         }
         team.changeGroupName(request.getGroupName());
-        return new ChangeTeamNameResponse(team.getGroupName());
+        return new ChangeTeamNameResponse(team.getTeamName());
     }
 
     @Transactional
     public LeaveTeamResponse leaveGroup(String email, Long groupId) {
 
         Member member = getMemberByEmail(email);
-        Team team = getGroupById(groupId);
-        Member leader = team.getMember();
+        Team team = getTeamById(groupId);
 
-        if(leader.getId() == member.getId()) {
-            throw new LeaderLeaveException();
+        if (member.isLeader(team.getTeamLeaderId())) {
+            throw new IllegalArgumentException("그룹내 리더는 그룹을 탈퇴할 수 없습니다. 리더를 위임해 주세요.");
         }
         teamMemberRepository.leaveGroup(member, team);
-        return new LeaveTeamResponse(
-                member.getId(),
-                groupId
-        );
+        return new LeaveTeamResponse(member.getId(), groupId);
     }
 
     @Transactional
     public InviteTeamResponse inviteGroup(String email, InviteTeamRequest request){
 
-        Member inviting = getMemberByEmail(email);
-        Team team = getGroupById(request.getGroupId());
+        Member invitee = getMemberByEmail(email);
+        Team team = getTeamById(request.getTeamId());
 
-        if(!Objects.equals(team.getMember().getId(), inviting.getId())){
-            throw new NoRightToInviteException();
+        if (team.memberNotBelongsToTeam(invitee.getId())) {
+            throw new IllegalArgumentException(String.format("초대자(%s)가 그룹에 속해있지 않는 멤버입니다.", invitee.getId()));
         }
 
-        Member[] invited = new Member[request.getMemberId().length];
-        for(int i = 0; i < request.getMemberId().length; i++) {
-            invited[i] = memberRepository.findById(request.getMemberId()[i]).orElseThrow(MemberNotFoundException::new);
-            TeamMember teamMember = teamMemberRepository.save(new TeamMember(invited[i], team));
+        for (Long teamMemberId : request.getMemberId()) {
+            Member member = memberRepository.findById(teamMemberId).orElseThrow(MemberNotFoundException::new);
+            TeamMember teamMember = teamMemberRepository.save(new TeamMember(member, team));
             team.addTeam(teamMember);
         }
-        return new InviteTeamResponse(
-                team.getId()
-        );
+        return new InviteTeamResponse(team.getId());
     }
 
     @Transactional
     public DelegateLeaderResponse delegateLeader(String email, DelegateLeaderRequest request) {
 
-        Member oldLeader = getMemberByEmail(email);
-        Member newLeader = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
-        Team team = getGroupById(request.getGroupId());
-        if(!Objects.equals(team.getMember().getId(), oldLeader.getId())){
-            throw new NoRightToDelegateException();
+        Member prevLeader = getMemberByEmail(email);
+        Member postLeader = memberRepository.findById(request.getMemberId()).orElseThrow(MemberNotFoundException::new);
+        Team team = getTeamById(request.getTeamId());
+
+        if (team.memberNotBelongsToTeam(prevLeader.getId())) {
+            throw new IllegalArgumentException(
+                    String.format("기존 리더(%s)가 그룹에 속해있지 않는 멤버입니다.", prevLeader.getId()));
         }
-        team.changeLeader(newLeader);
-        return new DelegateLeaderResponse(request.getMemberId(), request.getGroupId());
+        team.changeLeader(postLeader);
+        return new DelegateLeaderResponse(request.getMemberId(), request.getTeamId());
     }
 
-    /*
-     *   그룹 조회 API
-     *   @Param: 조회 요청자 이메일
-     *   @Return: 조회 그룹 정보
-     *   @author: Sanha Ko
-     */
     public List<SearchGroupResponse> searchGroup(String email) {
 
         Member member = getMemberByEmail(email);
 
         PageRequest pageRequest = PageRequest.of(0, 8, Sort.by(Sort.Direction.DESC, "createdAt"));
-        Slice<TeamMember> teams = teamRepository.findGroupInfoWithMembers(member, pageRequest);
-        return teams.stream()
-                .map(m -> new SearchGroupResponse(m.getTeamIdFromTeam(), m.getGroupNameFromTeam(),
-                        m.getImageUrlFromTeam(), m.getTeamMembersFromTeam()))
+        Slice<TeamMember> teamMembers = teamRepository.findTeamInfoWithMembers(member, pageRequest);
+        return teamMembers.stream()
+                .map(teamMember -> new SearchGroupResponse(teamMember.getTeamId(), teamMember.getTeamName(),
+                        teamMember.getImageUrl(), teamMember.getTeamMembers()))
                 .collect(toList());
     }
 
@@ -144,32 +127,27 @@ public class TeamService {
 
     public GetMidPointResponse getMidPoint(String email, Long teamId) {
 
-        double avgLatitude = 0;
-        double avgLongitude = 0;
+        final int LATITUDE_INDEX = 0;
+        final int LONGITUDE_INDEX = 1;
 
         if (checkMemberInTeam(email, teamId)) {
             throw new MemberNotBelongsToTeam();
         }
-
-        List<TeamMember> teamMembers = teamMemberRepository.findMembersByTeamId(teamId);
-
-        for (TeamMember teamMember : teamMembers) {
-            avgLatitude = teamMember.addLatitude(avgLatitude);
-            avgLongitude = teamMember.addLongitude(avgLongitude);
-        }
-        avgLatitude = avgLatitude / teamMembers.size();
-        avgLongitude = avgLongitude / teamMembers.size();
-        return new GetMidPointResponse(teamId, avgLatitude, avgLongitude);
+        Team team = teamRepository.findById(teamId).orElseThrow(TeamNotFoundException::new);
+        List<Double> points = team.calculateMidPoint();
+        return new GetMidPointResponse(teamId, points.get(LATITUDE_INDEX), points.get(LONGITUDE_INDEX));
     }
 
     public List<GetTeamMembersLocationResponse> getTeamMembersLocation(String email, Long teamId) {
+
         if (checkMemberInTeam(email, teamId)) {
             throw new MemberNotBelongsToTeam();
         }
+
         List<TeamMember> teamMembers = teamMemberRepository.findMembersByTeamId(teamId);
         return teamMembers.stream()
-                .map(m -> new GetTeamMembersLocationResponse(m.getTeam().getId(), m.getMember().getId(),
-                        m.getMember().getName(), m.getLatitude(), m.getLongitude()))
+                .map(teamMember -> new GetTeamMembersLocationResponse(teamMember.getTeamId(), teamMember.getMemberId(),
+                        teamMember.getMemberName(), teamMember.getLatitude(), teamMember.getLongitude()))
                 .collect(toList());
     }
 
@@ -177,7 +155,7 @@ public class TeamService {
         return memberRepository.findByEmail(email).orElseThrow(MemberEmailNotFound::new);
     }
 
-    private Team getGroupById(Long id) {
+    private Team getTeamById(Long id) {
         return teamRepository.findById(id).orElseThrow(TeamIdNotFoundException::new);
     }
 

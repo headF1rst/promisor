@@ -19,6 +19,7 @@ import promisor.promisor.domain.calender.exception.*;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
+import promisor.promisor.domain.team.dao.TeamMemberRepository;
 import promisor.promisor.domain.team.dao.TeamRepository;
 import promisor.promisor.domain.team.domain.Team;
 
@@ -35,6 +36,7 @@ import static java.util.stream.Collectors.toList;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CalenderService {
+
     private final PersonalCalenderRepository personalCalenderRepository;
     private final PersonalScheduleRepository personalScheduleRepository;
     private final MemberRepository memberRepository;
@@ -48,15 +50,16 @@ public class CalenderService {
         Member member = getMember(email);
         PersonalCalender personalCalender = personalCalenderRepository.findPersonalBanDateByMemberAndDate(member, date);
         List<TeamCalender> tbd = teamCalenderRepository.findAllByMemberAndDate(member, date);
-        List<Team> teams = teamRepository.findAllByMember(member);
+        List<Team> teams = teamRepository.findAllTeams(member);
+
         if (personalCalender != null) {
             personalCalender.modifyStatus(status);
             return getRegisterPersonalBanDateResponse(date, status, member, personalCalender, tbd, teams);
-        } else {
-            PersonalCalender newPersonalCalender = new PersonalCalender(member, date, status);
-            personalCalenderRepository.save(newPersonalCalender);
-            return getRegisterPersonalBanDateResponse(date, status, member, newPersonalCalender, tbd, teams);
         }
+
+        PersonalCalender newPersonalCalender = new PersonalCalender(member, date, status);
+        personalCalenderRepository.save(newPersonalCalender);
+        return getRegisterPersonalBanDateResponse(date, status, member, newPersonalCalender, tbd, teams);
     }
 
     private RegisterPersonalCalenderResponse getRegisterPersonalBanDateResponse(String date, String status, Member member,
@@ -105,7 +108,6 @@ public class CalenderService {
         return new ModifyStatusResponse(member.getId(), personalCalender.getDate(), personalCalender.getDateStatus());
     }
 
-    @Transactional
     public List<GetTeamCalendarResponse> getTeamCalendarDetail(String email, Long teamId, String date) {
         PageRequest pageRequest = PageRequest.of(0, 10);
         LocalDate inputDate = LocalDate.parse(date, DateTimeFormatter.ISO_DATE);

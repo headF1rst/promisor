@@ -14,6 +14,9 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PersonalSchedule extends BaseEntity {
 
+    @Id @GeneratedValue
+    private Long id;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "personal_calender_id")
     private

@@ -7,9 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.model.BaseEntity;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import static javax.persistence.FetchType.*;
 
@@ -17,6 +15,10 @@ import static javax.persistence.FetchType.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Invite extends BaseEntity {
+
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")

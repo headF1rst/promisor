@@ -8,28 +8,26 @@ import promisor.promisor.domain.place.domain.Place;
 import promisor.promisor.domain.member.domain.Member;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Group 도메인 객체를 나타내는 자바 빈
- *
- * @author Sanha Ko
- */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Team extends BaseEntity {
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Id @GeneratedValue
+    private Long id;
+
+    @Column(nullable = false)
+    private Long teamLeaderId;
+
+    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
+    private final Set<TeamMember> teamMembers = new HashSet<>();
 
     @Column(length = 30)
-    private String groupName;
+    private String teamName;
 
     @Lob
     private String imageUrl;
@@ -37,24 +35,41 @@ public class Team extends BaseEntity {
     @Embedded
     private Place place;
 
-    @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)
-    private final Set<TeamMember> teamMembers = new HashSet<>();
-
-    public Team(Member member, String groupName) {
+    public Team(Long teamLeaderId, String groupName) {
         super("ACTIVE");
-        this.member = member;
-        this.groupName = groupName;
+        this.teamLeaderId = teamLeaderId;
+        this.teamName = groupName;
     }
 
     public void changeGroupName(String groupName) {
-        this.groupName = groupName;
+        this.teamName = groupName;
     }
 
     public void changeLeader(Member member){
-        this.member = member;
+        this.teamLeaderId = member.getId();
     }
 
     public void addTeam(TeamMember teamMember) {
         teamMembers.add(teamMember);
+    }
+
+    public boolean memberNotBelongsToTeam(Long id) {
+        for (TeamMember teamMember : teamMembers) {
+            return teamMember.getMemberId() == id;
+        }
+        return false;
+    }
+
+    public List<Double> calculateMidPoint() {
+        double avgLatitude = 0;
+        double avgLongitude = 0;
+
+        for (TeamMember teamMember : teamMembers) {
+            avgLatitude += teamMember.getLatitude();
+            avgLongitude += teamMember.getLongitude();
+        }
+        avgLatitude /= teamMembers.size();
+        avgLongitude /= teamMembers.size();
+        return List.of(avgLatitude, avgLongitude);
     }
 }

@@ -19,6 +19,9 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamCalender extends BaseEntity {
 
+    @Id @GeneratedValue
+    private Long id;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "team_id")
     private Team team;

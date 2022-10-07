@@ -21,6 +21,9 @@ import static javax.persistence.FetchType.*;
 @DynamicInsert
 public class PersonalCalender extends BaseEntity {
 
+    @Id @GeneratedValue
+    private Long id;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;

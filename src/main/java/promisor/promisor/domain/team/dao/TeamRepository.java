@@ -11,7 +11,6 @@ import promisor.promisor.domain.team.domain.Team;
 import promisor.promisor.domain.team.domain.TeamMember;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @Transactional(readOnly = true)
@@ -19,9 +18,12 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
 
     @Query("select tm from TeamMember tm join fetch tm.member m "+
             "where m in " +
-            "(select t from Team t inner join t.member m on m = :member) " +
+            "(select t from Team t inner join tm.member m on m = :member) " +
             "or m =: member")
-    Slice<TeamMember> findGroupInfoWithMembers(@Param("member") Member member, Pageable pageable);
+    Slice<TeamMember> findTeamInfoWithMembers(@Param("member") Member member, Pageable pageable);
 
-    List<Team> findAllByMember(Member member);
+    @Query("select t from TeamMember tm join fetch tm.team t " +
+            "where tm.member in " +
+            "(select m from Member m inner join tm.member m on m = :member)")
+    List<Team> findAllTeams(@Param("member") Member member);
 }
