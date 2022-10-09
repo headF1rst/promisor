@@ -62,21 +62,18 @@ public class CalendarService {
     }
 
     @Transactional
-    public ModifyStatusResponse modifyStatus(String email, String date, String status) {
+    public ModifyStatusResponse modifyPersonalCalendarStatus(String email, String date, String status) {
         Assert.notNull(date, "date는 null이어선 안됩니다.");
         Assert.notNull(status, "status는 null이어선 안됩니다.");
 
         Member member = getMember(email);
         PersonalCalendar personalCalendar = personalCalendarRepository.findPersonalCalendarByMemberAndDate(member, date);
-        if (personalCalendar == null){
-            throw new WrongAccess();
-        }
+        Assert.notNull(personalCalendar, "등록된 일정이 없습니다.");
         personalCalendar.modifyStatus(status);
+
         List<TeamCalendar> teamCalendars = teamCalendarRepository.findAllByMemberAndDate(member, date);
-        if (!teamCalendars.isEmpty()){
-            for (TeamCalendar teamCalendar : teamCalendars) {
-                teamCalendar.modifyStatus(status);
-            }
+        if (!teamCalendars.isEmpty()) {
+            reflectToTeam(teamCalendars, status);
         }
         return new ModifyStatusResponse(member.getId(), personalCalendar.getDate(), personalCalendar.getDateStatus());
     }
@@ -95,13 +92,12 @@ public class CalendarService {
     public RegisterPersonalScheduleResponse registerPersonalSchedule(String email, String date, String reason) {
         Member member = getMember(email);
         PersonalCalendar personalCalendar = personalCalendarRepository.findPersonalCalendarByMemberAndDate(member, date);
-        if (personalCalendar == null){
-            throw new WrongAccess();
-        }
-        PersonalSchedule pbd_reason = new PersonalSchedule(personalCalendar, reason);
-        personalScheduleRepository.save(pbd_reason);
-        return new RegisterPersonalScheduleResponse(pbd_reason.getId(), pbd_reason.getPersonalCalendar().getId(),
-                pbd_reason.getReason());
+        Assert.notNull(personalCalendar, "등록된 일정이 없습니다.");
+
+        PersonalSchedule personalSchedule = new PersonalSchedule(personalCalendar, reason);
+        personalScheduleRepository.save(personalSchedule);
+        return new RegisterPersonalScheduleResponse(personalSchedule.getId(), personalSchedule.getPersonalCalendar().getId(),
+                personalSchedule.getReason());
     }
 
     public List<GetPersonalCalendarResponse> getPersonalCalendar(String email) {
@@ -132,25 +128,24 @@ public class CalendarService {
         Integer year = Integer.parseInt(yearMonth.substring(0, 4));
         Integer month = Integer.parseInt(yearMonth.substring(5));
         List<Integer> monthSize = Arrays.asList(0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
-        monthSize.set(2, (year%4==0&&year%100!=0)||year%400==0?29:28);
-        for (int day=1; day<=monthSize.get(month); day++) {
+        monthSize.set(2, (year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ? 29 : 28);
+
+        for (int day = 1; day <= monthSize.get(month); day++) {
             String dayString = null;
-            if (day<10) {
-                dayString = "0"+String.valueOf(day);
-            }
-            else {
+            if (day < 10) {
+                dayString = "0" + String.valueOf(day);
+            } else {
                 dayString = String.valueOf(day);
             }
             LocalDate date = LocalDate.parse(yearMonth + "-" + dayString, DateTimeFormatter.ISO_DATE);
-            List<TeamCalendar> tbdList = teamCalendarRepository.findAllByTeamIdAndDates(teamId, date);
+            List<TeamCalendar> teamCalendarList = teamCalendarRepository.findAllByTeamIdAndDates(teamId, date);
             String check = "POSSIBLE";
-            for (TeamCalendar teamCalendar : tbdList) {
-                System.out.println(teamCalendar.getDateStatus());
-                if (teamCalendar.getDateStatus().equals(impossible)) {
+            for (TeamCalendar teamCalendar : teamCalendarList) {
+                if (teamCalendar.isDate(impossible)) {
                     check = "IMPOSSIBLE";
                     break;
                 }
-                if (teamCalendar.getDateStatus().equals(uncertain)) {
+                if (teamCalendar.isDate(uncertain)) {
                     check = "UNCERTAIN";
                 }
             }
@@ -160,23 +155,27 @@ public class CalendarService {
     }
 
     private RegisterPersonalCalendarResponse getRegisterPersonalCalendarResponse(String date, String status, Member member,
-                                                                                PersonalCalendar personalCalendar,
-                                                                                List<TeamCalendar> teamCalendars,
-                                                                                List<Team> teams) {
+                                                                                 PersonalCalendar personalCalendar,
+                                                                                 List<TeamCalendar> teamCalendars,
+                                                                                 List<Team> teams) {
         if (teamCalendars.isEmpty()) {
-            for (Team team : teams) {
-                TeamCalendar teamCalendar = new TeamCalendar(team, member, personalCalendar, date, status);
-                teamCalendarRepository.save(teamCalendar);
-            }
+            saveTeamCalender(date, status, member, personalCalendar, teams);
         } else {
-            reflectToTeam(teamCalendars,status);
+            reflectToTeam(teamCalendars, status);
         }
         return new RegisterPersonalCalendarResponse(member.getId(), personalCalendar.getDate(),
                 personalCalendar.getDateStatus());
     }
 
-    private void reflectToTeam(List<TeamCalendar> tbd, String status){
-        for (TeamCalendar teamCalendar : tbd) {
+    private void saveTeamCalender(String date, String status, Member member, PersonalCalendar personalCalendar, List<Team> teams) {
+        for (Team team : teams) {
+            TeamCalendar teamCalendar = new TeamCalendar(team, member, personalCalendar, date, status);
+            teamCalendarRepository.save(teamCalendar);
+        }
+    }
+
+    private void reflectToTeam(List<TeamCalendar> teamCalenders, String status) {
+        for (TeamCalendar teamCalendar : teamCalenders) {
             teamCalendar.modifyStatus(status);
         }
     }

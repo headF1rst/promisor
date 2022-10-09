@@ -30,9 +30,9 @@ public class CalendarController {
 
     @Operation(summary = "modify personal calendar", description = "개인 캘린더 상태 변경")
     @PatchMapping
-    public ResponseEntity<ModifyStatusResponse> modifyStatus(@JwtAuth String email,
+    public ResponseEntity<ModifyStatusResponse> modifyPersonalCalendarStatus(@JwtAuth String email,
                                                                           @RequestBody @Valid ModifyStatusDto request) {
-        ModifyStatusResponse response = calendarService.modifyStatus(email, request.getDate(), request.getStatus());
+        ModifyStatusResponse response = calendarService.modifyPersonalCalendarStatus(email, request.getDate(), request.getStatus());
         return ResponseEntity.ok().body(response);
     }
 

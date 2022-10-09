@@ -51,4 +51,7 @@ public class TeamCalendar extends BaseEntity {
     public void modifyStatus(String status) {
         this.dateStatus = DateStatusType.valueOf(status);
     }
+
+    public boolean isDate(DateStatusType status) {
+        return getDateStatus().equals(status);
 }
