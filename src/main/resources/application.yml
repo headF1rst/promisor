@@ -2,9 +2,9 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:mysql://database-1.cd0goxzitlbs.ap-northeast-2.rds.amazonaws.com:3306/promisorDB-dev?serverTimezone=Asia/Seoul
-    username: admin
-    password: Kershaw22!
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -38,11 +38,9 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 security:
-  kakao:
-    apikey: 2a4dfce9ea2dadb607b872ae4a973922
   jwt:
     token:
-      secret-key: sd92dfs0-1544-32da-bd21-bd234slkj
+      secret-key: ${JWT_KEY}
       expire-length: 36000000
       expire-length-refresh: 5184000000
 
