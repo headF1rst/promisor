@@ -19,7 +19,8 @@ import static javax.persistence.FetchType.LAZY;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeamCalendar extends BaseEntity {
 
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = LAZY)
@@ -36,7 +37,7 @@ public class TeamCalendar extends BaseEntity {
 
     private LocalDate date;
 
-    @Column(name="date_status", length = 10, columnDefinition = "varchar(10) default 'IMPOSSIBLE'")
+    @Column(name = "date_status", length = 10, columnDefinition = "varchar(10) default 'IMPOSSIBLE'")
     @Enumerated(EnumType.STRING)
     private DateStatusType dateStatus;
 
@@ -48,10 +49,12 @@ public class TeamCalendar extends BaseEntity {
         this.date = LocalDate.parse(date);
         this.dateStatus = DateStatusType.valueOf(status);
     }
+
     public void modifyStatus(String status) {
         this.dateStatus = DateStatusType.valueOf(status);
     }
 
     public boolean isDate(DateStatusType status) {
         return getDateStatus().equals(status);
+    }
 }
