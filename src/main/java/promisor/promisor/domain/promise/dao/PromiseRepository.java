@@ -22,7 +22,7 @@ public interface PromiseRepository extends JpaRepository<Promise, Long> {
     @Query("update PersonalSchedule pbr" +
             " set pbr.reason = :promiseName" +
             " where pbr.personalBanDate =" +
-                " (select pb from PersonalCalender pb" +
+                " (select pb from PersonalCalendar pb" +
                 " left join pb.member" +
                 " where pb.member = :member" +
                 " and pb.date = :date)")

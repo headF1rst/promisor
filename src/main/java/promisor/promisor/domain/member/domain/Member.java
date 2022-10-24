@@ -71,7 +71,6 @@ public class Member extends Person {
 
     public boolean hasFriend(Member receiver) {
         List<Member> friends = getMemberFriends();
-        System.out.println("friends = " + friends);
         if (friends.isEmpty()) {
             return false;
         }
