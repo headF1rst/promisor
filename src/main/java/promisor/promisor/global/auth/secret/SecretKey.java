@@ -9,13 +9,11 @@ import lombok.Getter;
 @Getter
 public class SecretKey {
 
-    private final String kakaoApiKey;
     private final String jwtSecretKey;
     private final Long jwtValidityTime;
     private final Long refreshValidityTime;
 
-    public SecretKey(String kakaoApiKey, String jwtSecretKey, Long jwtValidityTime, Long refreshValidityTime) {
-        this.kakaoApiKey = kakaoApiKey;
+    public SecretKey(String jwtSecretKey, Long jwtValidityTime, Long refreshValidityTime) {
         this.jwtSecretKey = jwtSecretKey;
         this.jwtValidityTime = jwtValidityTime;
         this.refreshValidityTime = refreshValidityTime;

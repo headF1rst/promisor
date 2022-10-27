@@ -7,20 +7,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SecretConfig {
 
-    @Value("${security.kakao.apikey}")
-    private String kakaoApiKey;
-
-    @Value("${security.jwt.token.secret-key}")
-    private String jwtSecretKey;
-
-    @Value("${security.jwt.token.expire-length}")
-    private Long jwtValidityTime;
-
-    @Value("${security.jwt.token.expire-length-refresh}")
-    private Long refreshValidityTime;
+    private final String jwtSecretKey;
+    private final Long jwtValidityTime;
+    private final Long refreshValidityTime;
 
     @Bean
     public SecretKey newSecretKey() {
-        return new SecretKey(kakaoApiKey, jwtSecretKey, jwtValidityTime, refreshValidityTime);
+        return new SecretKey(jwtSecretKey, jwtValidityTime, refreshValidityTime);
+    }
+
+    public SecretConfig(@Value("${security.jwt.token.secret-key}") String jwtSecretKey,
+                        @Value("${security.jwt.token.expire-length}")Long jwtValidityTime,
+                        @Value("${security.jwt.token.expire-length-refresh}") Long refreshValidityTime) {
+        this.jwtSecretKey = jwtSecretKey;
+        this.jwtValidityTime = jwtValidityTime;
+        this.refreshValidityTime = refreshValidityTime;
     }
 }
