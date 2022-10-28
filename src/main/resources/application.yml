@@ -16,6 +16,7 @@ spring:
         default_batch_fetch_size: 500
         format_sql: true
     open-in-view: false
+    generate-ddl: true
 
   mail:
     host: localhost

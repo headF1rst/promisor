@@ -26,6 +26,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,7 +122,7 @@ public class CalendarService {
         }
     }
 
-    public List<GetTeamCalendarStatusResponse> getTeamCalendarStatus(String email, Long teamId, String yearMonth) {
+    public List<GetTeamCalendarStatusResponse> getTeamCalendarStatusByYearMonth(String email, Long teamId, String yearMonth) {
         List<GetTeamCalendarStatusResponse> result = new ArrayList<>();
         DateStatusType impossible = DateStatusType.valueOf("IMPOSSIBLE");
         DateStatusType uncertain = DateStatusType.valueOf("UNCERTAIN");
@@ -131,22 +132,20 @@ public class CalendarService {
         monthSize.set(2, (year % 4 == 0 && year % 100 != 0) || year % 400 == 0 ? 29 : 28);
 
         for (int day = 1; day <= monthSize.get(month); day++) {
-            String dayString = null;
+            String dayString = String.valueOf(day);
             if (day < 10) {
-                dayString = "0" + String.valueOf(day);
-            } else {
-                dayString = String.valueOf(day);
+                dayString = "0" + day;
             }
             LocalDate date = LocalDate.parse(yearMonth + "-" + dayString, DateTimeFormatter.ISO_DATE);
             List<TeamCalendar> teamCalendarList = teamCalendarRepository.findAllByTeamIdAndDates(teamId, date);
-            String check = "POSSIBLE";
+            DateStatusType check = DateStatusType.POSSIBLE;
             for (TeamCalendar teamCalendar : teamCalendarList) {
                 if (teamCalendar.isDate(impossible)) {
-                    check = "IMPOSSIBLE";
+                    check = DateStatusType.IMPOSSIBLE;
                     break;
                 }
                 if (teamCalendar.isDate(uncertain)) {
-                    check = "UNCERTAIN";
+                    check = DateStatusType.UNCERTAIN;
                 }
             }
             result.add(new GetTeamCalendarStatusResponse(date, check));
@@ -159,7 +158,7 @@ public class CalendarService {
                                                                                  List<TeamCalendar> teamCalendars,
                                                                                  List<Team> teams) {
         if (teamCalendars.isEmpty()) {
-            saveTeamCalender(date, status, member, personalCalendar, teams);
+            saveTeamCalendar(date, status, member, personalCalendar, teams);
         } else {
             reflectToTeam(teamCalendars, status);
         }
@@ -167,15 +166,15 @@ public class CalendarService {
                 personalCalendar.getDateStatus());
     }
 
-    private void saveTeamCalender(String date, String status, Member member, PersonalCalendar personalCalendar, List<Team> teams) {
+    private void saveTeamCalendar(String date, String status, Member member, PersonalCalendar personalCalendar, List<Team> teams) {
         for (Team team : teams) {
             TeamCalendar teamCalendar = new TeamCalendar(team, member, personalCalendar, date, status);
             teamCalendarRepository.save(teamCalendar);
         }
     }
 
-    private void reflectToTeam(List<TeamCalendar> teamCalenders, String status) {
-        for (TeamCalendar teamCalendar : teamCalenders) {
+    private void reflectToTeam(List<TeamCalendar> teamCalendars, String status) {
+        for (TeamCalendar teamCalendar : teamCalendars) {
             teamCalendar.modifyStatus(status);
         }
     }
