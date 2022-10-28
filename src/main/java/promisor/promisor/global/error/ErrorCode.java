@@ -11,7 +11,7 @@ public enum ErrorCode {
     // Date
     DATE_EMPTY(400,"D001" ,"날짜를 입력하지 않았습니다."),
 
-    // Calender
+    // Calendar
     BANDATE_NOT_FOUND(400, "B001", "일정이 등록되지 않았습니다."),
 
     // Common 공통 예외

@@ -75,7 +75,7 @@ public class CalendarController {
     public ResponseEntity<List<GetTeamCalendarStatusResponse>> getTeamCalendarStatus(@JwtAuth String email,
                                                                                @PathVariable("id") Long id,
                                                                                @PathVariable("yearMonth") String yearMonth) {
-        List<GetTeamCalendarStatusResponse> response = calendarService.getTeamCalendarStatus(email, id, yearMonth);
+        List<GetTeamCalendarStatusResponse> response = calendarService.getTeamCalendarStatusByYearMonth(email, id, yearMonth);
         return ResponseEntity.ok().body(response);
     }
 }
