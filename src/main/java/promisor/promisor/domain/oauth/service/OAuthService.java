@@ -29,6 +29,7 @@ public class OAuthService {
 
     public LoginResponse login(String accessToken) {
         String reqURL = "https://kauth.kakao.com/oauth/token";
+        LoginRequest loginRequest = null;
         try {
             URL url = new URL(reqURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -66,10 +67,12 @@ public class OAuthService {
                         new SignUpRequest(nickname, email, password, telephone, MemberRole.USER.role(), profileImage);
                 memberService.save(signUpRequest);
             }
-            LoginRequest loginRequest = new LoginRequest(email, password);
+            loginRequest = new LoginRequest(email, password);
             return memberService.login(loginRequest);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        assert loginRequest != null;
+        return memberService.login(loginRequest);
     }
 }

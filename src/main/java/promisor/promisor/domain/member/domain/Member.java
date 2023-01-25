@@ -56,7 +56,13 @@ public class Member extends Person {
         this.memberRole = memberRole;
     }
 
-    public Member(String name, String email, String password, String telephone, String imageUrl, MemberRole user) {
+    private Member(String name, String email, String password, String telephone, String imageUrl, MemberRole role) {
+        super(name, "INACTIVE");
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+        this.imageUrl = imageUrl;
+        this.memberRole = role;
     }
 
     public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {
