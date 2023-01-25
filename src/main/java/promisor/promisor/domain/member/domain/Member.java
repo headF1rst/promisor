@@ -85,11 +85,10 @@ public class Member extends Person {
     }
 
     public boolean hasFriend(Member receiver) {
-        List<Member> friends = getMemberFriends();
-        if (friends.isEmpty()) {
+        if (getMemberFriends().isEmpty()) {
             return false;
         }
-        return friends.contains(receiver);
+        return getMemberFriends().contains(receiver);
     }
 
     public void addFriend(Member friend) {
@@ -111,11 +110,11 @@ public class Member extends Person {
     }
 
     public boolean isNotLeader(Long id) {
-        return this.id != id;
+        return this.id.equals(id);
     }
 
     public boolean isLeader(Long id) {
-        return this.id == id;
+        return this.id.equals(id);
     }
 
     public void setImageUrl(String imageUrl) {
