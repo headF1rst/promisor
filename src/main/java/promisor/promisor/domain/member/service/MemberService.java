@@ -8,9 +8,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import promisor.promisor.domain.member.dao.MemberRepository;
+import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.RefreshToken;
 import promisor.promisor.domain.member.dao.RefreshTokenRepository;
-import promisor.promisor.domain.member.domain.MemberRole;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.dto.request.LoginRequest;
 import promisor.promisor.domain.member.dto.request.ModifyMemberRequest;
@@ -46,15 +46,16 @@ public class MemberService {
 
     @Transactional
     public String save(SignUpRequest request) {
-        String token = signUpUser(
-               Member.of(
-                        request.getName(),
-                        request.getEmail(),
-                        request.getPassword(),
-                        request.getTelephone(),
-                        MemberRole.valueOf(request.getMemberRole())
-                )
+        Member member = Member.of(
+                request.getName(),
+                request.getEmail(),
+                request.getPassword(),
+                request.getTelephone(),
+                MemberRole.valueOf(request.getMemberRole())
         );
+        String imageUrl = request.getImageUrl();
+        member.setImageUrl(imageUrl);
+        String token = signUpUser(member);
         String link = "http://localhost:8080/members/confirm?token=" + token;
         emailSender.send(request.getEmail(), emailSender.buildEmail(request.getName(), link));
         return token;
@@ -65,11 +66,10 @@ public class MemberService {
         Optional<Member> userExists = memberRepository.findByEmail(member.getEmail());
 
         if (userExists.isPresent()) {
-            // TODO 속성값이 같은지 확인해야 합니다.
-            // TODO 이메일이 아직 컨펌되기 전이라면 다시 컨펌 요청을 했을때 요청에 성공해야 합니다.
             throw new EmailDuplicatedException(member.getEmail());
         }
-        String encodedPassword = bCryptPasswordEncoder.encode(member.getPassword());
+        String password = member.getPassword();
+        String encodedPassword = bCryptPasswordEncoder.encode(password);
         member.setEncodedPassword(encodedPassword);
 
         memberRepository.save(member);
@@ -101,14 +101,18 @@ public class MemberService {
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new TokenExpiredException();
         }
+        Member member = confirmationToken.getMember();
+        String email = member.getEmail();
         confirmationTokenService.setConfirmedAt(token);
-        memberRepository.enableMember(confirmationToken.getMember().getEmail());
-        return new MemberResponse(confirmationToken.getMember());
+        memberRepository.enableMember(email);
+        return new MemberResponse(member);
     }
 
     public LoginResponse login(LoginRequest loginRequest) {
+        String email = loginRequest.getEmail();
+        String password = loginRequest.getPassword();
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password);
         TokenResponse createToken = createTokenReturn(loginRequest);
         Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
         return new LoginResponse(
@@ -118,8 +122,8 @@ public class MemberService {
     }
 
     public LoginResponse refreshToken(LoginRequest.GetRefreshTokenDto getRefreshTokenDto) {
-
-        String refreshToken = refreshTokenRepository.findRefreshTokenById(getRefreshTokenDto.getRefreshId());
+        Long refreshId = getRefreshTokenDto.getRefreshId();
+        String refreshToken = refreshTokenRepository.findRefreshTokenById(refreshId);
         if (jwtProvider.validateJwtToken(refreshToken)) {
             String email = jwtProvider.extractEmail(refreshToken);
             LoginRequest loginRequest = new LoginRequest();
