@@ -16,7 +16,7 @@ public class OAuthController {
 
     private final OAuthService oAuthService;
 
-    @GetMapping("/kakao/login")
+    @PostMapping("/kakao/login")
     public ResponseEntity<LoginResponse> kakaoSignIn(@RequestBody @Valid final String accessToken) {
         LoginResponse loginResponse = oAuthService.login(accessToken);
         return ResponseEntity.ok().body(loginResponse);
