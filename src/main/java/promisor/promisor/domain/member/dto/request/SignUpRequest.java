@@ -1,12 +1,15 @@
 package promisor.promisor.domain.member.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import reactor.util.annotation.Nullable;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Data
+@AllArgsConstructor
 public class SignUpRequest {
 
     @NotBlank(message = "이름을 입력해주세요.")
@@ -26,4 +29,7 @@ public class SignUpRequest {
 
     @NotBlank(message = "관리자와 사용자 중 하나를 선택해 주세요.")
     private String memberRole;
+
+    @Nullable
+    private String imageUrl;
 }

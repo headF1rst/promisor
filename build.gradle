@@ -40,7 +40,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
-	implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7")
+	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+	implementation 'com.google.code.gson:gson:2.8.7'
+
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'

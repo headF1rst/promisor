@@ -3,14 +3,16 @@ package promisor.promisor.domain.member.domain;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import promisor.promisor.domain.model.Person;
 import promisor.promisor.global.error.ErrorCode;
 import promisor.promisor.global.error.exception.ApplicationException;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -54,8 +56,21 @@ public class Member extends Person {
         this.memberRole = memberRole;
     }
 
+    private Member(String name, String email, String password, String telephone, String imageUrl, MemberRole role) {
+        super(name, "INACTIVE");
+        this.email = email;
+        this.password = password;
+        this.telephone = telephone;
+        this.imageUrl = imageUrl;
+        this.memberRole = role;
+    }
+
     public static Member of(String name, String email, String password, String telephone, MemberRole memberRole) {
-        return new Member(name, email, password,  telephone, memberRole);
+        return new Member(name, email, password, telephone, memberRole);
+    }
+
+    public static Member of(String name, String email, String password, String telephone, String imageUrl) {
+        return new Member(name, email, password, telephone, imageUrl, MemberRole.USER);
     }
 
     public void setEncodedPassword(String encodedPassword) {
@@ -70,22 +85,22 @@ public class Member extends Person {
     }
 
     public boolean hasFriend(Member receiver) {
-        List<Member> friends = getMemberFriends();
-        if (friends.isEmpty()) {
+        if (getMemberFriends().isEmpty()) {
             return false;
         }
-        return friends.contains(receiver);
+        return getMemberFriends().contains(receiver);
     }
 
     public void addFriend(Member friend) {
         this.friends.add(new Relation(this, friend, "ACTIVE"));
     }
 
-    public void modifyMemberInfo(String name, String imageUrl, String location){
+    public void modifyMemberInfo(String name, String imageUrl, String location) {
         this.name = name;
         this.imageUrl = imageUrl;
         this.location = location;
     }
+
     public void deleteFriend(Member friend) {
         if (getMemberFriends().contains(friend)) {
             friends.removeIf(friendShip -> friendShip.getFriend().equals(friend));
@@ -95,10 +110,14 @@ public class Member extends Person {
     }
 
     public boolean isNotLeader(Long id) {
-        return this.id != id;
+        return this.id.equals(id);
     }
 
     public boolean isLeader(Long id) {
-        return this.id == id;
+        return this.id.equals(id);
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
