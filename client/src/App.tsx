@@ -1,19 +1,11 @@
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, HashRouter, Route, Routes } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 import { darkModeState } from "./states/darkmode";
 import { darkTheme, lightTheme } from "./Theme";
-import {
-  Friend,
-  Login,
-  GroupMaker,
-  Promise,
-  GroupChatRoom,
-  Group,
-  Home,
-  PromiseDate,
-  PromisePlace,
-} from "./pages/_index";
+import { Friend, Login, GroupMaker, Promise, GroupChatRoom, Group, Home, PromiseDate, PromisePlace } from "./pages/_index";
+import KakaoLogin from "./pages/KakaoLogin";
+import NLogin from "./pages/NLogin";
 import { useEffect } from "react";
 import { getCookie } from "./Cookie";
 const GlobalStyle = createGlobalStyle`
@@ -48,8 +40,8 @@ time, mark, audio, video {
   font: inherit;
   font-weight: 400;
   vertical-align: baseline;
-  background-color: ${(p) => p.theme.bgColor};
-  color: ${(p) => p.theme.textColor}
+  background-color: ${p => p.theme.bgColor};
+  color: ${p => p.theme.textColor}
 }
 img{
   background-color:rgba(0, 0, 0, 0);
@@ -105,24 +97,22 @@ function App() {
   return (
     <ThemeProvider theme={dark ? darkTheme : lightTheme}>
       <GlobalStyle />
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<NLogin />} />
+          <Route path="/oauth/kakao" element={<KakaoLogin />} />
           <Route path="/register" element={<Login />} />
           <Route path="/team/:id/invite" element={<GroupMaker />} />
           <Route path="/team/:id/promise" element={<Promise />} />
           <Route path="/team/:id/promise/:pid/date" element={<PromiseDate />} />
-          <Route
-            path="/team/:id/promise/:pid/place"
-            element={<PromisePlace />}
-          />
+          <Route path="/team/:id/promise/:pid/place" element={<PromisePlace />} />
           <Route path="/team/:id" element={<GroupChatRoom />} />
           <Route path="/" element={<Home />}>
             <Route path="/team" element={<Group />}></Route>
             <Route path="/friend" element={<Friend />} />
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </ThemeProvider>
   );
 }
