@@ -8,6 +8,8 @@ import * as A from "../atoms/_index";
 import { setCookie } from "../Cookie";
 import { KAKAO_AUTH_URL } from "../auth/OAuth";
 import axios from "axios";
+import { Code } from "../atoms/Code";
+import { useRecoilState } from "recoil";
 interface ILoginForm {
   name: string;
   email: string;
@@ -17,6 +19,8 @@ interface ILoginForm {
 }
 function Login() {
   const { register, setValue, handleSubmit } = useForm<ILoginForm>();
+  const [kakaoCode, setKakaoCode] = useRecoilState(Code);
+  console.log(kakaoCode);
   const navigate = useNavigate();
   const loginMatch = useMatch("/login");
 
@@ -34,7 +38,7 @@ function Login() {
         setCookie("accessToken", accessToken);
         localStorage.setItem("refreshTokenId", refreshTokenId);
         localStorage.setItem("tokenExpireTime", String(tokenExpireTime * 1000));
-        navigate("/");
+        // navigate("/");
       })
       .catch(err => {
         console.log(err);
@@ -66,13 +70,13 @@ function Login() {
   const onRegisterInvalid = (v: any) => {
     console.log(v);
   };
-  const onPushClick = () => {
-    if (loginMatch) {
-      navigate("/register");
-    } else {
-      navigate("/login");
-    }
-  };
+  // const onPushClick = () => {
+  //   if (loginMatch) {
+  //     navigate("/register");
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
   const Header = () => {
     return (
       <>
@@ -139,14 +143,15 @@ function Login() {
               </S.LabelInput>
             </>
           )}
-          <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton>
+          {/* <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton> */}
         </LoginForm>
+        {/* 카카오 로그인 */}
         <a href={KAKAO_AUTH_URL}>
           <button>카카오로 로그인하기</button>
         </a>
         <Tab>
-          {loginMatch ? "아직 계정이 없으십니까?" : "계정이 있으십니까?"}
-          <span onClick={onPushClick}>{loginMatch ? "가입하기" : "로그인하기"}</span>
+          {/* {loginMatch ? "아직 계정이 없으십니까?" : "계정이 있으십니까?"} */}
+          {/* <span onClick={onPushClick}>{loginMatch ? "가입하기" : "로그인하기"}</span> */}
         </Tab>
       </>
     );
