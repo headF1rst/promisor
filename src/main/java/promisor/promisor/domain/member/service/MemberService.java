@@ -112,7 +112,7 @@ public class MemberService {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password);
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         TokenResponse createToken = createTokenReturn(loginRequest);
         Long tokenExpireTime = jwtProvider.getTokenExpireTime(createToken.getAccessToken());
         return new LoginResponse(
