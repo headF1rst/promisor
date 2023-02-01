@@ -21,8 +21,9 @@ public interface TeamMemberRepository extends JpaRepository<TeamMember, Long> {
             "and tm.team = :team")
     void leaveGroup(@Param("member") Member member, @Param("team") Team team);
 
-    List<TeamMember> findMembersByTeamId(Long teamId);
 
-    @Query("select tm from TeamMember tm where tm.member.id=:id and tm.team.id=:teamId")
+    List<TeamMember> findTeamMembersByTeam(Team team);
+
+    @Query("select tm from TeamMember tm where tm.member.id = :id and tm.team.id = :teamId")
     TeamMember findMemberByMemberIdAndTeamId(@Param("id") Long id, @Param("teamId") Long teamId);
 }

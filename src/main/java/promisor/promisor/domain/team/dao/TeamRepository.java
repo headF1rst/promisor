@@ -16,14 +16,14 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface TeamRepository extends JpaRepository<Team, Long> {
 
-    @Query("select tm from TeamMember tm join fetch tm.member m "+
+    @Query("select tm from TeamMember tm join fetch tm.member m " +
             "where m in " +
             "(select t from Team t inner join tm.member m on m = :member) " +
             "or m =: member")
     Slice<TeamMember> findTeamInfoWithMembers(@Param("member") Member member, Pageable pageable);
 
-    @Query("select t from TeamMember tm join fetch tm.team t " +
+    @Query("select t from Team t join fetch t.teamMembers tm " +
             "where tm.member in " +
-            "(select m from Member m inner join tm.member m on m = :member)")
+            "(select m from Member m inner join tm.member mm on mm = :member)")
     List<Team> findAllTeams(@Param("member") Member member);
 }

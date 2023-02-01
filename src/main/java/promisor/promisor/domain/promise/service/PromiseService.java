@@ -49,12 +49,10 @@ public class PromiseService {
      */
     @Transactional
     public void createPromise(String email, PromiseCreateRequest request, Long teamId) {
-
-        if (checkMemberInTeam(email, teamId)) {
+        Team team = getTeamById(teamId);
+        if (checkMemberInTeam(email, team)) {
             throw new MemberNotBelongsToTeam();
         }
-
-        Team team = getTeamById(teamId);
         Promise promise = Promise.of("ACTIVE", team, request.getName());
         promiseRepository.save(promise);
     }
@@ -74,7 +72,7 @@ public class PromiseService {
         Promise promise = getPromiseById(promiseId);
 
         if (!request.getDate().isEmpty()) {
-            List<TeamMember> members = teamMemberRepository.findMembersByTeamId(promise.getTeam().getId());
+            List<TeamMember> members = teamMemberRepository.findTeamMembersByTeam(promise.getTeam());
 
             for (TeamMember teamMember : members) {
                 promiseRepository.updateBandDateOfMembers(request.getName(),
@@ -94,7 +92,8 @@ public class PromiseService {
      */
     public List<PromiseResponse> searchPromises(String email, Long teamId) {
 
-        if (checkMemberInTeam(email, teamId)) {
+        Team team = getTeamById(teamId);
+        if (checkMemberInTeam(email, team)) {
             throw new MemberNotBelongsToTeam();
         }
 
@@ -128,9 +127,9 @@ public class PromiseService {
         return promiseRepository.findById(id).orElseThrow(PromiseIdNotFound::new);
     }
 
-    public boolean checkMemberInTeam(String email, Long teamId) {
+    private boolean checkMemberInTeam(String email, Team team) {
 
-        List<TeamMember> foundMembers = teamMemberRepository.findMembersByTeamId(teamId);
+        List<TeamMember> foundMembers = teamMemberRepository.findTeamMembersByTeam(team);
         Member member = getMember(email);
 
         for (TeamMember foundMember : foundMembers) {
