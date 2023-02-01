@@ -1,9 +1,6 @@
 package promisor.promisor.domain.member.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -11,6 +8,7 @@ import javax.validation.constraints.Pattern;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class LoginRequest {
 
     @NotBlank(message = "이메일을 입력해주세요.")

@@ -143,8 +143,8 @@ public class TeamService {
         if (checkMemberInTeam(email, teamId)) {
             throw new MemberNotBelongsToTeam();
         }
-
-        List<TeamMember> teamMembers = teamMemberRepository.findMembersByTeamId(teamId);
+        Team team = getTeamById(teamId);
+        List<TeamMember> teamMembers = teamMemberRepository.findTeamMembersByTeam(team);
         return teamMembers.stream()
                 .map(teamMember -> new GetTeamMembersLocationResponse(teamMember.getTeamId(), teamMember.getMemberId(),
                         teamMember.getMemberName(), teamMember.getLatitude(), teamMember.getLongitude()))
@@ -160,8 +160,8 @@ public class TeamService {
     }
 
     public boolean checkMemberInTeam(String email, Long teamId) {
-
-        List<TeamMember> foundMembers = teamMemberRepository.findMembersByTeamId(teamId);
+        Team team = getTeamById(teamId);
+        List<TeamMember> foundMembers = teamMemberRepository.findTeamMembersByTeam(team);
         Member member = getMemberByEmail(email);
         for (TeamMember foundMember : foundMembers) {
             if (foundMember.getMember() == member) {

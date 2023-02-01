@@ -1,7 +1,6 @@
 package promisor.promisor.domain.calendar.service;
 
 import io.jsonwebtoken.lang.Assert;
-import io.jsonwebtoken.lang.Collections;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -16,7 +15,6 @@ import promisor.promisor.domain.calendar.domain.PersonalCalendar;
 import promisor.promisor.domain.calendar.domain.PersonalSchedule;
 import promisor.promisor.domain.calendar.domain.TeamCalendar;
 import promisor.promisor.domain.calendar.dto.*;
-import promisor.promisor.domain.calendar.exception.*;
 import promisor.promisor.domain.member.dao.MemberRepository;
 import promisor.promisor.domain.member.domain.Member;
 import promisor.promisor.domain.member.exception.MemberNotFoundException;
@@ -27,7 +25,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
