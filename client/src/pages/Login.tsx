@@ -6,7 +6,10 @@ import BasedTemplate from "../template/BasedTemplate";
 import * as S from "../styles/_index";
 import * as A from "../atoms/_index";
 import { setCookie } from "../Cookie";
+import { KAKAO_AUTH_URL } from "../auth/OAuth";
 import axios from "axios";
+import { Code } from "../atoms/Code";
+import { useRecoilState } from "recoil";
 interface ILoginForm {
   name: string;
   email: string;
@@ -16,6 +19,8 @@ interface ILoginForm {
 }
 function Login() {
   const { register, setValue, handleSubmit } = useForm<ILoginForm>();
+  const [kakaoCode, setKakaoCode] = useRecoilState(Code);
+  console.log(kakaoCode);
   const navigate = useNavigate();
   const loginMatch = useMatch("/login");
 
@@ -26,27 +31,21 @@ function Login() {
     const requestBody = { email, password };
     api
       .post("/members/login", requestBody)
-      .then((res) => {
+      .then(res => {
         const {
           data: { accessToken, refreshTokenId, tokenExpireTime },
         } = res;
         setCookie("accessToken", accessToken);
         localStorage.setItem("refreshTokenId", refreshTokenId);
         localStorage.setItem("tokenExpireTime", String(tokenExpireTime * 1000));
-        navigate("/");
+        // navigate("/");
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
         alert(err.response.data.message);
       });
   };
-  const onRegisterValid = ({
-    name,
-    email,
-    password,
-    passwordConfirm,
-    telephone,
-  }: ILoginForm) => {
+  const onRegisterValid = ({ name, email, password, passwordConfirm, telephone }: ILoginForm) => {
     if (password !== passwordConfirm) {
       alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
       return;
@@ -60,24 +59,24 @@ function Login() {
     };
     api
       .post("/members", requestBody)
-      .then((res) => {
+      .then(res => {
         alert(`${email} 로 인증 메일을 전송하였습니다.`);
         navigate("/login");
       })
-      .catch((err) => {
+      .catch(err => {
         alert(err.response.data.message);
       });
   };
   const onRegisterInvalid = (v: any) => {
     console.log(v);
   };
-  const onPushClick = () => {
-    if (loginMatch) {
-      navigate("/register");
-    } else {
-      navigate("/login");
-    }
-  };
+  // const onPushClick = () => {
+  //   if (loginMatch) {
+  //     navigate("/register");
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // };
   const Header = () => {
     return (
       <>
@@ -93,11 +92,7 @@ function Login() {
         <A.Logo value={"Promisor"} />
         <LoginForm
           page={loginMatch ? "login" : "register"}
-          onSubmit={
-            loginMatch
-              ? handleSubmit(onLoginValid)
-              : handleSubmit(onRegisterValid, onRegisterInvalid)
-          }
+          onSubmit={loginMatch ? handleSubmit(onLoginValid) : handleSubmit(onRegisterValid, onRegisterInvalid)}
         >
           {!loginMatch && (
             <S.LabelInput>
@@ -148,13 +143,15 @@ function Login() {
               </S.LabelInput>
             </>
           )}
-          <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton>
+          {/* <LoginButton>{loginMatch ? "Login" : "Join"}</LoginButton> */}
         </LoginForm>
+        {/* 카카오 로그인 */}
+        <a href={KAKAO_AUTH_URL}>
+          <button>카카오로 로그인하기</button>
+        </a>
         <Tab>
-          {loginMatch ? "아직 계정이 없으십니까?" : "계정이 있으십니까?"}
-          <span onClick={onPushClick}>
-            {loginMatch ? "가입하기" : "로그인하기"}
-          </span>
+          {/* {loginMatch ? "아직 계정이 없으십니까?" : "계정이 있으십니까?"} */}
+          {/* <span onClick={onPushClick}>{loginMatch ? "가입하기" : "로그인하기"}</span> */}
         </Tab>
       </>
     );
@@ -165,7 +162,7 @@ export default Login;
 
 const LoginForm = styled.form<{ page: string }>`
   width: 60vw;
-  height: ${(p) => (p.page === "login" ? "45vh" : "60vh")};
+  height: ${p => (p.page === "login" ? "45vh" : "60vh")};
   margin-top: 1em;
 `;
 
@@ -173,8 +170,8 @@ const LoginButton = styled.button`
   width: 100%;
   border: none;
   text-align: center;
-  background-color: ${(p) => p.theme.textColor};
-  color: ${(p) => p.theme.bgColor};
+  background-color: ${p => p.theme.textColor};
+  color: ${p => p.theme.bgColor};
   border-radius: 5px;
   margin-top: 15px;
   padding: 10px;
@@ -182,7 +179,7 @@ const LoginButton = styled.button`
   cursor: pointer;
 `;
 const Tab = styled.div`
-  color: ${(p) => p.theme.grey};
+  color: ${p => p.theme.grey};
   font-size: 0.9rem;
   span {
     padding-inline: 8px;
