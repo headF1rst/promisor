@@ -22,8 +22,8 @@ public interface TeamRepository extends JpaRepository<Team, Long> {
             "or m =: member")
     Slice<TeamMember> findTeamInfoWithMembers(@Param("member") Member member, Pageable pageable);
 
-    @Query("select t from Team t join fetch t.teamMembers tm " +
-            "where tm.member in " +
-            "(select m from Member m inner join tm.member mm on mm = :member)")
-    List<Team> findAllTeams(@Param("member") Member member);
+    @Query("select t from Team t " +
+            "where t.id in " +
+            "(select tm.team.id from TeamMember tm where tm.member = :member)")
+    List<Team> findAllTeams(@Param("member") Member member, Pageable pageable);
 }
