@@ -48,7 +48,8 @@ public class CalendarService {
         Member member = getMember(email);
         PersonalCalendar personalCalendar = personalCalendarRepository.findPersonalCalendarByMemberAndDate(member, date);
         List<TeamCalendar> teamCalendars = teamCalendarRepository.findAllByMemberAndDate(member, date);
-        List<Team> teams = teamRepository.findAllTeams(member);
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.Direction.ASC, "teamName");
+        List<Team> teams = teamRepository.findAllTeams(member, pageRequest);
 
         if (personalCalendar != null) {
             personalCalendar.modifyStatus(status);
