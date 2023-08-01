@@ -3,7 +3,6 @@ package promisor.promisor.global.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,6 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class JwtProvider {
 
     private final SecretKey secret;
@@ -63,7 +61,7 @@ public class JwtProvider {
 
     public String extractEmail(String token) {
         return (String) Jwts.parser().setSigningKey(secret.getJwtSecretKey())
-                .parseClaimsJws(token).getBody().get("email");
+                .parseClaimsJws(token).getBody().get("sub");
     }
 
     public String resolveToken(HttpServletRequest request) {
@@ -89,10 +87,9 @@ public class JwtProvider {
         String[] parts = accessToken.split("\\.");
         ObjectMapper mapper = new ObjectMapper();
         String payload = new String(decoder.decode(parts[1]));
-        Map exp = null;
 
         try {
-            exp = mapper.readValue(payload, Map.class);
+            Map exp = mapper.readValue(payload, Map.class);
             return ((Number) exp.get("exp")).longValue();
         } catch (IOException err) {
             throw new RuntimeException(err);
